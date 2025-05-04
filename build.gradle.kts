@@ -5,6 +5,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi
 plugins {
     alias(libs.plugins.compose.kotlin)
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.hot.reload)
     alias(libs.plugins.kotlinter)
     alias(libs.plugins.compose)
 }
@@ -34,6 +35,16 @@ compose.desktop {
             packageName = "Leviathan"
             packageVersion = "1.0.0"
         }
+    }
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 

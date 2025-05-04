@@ -50,7 +50,7 @@ fun HomeScreen(navi: Navigator) {
                         .fillMaxWidth(),
                 contentAlignment = Center,
             ) {
-                Heading1("Character HERE")
+                Heading1("Character TEST")
             }
         }.divide(vertical = false)()
         Row(
