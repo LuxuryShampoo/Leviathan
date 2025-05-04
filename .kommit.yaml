@@ -1,0 +1,27 @@
+types:
+  - feat: A new feature
+  - fix: A bug fix
+  - docs: Documentation only changes
+  - refactor: A code change that neither fixes a bug nor adds a feature
+  - chore: Other changes that don't modify src or test files
+
+scopes:
+  all:
+    - core
+    - ui
+  docs:
+    - readme
+  chore:
+    - project
+    - dep
+    - build
+    - ci
+    - kommit
+
+options:
+  allowBreakingChanges:
+    - feat
+    - fix
+  allowIssues:
+    - feat
+    - fix
