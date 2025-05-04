@@ -1,0 +1,29 @@
+[versions]
+precompose = "1.6.2"
+maleficnav = "1.3.3"
+maleficextensions = "1.4.2"
+maleficcomps = "1.1.0"
+malefictheme = "1.1.2"
+maleficengine = "1.3.0"
+kotlinter = "5.0.2"
+compose = "1.8.0-rc01"
+kotlin = "2.1.20"
+
+[libraries]
+precompose = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
+malefic-nav = { group = "xyz.malefic.compose", name = "nav", version.ref = "maleficnav" }
+malefic-ext-core = { group = "xyz.malefic", name = "ext-core", version.ref = "maleficextensions" }
+malefic-ext-compose = { group = "xyz.malefic", name = "ext-compose", version.ref = "maleficextensions" }
+malefic-components = { group = "xyz.malefic.compose", name = "comps", version.ref = "maleficcomps" }
+malefic-theming = { group = "xyz.malefic.compose", name = "theming", version.ref = "malefictheme" }
+malefic-engine = { group = "xyz.malefic.compose", name = "engine", version.ref = "maleficengine" }
+
+[plugins]
+compose-kotlin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+
+[bundles]
+malefic-ext = ['malefic-ext-core', 'malefic-ext-compose']
+malefic-compose = ['malefic-components', 'malefic-nav', 'malefic-theming', 'malefic-engine']
