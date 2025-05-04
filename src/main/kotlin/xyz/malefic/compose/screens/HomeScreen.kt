@@ -4,15 +4,13 @@ import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import moe.tlaster.precompose.navigation.Navigator
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Body2
@@ -25,15 +23,15 @@ fun HomeScreen(navi: Navigator) {
     Column(
         modifier =
             Modifier
-                .width(500.dp)
-                .height(600.dp),
+                .fillMaxWidth()
+                .fillMaxHeight(),
         horizontalAlignment = CenterHorizontally,
     ) {
         fuel {
             Row(
                 modifier =
                     Modifier
-                        .height(100.dp)
+                        .fillMaxHeight(0.15f)
                         .fillMaxWidth(),
                 horizontalArrangement = SpaceEvenly,
                 verticalAlignment = CenterVertically,
@@ -46,7 +44,7 @@ fun HomeScreen(navi: Navigator) {
             Box(
                 modifier =
                     Modifier
-                        .height(400.dp)
+                        .fillMaxHeight(0.7f)
                         .fillMaxWidth(),
                 contentAlignment = Center,
             ) {
@@ -56,7 +54,7 @@ fun HomeScreen(navi: Navigator) {
         Row(
             modifier =
                 Modifier
-                    .height(100.dp)
+                    .fillMaxHeight(0.15f)
                     .fillMaxWidth(),
             horizontalArrangement = SpaceEvenly,
             verticalAlignment = CenterVertically,
