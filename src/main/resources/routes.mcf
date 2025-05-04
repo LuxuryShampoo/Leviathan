@@ -1,0 +1,4 @@
+routes:
+  home* -> Home
+  app1 -> App1? [id, name?]
+  hidden -> Text? [text?]
