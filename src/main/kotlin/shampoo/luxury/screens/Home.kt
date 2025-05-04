@@ -1,4 +1,4 @@
-package xyz.malefic.compose.screens
+package shampoo.luxury.screens
 
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
@@ -15,11 +15,13 @@ import moe.tlaster.precompose.navigation.Navigator
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Body2
 import xyz.malefic.compose.comps.text.typography.Heading1
+import xyz.malefic.compose.engine.factory.ButtonFactory
+import xyz.malefic.compose.engine.factory.div
 import xyz.malefic.compose.engine.fuel.divide
 import xyz.malefic.compose.engine.fuel.fuel
 
 @Composable
-fun HomeScreen(navi: Navigator) {
+fun Home(navi: Navigator) {
     Column(
         modifier =
             Modifier
@@ -37,7 +39,11 @@ fun HomeScreen(navi: Navigator) {
                 verticalAlignment = CenterVertically,
             ) {
                 Body1("Hello, World!")
-                Body1("Hello, Body!")
+                ButtonFactory {
+                    Body1("Hello, Body!")
+                } / {
+                    onClick = { navi.navigate("tts") }
+                }
             }
         }.divide(vertical = false)()
         fuel {

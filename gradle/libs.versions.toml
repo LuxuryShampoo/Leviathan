@@ -9,6 +9,8 @@ kotlinter = "5.0.2"
 compose = "1.8.0-rc01"
 kotlin = "2.1.20"
 hot-reload = "1.0.0-alpha09"
+ktor = "3.1.2"
+kotlinx-serialization = "1.8.0"
 
 [libraries]
 precompose = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
@@ -19,13 +21,21 @@ malefic-components = { group = "xyz.malefic.compose", name = "comps", version.re
 malefic-theming = { group = "xyz.malefic.compose", name = "theming", version.ref = "malefictheme" }
 malefic-engine = { group = "xyz.malefic.compose", name = "engine", version.ref = "maleficengine" }
 
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
 [plugins]
 compose-kotlin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 hot-reload = { id = "org.jetbrains.compose.hot-reload", version.ref = "hot-reload" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
 malefic-ext = ['malefic-ext-core', 'malefic-ext-compose']
 malefic-compose = ['malefic-components', 'malefic-nav', 'malefic-theming', 'malefic-engine']
+ktor = ['ktor-client-core', 'ktor-client-cio', 'ktor-client-content-negotiation', 'ktor-serialization-kotlinx-json', 'kotlinx-serialization-json']

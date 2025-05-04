@@ -1,9 +1,10 @@
-package xyz.malefic.compose
+package shampoo.luxury
 
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import shampoo.luxury.screens.Home
 import xyz.malefic.compose.engine.factory.ColumnFactory
 import xyz.malefic.compose.engine.factory.div
 import xyz.malefic.compose.engine.factory.timesAssign
@@ -11,7 +12,6 @@ import xyz.malefic.compose.engine.fuel.background
 import xyz.malefic.compose.engine.fuel.center
 import xyz.malefic.compose.nav.RouteManager.RoutedNavHost
 import xyz.malefic.compose.nav.RouteManager.navi
-import xyz.malefic.compose.screens.HomeScreen
 
 /**
  * Composable function that defines the navigation menu layout. It includes a sidebar and a
@@ -35,5 +35,5 @@ fun NavigationMenu() {
  */
 val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
     mapOf(
-        "HomeScreen" to { _ -> HomeScreen(navi) },
+        "HomeScreen" to { _ -> Home(navi) },
     )

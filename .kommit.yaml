@@ -7,8 +7,9 @@ types:
 
 scopes:
   all:
-    - core
+    - ai
     - ui
+    - pet
   docs:
     - readme
   chore:

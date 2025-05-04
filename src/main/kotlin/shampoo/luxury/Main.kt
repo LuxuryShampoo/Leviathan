@@ -1,4 +1,4 @@
-package xyz.malefic.compose
+package shampoo.luxury
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Alignment.Companion.BottomEnd

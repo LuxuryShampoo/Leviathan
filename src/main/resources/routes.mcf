@@ -1,2 +1,2 @@
 routes:
-  homescreen* -> HomeScreen
+  home* -> Home

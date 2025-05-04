@@ -8,9 +8,10 @@ plugins {
     alias(libs.plugins.hot.reload)
     alias(libs.plugins.kotlinter)
     alias(libs.plugins.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
-group = "xyz.malefic.compose"
+group = "shampoo.luxury"
 version = "1.0.0"
 
 repositories {
@@ -24,11 +25,12 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation(libs.bundles.malefic.ext)
     implementation(libs.precompose)
+    implementation(libs.bundles.ktor)
 }
 
 compose.desktop {
     application {
-        mainClass = "xyz.malefic.compose.MainKt"
+        mainClass = "shampoo.luxury.MainKt"
 
         nativeDistributions {
             targetFormats(Dmg, Msi, Deb)
