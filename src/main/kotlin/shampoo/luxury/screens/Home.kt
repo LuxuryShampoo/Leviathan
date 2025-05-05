@@ -19,6 +19,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -139,27 +140,35 @@ private fun BottomRow(navi: Navigator) {
     }
 }
 
+
 @Composable
 fun Buicon(
     imageVector: ImageVector,
     contentDescription: String,
     size: Dp = 32.dp,
+    hitBox: Dp = 64.dp,
+    unbounded: Boolean = false,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    Button(
-        onClick = onClick,
-        colors =
-            ButtonDefaults.buttonColors(
-                backgroundColor = Transparent,
-                contentColor = MaterialTheme.colors.onBackground,
-            ),
-        modifier = Modifier.size(64.dp),
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier,
     ) {
+        Button(
+            onClick = onClick,
+            colors =
+                ButtonDefaults.buttonColors(
+                    backgroundColor = Transparent,
+                    MaterialTheme.colors.onBackground,
+                ),
+            modifier = Modifier.size(hitBox),
+        ) {}
         Icon(
             imageVector = imageVector,
             contentDescription = contentDescription,
-            modifier = Modifier.size(size).wrapContentSize(align = Center).then(modifier),
+            modifier = if (!unbounded) Modifier.size(size).wrapContentSize(align = Center) else Modifier.size(size),
+            tint = MaterialTheme.colors.onBackground,
         )
     }
 }

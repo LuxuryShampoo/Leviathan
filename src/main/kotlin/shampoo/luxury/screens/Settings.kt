@@ -1,6 +1,7 @@
 package shampoo.luxury.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,10 +9,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -29,11 +33,20 @@ fun Settings(navi: Navigator) {
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Buicon(FontAwesomeIcons.Solid.Home, "homeButton") { navi.navigate("home") }
-        Heading1("Settings")
-
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Buicon(
+                FontAwesomeIcons.Solid.Home,
+                "homeButton",
+                size = 24.dp,
+                hitBox = 32.dp,
+                unbounded = true,
+                Modifier.align(Alignment.TopEnd),
+            ) { navi.navigate("home") }
+            Heading1("Settings", Modifier.align(Alignment.TopStart))
+        }
         Spacer(modifier = Modifier.height(32.dp))
 
         Row(
