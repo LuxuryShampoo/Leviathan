@@ -1,5 +1,7 @@
 package shampoo.luxury.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
@@ -29,14 +32,19 @@ import compose.icons.fontawesomeicons.solid.QuestionCircle
 import moe.tlaster.precompose.navigation.Navigator
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Heading1
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun Home(navi: Navigator) {
     Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
         horizontalAlignment = CenterHorizontally,
     ) {
         TopRow()
@@ -50,10 +58,9 @@ fun Home(navi: Navigator) {
 @Composable
 private fun TopRow() {
     Row(
-        modifier =
-            Modifier
-                .fillMaxHeight(0.2f)
-                .fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxHeight(0.2f)
+            .fillMaxWidth(),
         horizontalArrangement = SpaceEvenly,
         verticalAlignment = CenterVertically,
     ) {
@@ -63,29 +70,66 @@ private fun TopRow() {
         }) {
             Body1("Button")
         }
+        val expanded = remember { mutableStateOf(false) }
+        Box {
+            Button(onClick = { expanded.value = true }) {
+                Body1("Menu")
+            }
+            DropdownMenu(
+                expanded = expanded.value,
+                onDismissRequest = { expanded.value = false }
+            ) {
+                DropdownMenuItem(
+                    onClick = {
+                        println("Option 1")
+                        expanded.value = false
+                    }
+                ) {
+                    Body1("Option 1")
+                }
+                DropdownMenuItem(
+                    onClick = {
+                        println("Option 2")
+                        expanded.value = false
+                    }
+                ) {
+                    Body1("Option 2")
+                }
+            }
+        }
     }
 }
 
 @Composable
 private fun MiddleBox() {
     Box(
-        modifier =
-            Modifier
-                .fillMaxHeight(0.75f)
-                .fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxHeight(0.75f)
+            .fillMaxWidth(),
         contentAlignment = Center,
     ) {
-        Heading1("Character TEST")
+        Column(
+            horizontalAlignment = CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource("src/main/resources/bobtest.png"),
+                contentDescription = "Character Image",
+                modifier = Modifier
+                    .size(200.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+            Heading1("Character TEST")
+        }
     }
 }
 
 @Composable
 private fun BottomRow() {
     Row(
-        modifier =
-            Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(),
         horizontalArrangement = SpaceEvenly,
         verticalAlignment = CenterVertically,
     ) {
@@ -102,16 +146,14 @@ private fun Buicon(
 ) {
     Button(
         onClick = onClick,
-        colors =
-            ButtonDefaults.buttonColors(
-                backgroundColor = Color.Transparent,
-                contentColor = MaterialTheme.colors.onBackground,
-            ),
-        elevation =
-            ButtonDefaults.elevation(
-                defaultElevation = 0.dp,
-                pressedElevation = 0.dp,
-            ),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Transparent,
+            contentColor = MaterialTheme.colors.onBackground,
+        ),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 0.dp,
+            pressedElevation = 0.dp,
+        ),
         modifier = Modifier.size(64.dp),
         contentPadding = PaddingValues(0.dp),
     ) {
