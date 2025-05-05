@@ -13,6 +13,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -38,43 +39,58 @@ fun Home(navi: Navigator) {
                 .fillMaxHeight(),
         horizontalAlignment = CenterHorizontally,
     ) {
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxHeight(0.2f)
-                    .fillMaxWidth(),
-            horizontalArrangement = SpaceEvenly,
-            verticalAlignment = CenterVertically,
-        ) {
-            Body1("Hello, World!")
-            Button(onClick = {
-                println("Button clicked!")
-            }) {
-                Body1("Button")
-            }
-        }
+        TopRow()
         Divider()
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxHeight(0.75f)
-                    .fillMaxWidth(),
-            contentAlignment = Center,
-        ) {
-            Heading1("Character TEST")
-        }
+        MiddleBox()
         Divider()
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(),
-            horizontalArrangement = SpaceEvenly,
-            verticalAlignment = CenterVertically,
-        ) {
-            Buicon(FontAwesomeIcons.Solid.Cog, "Settings") { println("Settings clicked!") }
-            Buicon(FontAwesomeIcons.Solid.QuestionCircle, "Help") { println("Help clicked!") }
+        BottomRow()
+    }
+}
+
+@Composable
+private fun TopRow() {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxHeight(0.2f)
+                .fillMaxWidth(),
+        horizontalArrangement = SpaceEvenly,
+        verticalAlignment = CenterVertically,
+    ) {
+        Body1("Hello, World!")
+        Button(onClick = {
+            println("Button clicked!")
+        }) {
+            Body1("Button")
         }
+    }
+}
+
+@Composable
+private fun MiddleBox() {
+    Box(
+        modifier =
+            Modifier
+                .fillMaxHeight(0.75f)
+                .fillMaxWidth(),
+        contentAlignment = Center,
+    ) {
+        Heading1("Character TEST")
+    }
+}
+
+@Composable
+private fun BottomRow() {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(),
+        horizontalArrangement = SpaceEvenly,
+        verticalAlignment = CenterVertically,
+    ) {
+        Buicon(FontAwesomeIcons.Solid.Cog, "Settings") { println("Settings clicked!") }
+        Buicon(FontAwesomeIcons.Solid.QuestionCircle, "Help") { println("Help clicked!") }
     }
 }
 
@@ -89,7 +105,7 @@ private fun Buicon(
         colors =
             ButtonDefaults.buttonColors(
                 backgroundColor = Color.Transparent,
-                contentColor = Color.Black,
+                contentColor = MaterialTheme.colors.onBackground,
             ),
         elevation =
             ButtonDefaults.elevation(
