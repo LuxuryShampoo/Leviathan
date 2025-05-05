@@ -19,6 +19,7 @@ import xyz.malefic.compose.theming.MaleficTheme
 import xyz.malefic.ext.stream.grass
 import java.awt.Toolkit
 
+
 fun main() =
     application {
         val screenSize = Toolkit.getDefaultToolkit().screenSize

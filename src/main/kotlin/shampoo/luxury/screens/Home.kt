@@ -1,5 +1,6 @@
 package shampoo.luxury.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
@@ -25,7 +26,9 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.useResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import compose.icons.FontAwesomeIcons
@@ -36,6 +39,12 @@ import moe.tlaster.precompose.navigation.Navigator
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Body1B
 import xyz.malefic.compose.comps.text.typography.Heading1
+import androidx.compose.ui.res.loadImageBitmap
+import androidx.compose.ui.res.useResource
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+
 
 @Composable
 fun Home(navi: Navigator) {
@@ -113,14 +122,14 @@ private fun MiddleBox() {
             horizontalAlignment = CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-/*            Image(
-                painter = painterResource("src/main/resources/bobtest.png"),
+            val image: ImageBitmap = useResource("bobtest.png", ::loadImageBitmap)
+            Image(
+                bitmap = image,
                 contentDescription = "Character Image",
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(100.dp)
                     .clip(RoundedCornerShape(8.dp))
-            ) */
-            Heading1("Character TEST")
+            )
         }
     }
 }
