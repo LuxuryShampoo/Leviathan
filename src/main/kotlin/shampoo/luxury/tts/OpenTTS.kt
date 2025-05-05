@@ -1,4 +1,4 @@
-package shampoo.luxury.ai
+package shampoo.luxury.tts
 
 import io.ktor.client.*
 import io.ktor.client.call.*
