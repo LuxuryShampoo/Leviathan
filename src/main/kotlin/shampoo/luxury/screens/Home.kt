@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -37,7 +38,12 @@ fun Home(navi: Navigator) {
                 verticalAlignment = CenterVertically,
             ) {
                 Body1("Hello, World!")
-                Body1("Hello, Body!")
+                Button(onClick = {
+                    println("Button clicked!")
+                })
+                {
+                    Body1("Button")
+                }
             }
         }.divide(vertical = false)()
         fuel {
