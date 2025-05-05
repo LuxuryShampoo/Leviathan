@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import xyz.malefic.Signal
+import xyz.malefic.compose.prefs.delegate.StringPreference
 import xyz.malefic.ext.stream.grass
 import java.io.InputStream
 
@@ -14,26 +15,39 @@ import java.io.InputStream
  * Uses Signal for reactive theme change notifications.
  */
 object ThemeManager {
-    // Default theme file path
+    /**
+     * The default theme path used when no other theme is selected.
+     */
     private const val DEFAULT_THEME = "/theme/dark.json"
 
-    // MutableState to hold the current theme file path
-    private val currentThemePath = mutableStateOf(DEFAULT_THEME)
+    /**
+     * A preference-backed property that stores the current theme path.
+     * The value is persisted and retrieved using `StringPreference`.
+     */
+    var currentThemePath by StringPreference("theme_path", DEFAULT_THEME)
 
-    // MutableState to hold the current theme input stream
-    private val _themeInputStream = mutableStateOf<InputStream?>(grass(DEFAULT_THEME))
+    /**
+     * A mutable state holding the current theme's input stream.
+     * This is used to provide the theme data to the application.
+     */
+    private val _themeInputStream = mutableStateOf<InputStream?>(grass(currentThemePath))
 
-    // Signal to emit updates when the theme changes
+    /**
+     * A reactive signal that emits notifications when the theme changes.
+     * Listeners can connect to this signal to respond to theme updates.
+     */
     val themeChanges = Signal<Int>()
 
-    // Public property to access the theme input stream
+    /**
+     * A public getter for the current theme's input stream.
+     * Provides access to the theme data for other parts of the application.
+     */
     val themeInputStream: InputStream?
         get() = _themeInputStream.value
 
-    // Initialize the theme manager with the default theme
     init {
         CoroutineScope(Dispatchers.IO).launch {
-            updateTheme(DEFAULT_THEME)
+            updateTheme(currentThemePath)
         }
     }
 
@@ -46,18 +60,11 @@ object ThemeManager {
     suspend fun updateTheme(themePath: String): Boolean {
         val stream = grass(themePath)
         if (stream != null) {
-            currentThemePath.value = themePath
+            currentThemePath = themePath
             _themeInputStream.value = stream
             themeChanges.emit(themeChanges.hashCode())
             return true
         }
         return false
     }
-
-    /**
-     * Gets the current theme file path.
-     *
-     * @return The current theme file path.
-     */
-    fun getCurrentThemePath(): String = currentThemePath.value
 }

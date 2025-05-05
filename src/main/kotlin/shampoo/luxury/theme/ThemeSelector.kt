@@ -1,7 +1,6 @@
 package shampoo.luxury.theme
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -20,7 +19,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter.Companion.tint
 import androidx.compose.ui.unit.dp
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -33,7 +31,7 @@ fun ThemeSelector() {
     var expanded by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    val initialTheme = Theme.fromPath(ThemeManager.getCurrentThemePath())
+    val initialTheme = Theme.fromPath(ThemeManager.currentThemePath)
     var selectedTheme by remember { mutableStateOf(initialTheme) }
 
     Row(

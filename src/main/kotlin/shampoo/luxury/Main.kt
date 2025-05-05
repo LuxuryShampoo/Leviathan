@@ -40,28 +40,16 @@ fun main() =
                 MalefiConfigLoader(),
             )
 
-            // Initialize the ThemeManager with the system theme if it hasn't been initialized yet
-            LaunchedEffect(Unit) {
-                val systemThemePath = "/theme/grassy.json"
-                ThemeManager.updateTheme(systemThemePath)
-            }
-
-            // Use remember to create a mutableState for tracking theme changes
             var themeChangeCount by remember { mutableStateOf(0) }
 
-            // Use LaunchedEffect to connect to the themeChanges Signal
             LaunchedEffect(Unit) {
-                // Connect to the Signal and update themeChangeCount when a new value is emitted
                 ThemeManager.themeChanges.connect { _ ->
                     themeChangeCount++
                 }
             }
 
-            // Use remember to observe the ThemeManager's themeInputStream
-            // The key parameter ensures that the state is updated when themeChangeCount changes
             val themeStream by remember(themeChangeCount) { mutableStateOf(ThemeManager.themeInputStream) }
 
-            // Use the observed themeStream
             themeStream?.let { stream ->
                 println("Recomposing with theme stream: $stream")
                 MaleficTheme(stream) {
