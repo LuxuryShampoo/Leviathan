@@ -15,8 +15,6 @@ import moe.tlaster.precompose.navigation.Navigator
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Body2
 import xyz.malefic.compose.comps.text.typography.Heading1
-import xyz.malefic.compose.engine.factory.ButtonFactory
-import xyz.malefic.compose.engine.factory.div
 import xyz.malefic.compose.engine.fuel.divide
 import xyz.malefic.compose.engine.fuel.fuel
 
@@ -39,11 +37,7 @@ fun Home(navi: Navigator) {
                 verticalAlignment = CenterVertically,
             ) {
                 Body1("Hello, World!")
-                ButtonFactory {
-                    Body1("Hello, Body!")
-                } / {
-                    onClick = { navi.navigate("tts") }
-                }
+                Body1("Hello, Body!")
             }
         }.divide(vertical = false)()
         fuel {
