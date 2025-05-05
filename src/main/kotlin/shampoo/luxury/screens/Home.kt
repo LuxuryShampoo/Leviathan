@@ -3,21 +3,31 @@ package shampoo.luxury.screens
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Cog
+import compose.icons.fontawesomeicons.solid.QuestionCircle
 import moe.tlaster.precompose.navigation.Navigator
 import xyz.malefic.compose.comps.text.typography.Body1
-import xyz.malefic.compose.comps.text.typography.Body2
 import xyz.malefic.compose.comps.text.typography.Heading1
-import xyz.malefic.compose.engine.fuel.divide
-import xyz.malefic.compose.engine.fuel.fuel
 
 @Composable
 fun Home(navi: Navigator) {
@@ -28,44 +38,71 @@ fun Home(navi: Navigator) {
                 .fillMaxHeight(),
         horizontalAlignment = CenterHorizontally,
     ) {
-        fuel {
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxHeight(0.15f)
-                        .fillMaxWidth(),
-                horizontalArrangement = SpaceEvenly,
-                verticalAlignment = CenterVertically,
-            ) {
-                Body1("Hello, World!")
-                Button(onClick = {
-                    println("Button clicked!")
-                })
-                {
-                    Body1("Button")
-                }
-            }
-        }.divide(vertical = false)()
-        fuel {
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxHeight(0.7f)
-                        .fillMaxWidth(),
-                contentAlignment = Center,
-            ) {
-                Heading1("Character TEST")
-            }
-        }.divide(vertical = false)()
         Row(
             modifier =
                 Modifier
-                    .fillMaxHeight(0.15f)
+                    .fillMaxHeight(0.2f)
                     .fillMaxWidth(),
             horizontalArrangement = SpaceEvenly,
             verticalAlignment = CenterVertically,
         ) {
-            Body2("settings n stuff")
+            Body1("Hello, World!")
+            Button(onClick = {
+                println("Button clicked!")
+            }) {
+                Body1("Button")
+            }
         }
+        Divider()
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxHeight(0.75f)
+                    .fillMaxWidth(),
+            contentAlignment = Center,
+        ) {
+            Heading1("Character TEST")
+        }
+        Divider()
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
+            horizontalArrangement = SpaceEvenly,
+            verticalAlignment = CenterVertically,
+        ) {
+            Buicon(FontAwesomeIcons.Solid.Cog, "Settings") { println("Settings clicked!") }
+            Buicon(FontAwesomeIcons.Solid.QuestionCircle, "Help") { println("Help clicked!") }
+        }
+    }
+}
+
+@Composable
+private fun Buicon(
+    imageVector: ImageVector,
+    desc: String,
+    onClick: () -> Unit,
+) {
+    Button(
+        onClick = onClick,
+        colors =
+            ButtonDefaults.buttonColors(
+                backgroundColor = Color.Transparent,
+                contentColor = Color.Black,
+            ),
+        elevation =
+            ButtonDefaults.elevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+            ),
+        modifier = Modifier.size(64.dp),
+        contentPadding = PaddingValues(0.dp),
+    ) {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = desc,
+            modifier = Modifier.size(96.dp).wrapContentSize(align = Center),
+        )
     }
 }

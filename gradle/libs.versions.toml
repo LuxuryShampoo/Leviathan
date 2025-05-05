@@ -11,6 +11,7 @@ kotlin = "2.1.20"
 hot-reload = "1.0.0-alpha09"
 ktor = "3.1.2"
 kotlinx-serialization = "1.8.0"
+font-awesome = "1.1.1"
 
 [libraries]
 precompose = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
@@ -20,12 +21,12 @@ malefic-ext-compose = { group = "xyz.malefic", name = "ext-compose", version.ref
 malefic-components = { group = "xyz.malefic.compose", name = "comps", version.ref = "maleficcomps" }
 malefic-theming = { group = "xyz.malefic.compose", name = "theming", version.ref = "malefictheme" }
 malefic-engine = { group = "xyz.malefic.compose", name = "engine", version.ref = "maleficengine" }
-
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+font-awesome = { group = "br.com.devsrsouza.compose.icons", name = "font-awesome", version.ref = "font-awesome" }
 
 [plugins]
 compose-kotlin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

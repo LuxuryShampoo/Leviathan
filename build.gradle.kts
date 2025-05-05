@@ -24,8 +24,9 @@ dependencies {
     implementation(libs.bundles.malefic.compose)
     implementation(compose.desktop.currentOs)
     implementation(libs.bundles.malefic.ext)
-    implementation(libs.precompose)
+    implementation(libs.font.awesome)
     implementation(libs.bundles.ktor)
+    implementation(libs.precompose)
 }
 
 compose.desktop {
