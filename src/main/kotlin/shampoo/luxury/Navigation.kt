@@ -35,5 +35,5 @@ fun NavigationMenu() {
  */
 val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
     mapOf(
-        "HomeScreen" to { _ -> Home(navi) },
+        "Home" to { _ -> Home(navi) },
     )
