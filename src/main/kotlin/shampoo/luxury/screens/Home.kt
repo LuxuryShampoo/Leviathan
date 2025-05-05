@@ -18,6 +18,7 @@ import xyz.malefic.compose.comps.text.typography.Body2
 import xyz.malefic.compose.comps.text.typography.Heading1
 import xyz.malefic.compose.engine.fuel.divide
 import xyz.malefic.compose.engine.fuel.fuel
+import androidx.compose.material.DropdownMenu
 
 @Composable
 fun Home(navi: Navigator) {
