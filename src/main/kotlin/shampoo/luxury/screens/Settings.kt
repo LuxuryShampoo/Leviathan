@@ -13,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Home
 import moe.tlaster.precompose.navigation.Navigator
 import shampoo.luxury.theme.ThemeSelector
 import xyz.malefic.compose.comps.text.typography.Heading1
@@ -28,6 +31,7 @@ fun Settings(navi: Navigator) {
                 .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Buicon(FontAwesomeIcons.Solid.Home, "homeButton") { navi.navigate("home") }
         Heading1("Settings")
 
         Spacer(modifier = Modifier.height(32.dp))
