@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,8 +21,9 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -51,7 +51,7 @@ fun Home(navi: Navigator) {
         Divider()
         MiddleBox()
         Divider()
-        BottomRow()
+        BottomRow(navi)
     }
 }
 
@@ -112,20 +112,20 @@ private fun MiddleBox() {
             horizontalAlignment = CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
+/*            Image(
                 painter = painterResource("src/main/resources/bobtest.png"),
                 contentDescription = "Character Image",
                 modifier = Modifier
                     .size(200.dp)
                     .clip(RoundedCornerShape(8.dp))
-            )
+            ) */
             Heading1("Character TEST")
         }
     }
 }
 
 @Composable
-private fun BottomRow() {
+private fun BottomRow(navi: Navigator) {
     Row(
         modifier = Modifier
             .fillMaxHeight()
@@ -133,34 +133,32 @@ private fun BottomRow() {
         horizontalArrangement = SpaceEvenly,
         verticalAlignment = CenterVertically,
     ) {
-        Buicon(FontAwesomeIcons.Solid.Cog, "Settings") { println("Settings clicked!") }
+        Buicon(FontAwesomeIcons.Solid.Cog, "Settings") { navi.navigate("settings") }
         Buicon(FontAwesomeIcons.Solid.QuestionCircle, "Help") { println("Help clicked!") }
     }
 }
 
 @Composable
-private fun Buicon(
+fun Buicon(
     imageVector: ImageVector,
-    desc: String,
+    contentDescription: String,
+    size: Dp = 32.dp,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Transparent,
-            contentColor = MaterialTheme.colors.onBackground,
-        ),
-        elevation = ButtonDefaults.elevation(
-            defaultElevation = 0.dp,
-            pressedElevation = 0.dp,
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                backgroundColor = Transparent,
+                contentColor = MaterialTheme.colors.onBackground,
+            ),
         modifier = Modifier.size(64.dp),
-        contentPadding = PaddingValues(0.dp),
     ) {
         Icon(
             imageVector = imageVector,
-            contentDescription = desc,
-            modifier = Modifier.size(96.dp).wrapContentSize(align = Center),
+            contentDescription = contentDescription,
+            modifier = Modifier.size(size).wrapContentSize(align = Center).then(modifier),
         )
     }
 }

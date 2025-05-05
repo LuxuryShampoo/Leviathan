@@ -1,0 +1,15 @@
+{
+  "primary": "#0288D1",
+  "primaryVariant": "#01579B",
+  "secondary": "#00BCD4",
+  "secondaryVariant": "#0097A7",
+  "background": "#E1F5FE",
+  "surface": "#B3E5FC",
+  "error": "#D50000",
+  "onPrimary": "#FFFFFF",
+  "onSecondary": "#000000",
+  "onBackground": "#01579B",
+  "onSurface": "#006064",
+  "onError": "#FFFFFF",
+  "isLight": true
+}
