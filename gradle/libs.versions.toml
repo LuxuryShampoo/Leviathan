@@ -14,6 +14,7 @@ hot-reload = "1.0.0-alpha09"
 ktor = "3.1.2"
 kotlinx-serialization = "1.8.0"
 font-awesome = "1.1.1"
+kermit = "2.0.4"
 
 [libraries]
 precompose = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
@@ -31,6 +32,7 @@ ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-conte
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 font-awesome = { group = "br.com.devsrsouza.compose.icons", name = "font-awesome", version.ref = "font-awesome" }
+kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 
 [plugins]
 compose-kotlin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

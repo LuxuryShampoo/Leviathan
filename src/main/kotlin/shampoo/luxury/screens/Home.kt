@@ -9,42 +9,39 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.useResource
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.graphics.decodeToImageBitmap
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Cog
 import compose.icons.fontawesomeicons.solid.QuestionCircle
 import moe.tlaster.precompose.navigation.Navigator
+import shampoo.luxury.components.Buicon
+import shampoo.luxury.components.DropdownText
+import shampoo.luxury.io.Resource.downloadFile
+import shampoo.luxury.io.Resource.getLocalResourcePath
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Body1B
-import xyz.malefic.compose.comps.text.typography.Heading1
-import androidx.compose.ui.res.loadImageBitmap
-import androidx.compose.ui.res.useResource
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.clip
-
+import xyz.malefic.ext.precompose.gate
+import java.io.File
 
 @Composable
 fun Home(navi: Navigator) {
@@ -88,21 +85,13 @@ private fun TopRow() {
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
             ) {
-                DropdownMenuItem(
-                    onClick = {
-                        println("Option 1")
-                        expanded.value = false
-                    },
-                ) {
-                    Body1("Option 1")
+                DropdownText("Option 1") {
+                    println("Option 1")
+                    expanded.value = false
                 }
-                DropdownMenuItem(
-                    onClick = {
-                        println("Option 2")
-                        expanded.value = false
-                    },
-                ) {
-                    Body1("Option 2")
+                DropdownText("Option 2") {
+                    println("Option 2")
+                    expanded.value = false
                 }
             }
         }
@@ -118,18 +107,32 @@ private fun MiddleBox() {
                 .fillMaxWidth(),
         contentAlignment = Center,
     ) {
+        var file by remember { mutableStateOf(File("")) }
+
+        LaunchedEffect(Unit) {
+            file = downloadFile("https://gallery.malefic.xyz/photos/Leviathan/BobAlarm.png", getLocalResourcePath("BobAlarm.png"))
+            println("File downloaded: ${file.absolutePath}")
+        }
+
         Column(
             horizontalAlignment = CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            val image: ImageBitmap = useResource("bobtest.png", ::loadImageBitmap)
-            Image(
-                bitmap = image,
-                contentDescription = "Character Image",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
+            key(file.absolutePath) {
+                Logger.d { "File exists: ${file.exists()}" }
+                if (file.exists()) {
+                    Logger.d("Recomposed the image")
+                    val image: ImageBitmap = file.inputStream().readAllBytes().decodeToImageBitmap()
+                    Image(
+                        bitmap = image,
+                        contentDescription = "Character Image",
+                        modifier =
+                            Modifier
+                                .size(400.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                    )
+                }
+            }
         }
     }
 }
@@ -144,40 +147,7 @@ private fun BottomRow(navi: Navigator) {
         horizontalArrangement = SpaceEvenly,
         verticalAlignment = CenterVertically,
     ) {
-        Buicon(FontAwesomeIcons.Solid.Cog, "Settings") { navi.navigate("settings") }
+        Buicon(FontAwesomeIcons.Solid.Cog, "Settings") { navi gate "settings" }
         Buicon(FontAwesomeIcons.Solid.QuestionCircle, "Help") { println("Help clicked!") }
-    }
-}
-
-
-@Composable
-fun Buicon(
-    imageVector: ImageVector,
-    contentDescription: String,
-    size: Dp = 32.dp,
-    hitBox: Dp = 64.dp,
-    unbounded: Boolean = false,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier,
-    ) {
-        Button(
-            onClick = onClick,
-            colors =
-                ButtonDefaults.buttonColors(
-                    backgroundColor = Transparent,
-                    MaterialTheme.colors.onBackground,
-                ),
-            modifier = Modifier.size(hitBox),
-        ) {}
-        Icon(
-            imageVector = imageVector,
-            contentDescription = contentDescription,
-            modifier = if (!unbounded) Modifier.size(size).wrapContentSize(align = Center) else Modifier.size(size),
-            tint = MaterialTheme.colors.onBackground,
-        )
     }
 }
