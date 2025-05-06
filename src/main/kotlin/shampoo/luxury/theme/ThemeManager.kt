@@ -16,12 +16,12 @@ import java.io.InputStream
  */
 object ThemeManager {
     /**
-     * The default theme io used when no other theme is selected.
+     * The default theme path used when no other theme is selected.
      */
     private const val DEFAULT_THEME = "/theme/dark.json"
 
     /**
-     * A preference-backed property that stores the current theme io.
+     * A preference-backed property that stores the current theme path.
      * The value is persisted and retrieved using `StringPreference`.
      */
     var currentThemePath by StringPreference("theme_path", DEFAULT_THEME)
