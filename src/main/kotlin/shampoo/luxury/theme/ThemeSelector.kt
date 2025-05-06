@@ -31,8 +31,7 @@ fun ThemeSelector() {
     var expanded by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    val initialTheme = Theme.fromPath(ThemeManager.currentThemePath)
-    var selectedTheme by remember { mutableStateOf(initialTheme) }
+    var selectedTheme by remember { mutableStateOf(Theme.fromPath(ThemeManager.currentThemePath)) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
