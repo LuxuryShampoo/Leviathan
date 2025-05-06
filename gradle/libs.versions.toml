@@ -18,14 +18,14 @@ kermit = "2.0.4"
 
 [libraries]
 precompose = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
-malefic-nav = { group = "xyz.malefic.compose", name = "nav", version.ref = "maleficnav" }
+malefic-signal = { group = "xyz.malefic", name = "signal", version.ref = "maleficsignal" }
 malefic-ext-core = { group = "xyz.malefic", name = "ext-core", version.ref = "maleficextensions" }
 malefic-ext-compose = { group = "xyz.malefic", name = "ext-compose", version.ref = "maleficextensions" }
 malefic-components = { group = "xyz.malefic.compose", name = "comps", version.ref = "maleficcomps" }
 malefic-theming = { group = "xyz.malefic.compose", name = "theming", version.ref = "malefictheme" }
 malefic-engine = { group = "xyz.malefic.compose", name = "engine", version.ref = "maleficengine" }
-malefic-signal = { group = "xyz.malefic", name = "signal", version.ref = "maleficsignal" }
 malefic-prefs = { group = "xyz.malefic.compose", name = "prefs", version.ref = "maleficprefs" }
+malefic-nav = { group = "xyz.malefic.compose", name = "nav", version.ref = "maleficnav" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }

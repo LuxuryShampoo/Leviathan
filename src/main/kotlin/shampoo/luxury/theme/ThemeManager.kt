@@ -18,7 +18,7 @@ object ThemeManager {
     /**
      * The default theme path used when no other theme is selected.
      */
-    private const val DEFAULT_THEME = "/theme/dark.json"
+    const val DEFAULT_THEME = "/theme/dark.json"
 
     /**
      * A preference-backed property that stores the current theme path.
