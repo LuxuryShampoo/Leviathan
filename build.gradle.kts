@@ -62,7 +62,7 @@ tasks {
         dependsOn(lintKotlin)
     }
     build {
-        dependsOn(named("formatAndLintKotlin"))
+        dependsOn(named("formatKotlin"))
     }
     check {
         dependsOn("installKotlinterPrePushHook")
