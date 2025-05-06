@@ -2,7 +2,7 @@ package shampoo.luxury.theme
 
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import xyz.malefic.Signal
 import xyz.malefic.compose.prefs.delegate.StringPreference
@@ -46,7 +46,7 @@ object ThemeManager {
         get() = _themeInputStream.value
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(IO).launch {
             updateTheme(currentThemePath)
         }
     }

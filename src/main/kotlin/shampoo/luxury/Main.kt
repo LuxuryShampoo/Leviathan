@@ -12,7 +12,7 @@ import androidx.compose.ui.window.WindowPosition.Aligned
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import shampoo.luxury.theme.ThemeManager
 import xyz.malefic.compose.comps.precompose.NavWindow
@@ -58,6 +58,6 @@ fun main() =
                 MaleficTheme(stream) {
                     NavigationMenu()
                 }
-            } ?: CoroutineScope(Dispatchers.IO).launch { ThemeManager.updateTheme(ThemeManager.DEFAULT_THEME) }
+            } ?: CoroutineScope(IO).launch { ThemeManager.updateTheme(ThemeManager.DEFAULT_THEME) }
         }
     }

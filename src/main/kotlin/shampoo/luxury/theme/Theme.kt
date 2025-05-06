@@ -13,6 +13,7 @@ enum class Theme(
     NEON("Neon", "/theme/neon.json"),
     MONOCHROME("Monochrome", "/theme/monochrome.json"),
     BANANA("Banana", "/theme/banana.json"),
+    LAVA("Lava", "/theme/lava.json"),
     ;
 
     companion object {
