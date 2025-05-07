@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.SolidGroup
-import jdk.internal.classfile.Signature.TypeArg.unbounded
 import xyz.malefic.ext.modifier.modifyIf
 
 @Composable

@@ -1,6 +1,8 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi
+import org.jmailen.gradle.kotlinter.tasks.FormatTask
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     alias(libs.plugins.compose.kotlin)
@@ -30,7 +32,6 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.precompose)
     implementation(libs.kermit)
-    implementation(libs.slf4j)
 }
 
 compose.desktop {
@@ -63,9 +64,15 @@ tasks {
         dependsOn(lintKotlin)
     }
     build {
-        dependsOn(named("formatKotlin"))
+        dependsOn("formatAndLintKotlin")
     }
     check {
-        dependsOn("installKotlinterPrePushHook")
+        dependsOn(installKotlinterPrePushHook)
+    }
+    withType<LintTask> {
+        this.source = this.source.minus(fileTree("build/generated")).asFileTree
+    }
+    withType<FormatTask> {
+        this.source = this.source.minus(fileTree("build/generated")).asFileTree
     }
 }

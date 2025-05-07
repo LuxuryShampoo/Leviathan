@@ -34,6 +34,7 @@ import compose.icons.fontawesomeicons.solid.QuestionCircle
 import moe.tlaster.precompose.navigation.Navigator
 import shampoo.luxury.components.Buicon
 import shampoo.luxury.components.DropdownText
+import shampoo.luxury.io.Resource.BOB_ALARM
 import shampoo.luxury.io.Resource.downloadFile
 import shampoo.luxury.io.Resource.getLocalResourcePath
 import xyz.malefic.compose.comps.text.typography.Body1
@@ -108,7 +109,7 @@ private fun MiddleBox() {
         var file by remember { mutableStateOf(File("")) }
 
         LaunchedEffect(Unit) {
-            file = downloadFile("https://gallery.malefic.xyz/photos/Leviathan/BobAlarm.png", getLocalResourcePath("BobAlarm.png"))
+            file = downloadFile(BOB_ALARM, getLocalResourcePath("BobAlarm.png"))
             Logger.d("File downloaded: ${file.absolutePath}")
         }
 

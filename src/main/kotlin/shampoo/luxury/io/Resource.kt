@@ -21,14 +21,13 @@ object Resource {
         val osName = System.getProperty("os.name").lowercase()
         val userHome = System.getProperty("user.home")
 
-        val basePath =
+        return "${
             when {
                 osName.contains("win") -> System.getenv("APPDATA") ?: "$userHome${separator}AppData${separator}Roaming"
                 osName.contains("mac") -> "$userHome${separator}Library${separator}Application Support"
                 else -> "$userHome$separator.config"
             }
-
-        return "$basePath${separator}Leviathan${separator}$path"
+        }${separator}Leviathan${separator}$path"
     }
 
     /**
@@ -62,4 +61,6 @@ object Resource {
         }
         return file
     }
+
+    const val BOB_ALARM = "https://gallery.malefic.xyz/photos/Leviathan/BobAlarm.png"
 }

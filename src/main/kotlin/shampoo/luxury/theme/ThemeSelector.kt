@@ -25,6 +25,8 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Palette
 import kotlinx.coroutines.launch
+import shampoo.luxury.theme.Theme.Companion.fromPath
+import shampoo.luxury.theme.ThemeManager.currentThemePath
 import shampoo.luxury.theme.ThemeManager.updateTheme
 import xyz.malefic.compose.comps.text.typography.Body1
 
@@ -32,7 +34,7 @@ import xyz.malefic.compose.comps.text.typography.Body1
 fun ThemeSelector() {
     var expanded by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    var selectedTheme by remember { mutableStateOf(Theme.fromPath(ThemeManager.currentThemePath)) }
+    var selectedTheme by remember { mutableStateOf(fromPath(currentThemePath)) }
 
     Row(
         verticalAlignment = CenterVertically,
