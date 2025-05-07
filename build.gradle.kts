@@ -5,12 +5,12 @@ import org.jmailen.gradle.kotlinter.tasks.FormatTask
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.kotlin)
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.hot.reload)
     alias(libs.plugins.kotlinter)
     alias(libs.plugins.compose)
-    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "shampoo.luxury"
@@ -32,6 +32,7 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.precompose)
     implementation(libs.kermit)
+    implementation(libs.slf4j)
 }
 
 compose.desktop {
