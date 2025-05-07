@@ -2,7 +2,6 @@ package shampoo.luxury.components
 
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.runtime.Composable
-import xyz.malefic.compose.comps.text.typography.Body1
 
 @Composable
 fun DropdownText(
@@ -14,6 +13,6 @@ fun DropdownText(
             onClick()
         },
     ) {
-        Body1(string)
+        Body1OS(string)
     }
 }

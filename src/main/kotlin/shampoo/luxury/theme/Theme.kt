@@ -17,6 +17,7 @@ enum class Theme(
     LAVA("Lava", "/theme/lava.json"),
     OCEAN("Ocean", "/theme/ocean.json"),
     SUNSET("Sunset", "/theme/sunset.json"),
+    RETRO("Retro", "/theme/retro.json"),
     ;
 
     companion object {

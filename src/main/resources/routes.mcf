@@ -1,3 +1,4 @@
 routes:
   home* -> Home
   settings -> Settings
+  shop -> Shop

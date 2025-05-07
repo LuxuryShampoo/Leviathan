@@ -10,7 +10,6 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +24,7 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Palette
 import kotlinx.coroutines.launch
+import shampoo.luxury.components.Body1OS
 import shampoo.luxury.theme.Theme.Companion.fromPath
 import shampoo.luxury.theme.ThemeManager.currentThemePath
 import shampoo.luxury.theme.ThemeManager.updateTheme
@@ -54,21 +54,21 @@ fun ThemeSelector() {
         )
 
         Surface(
+            Modifier.clickable { expanded = true },
             border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
-            modifier = Modifier.clickable { expanded = true },
         ) {
             Row(
                 verticalAlignment = CenterVertically,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             ) {
-                Body1(selectedTheme.displayName)
-                Body1(" ▼")
+                Body1OS(selectedTheme.displayName)
+                Body1OS(" ▼")
             }
         }
 
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
+            expanded,
+            { expanded = false },
         ) {
             Theme.entries.forEach { theme ->
                 DropdownMenuItem(
@@ -82,7 +82,7 @@ fun ThemeSelector() {
                         }
                     },
                 ) {
-                    Text(theme.displayName)
+                    Body1OS(theme.displayName)
                 }
             }
         }

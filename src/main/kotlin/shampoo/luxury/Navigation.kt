@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import shampoo.luxury.screens.Home
 import shampoo.luxury.screens.Settings
+import shampoo.luxury.screens.Shop
 import xyz.malefic.compose.engine.factory.ColumnFactory
 import xyz.malefic.compose.engine.factory.div
 import xyz.malefic.compose.engine.factory.timesAssign
@@ -38,4 +39,5 @@ val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
     mapOf(
         "Home" to { _ -> Home(navi) },
         "Settings" to { _ -> Settings(navi) },
+        "Shop" to { _ -> Shop(navi) },
     )

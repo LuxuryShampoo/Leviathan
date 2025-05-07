@@ -19,6 +19,17 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.SolidGroup
 import xyz.malefic.ext.modifier.modifyIf
 
+/**
+ * A composable function that creates a button with an icon, styled for compact and customizable usage.
+ *
+ * @param imageVector A lambda that provides the desired icon from the `SolidGroup`.
+ * @param contentDescription A description of the icon for accessibility purposes.
+ * @param size The size of the icon in Dp. Defaults to 32.dp.
+ * @param hitBox The size of the clickable area (hitbox) in Dp. Defaults to 64.dp.
+ * @param unbounded A flag indicating whether the icon's size is unbounded. Defaults to false.
+ * @param modifier A `Modifier` to apply to the outer `Box`. Defaults to `Modifier.Companion`.
+ * @param onClick A lambda function to be executed when the button is clicked.
+ */
 @Composable
 fun Buicon(
     imageVector: SolidGroup.() -> ImageVector,
@@ -30,23 +41,23 @@ fun Buicon(
     onClick: () -> Unit,
 ) {
     Box(
-        contentAlignment = Center,
-        modifier = modifier,
+        modifier,
+        Center,
     ) {
         Button(
-            onClick = onClick,
+            onClick,
+            Modifier.size(hitBox),
             colors =
                 ButtonDefaults.buttonColors(
                     backgroundColor = Transparent,
                     MaterialTheme.colors.onBackground,
                 ),
-            modifier = Modifier.size(hitBox),
         ) {}
         Icon(
-            imageVector = imageVector(FontAwesomeIcons.Solid),
-            contentDescription = contentDescription,
-            modifier = Modifier.size(size).modifyIf(!unbounded, Modifier.wrapContentSize(Center)),
-            tint = MaterialTheme.colors.onBackground,
+            imageVector(FontAwesomeIcons.Solid),
+            contentDescription,
+            Modifier.size(size).modifyIf(!unbounded, Modifier.wrapContentSize(Center)),
+            MaterialTheme.colors.onBackground,
         )
     }
 }
