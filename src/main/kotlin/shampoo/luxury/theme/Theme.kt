@@ -21,5 +21,7 @@ enum class Theme(
 
     companion object {
         fun fromPath(path: String) = entries.find { it.filePath == path } ?: DARK
+
+        val size by lazy { entries.size }
     }
 }

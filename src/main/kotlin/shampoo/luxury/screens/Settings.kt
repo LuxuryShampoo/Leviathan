@@ -16,9 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Home
+import jdk.internal.classfile.Signature.TypeArg.unbounded
 import moe.tlaster.precompose.navigation.Navigator
 import shampoo.luxury.components.Buicon
 import shampoo.luxury.theme.ThemeSelector
@@ -43,7 +42,7 @@ fun Settings(navi: Navigator) {
             modifier = Modifier.fillMaxWidth(),
         ) {
             Buicon(
-                FontAwesomeIcons.Solid.Home,
+                { Home },
                 "homeButton",
                 size = 24.dp,
                 hitBox = 32.dp,

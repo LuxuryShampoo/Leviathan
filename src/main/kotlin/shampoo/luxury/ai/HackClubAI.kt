@@ -1,5 +1,6 @@
 package shampoo.luxury.ai
 
+import co.touchlab.kermit.Logger
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -119,5 +120,5 @@ suspend fun parse(input: String): String {
 suspend fun main() {
     val input = "Hello, HackClub AI!"
     val response = parse(input)
-    println(response)
+    Logger.i(response)
 }

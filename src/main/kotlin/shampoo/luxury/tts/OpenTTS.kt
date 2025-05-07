@@ -1,5 +1,6 @@
 package shampoo.luxury.tts
 
+import co.touchlab.kermit.Logger
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -84,7 +85,7 @@ suspend fun speak(
 
         playWavAudio(audioBytes)
     } catch (e: Exception) {
-        println("Error speaking text: ${e.message}")
+        Logger.e("Error speaking text: ${e.message}")
         e.printStackTrace()
     }
 }
@@ -116,7 +117,7 @@ private fun playWavAudio(audioData: ByteArray) {
         line.close()
         audioInputStream.close()
     } catch (e: Exception) {
-        println("Error playing audio: ${e.message}")
+        Logger.e("Error playing audio: ${e.message}")
         e.printStackTrace()
     }
 }
@@ -164,7 +165,7 @@ suspend fun getVoices(
 
         return client.get(url).body()
     } catch (e: Exception) {
-        println("Error getting voices: ${e.message}")
+        Logger.e("Error getting voices: ${e.message}")
         e.printStackTrace()
         return emptyMap()
     }
@@ -189,7 +190,7 @@ suspend fun getLanguages(ttsName: String? = null): List<String> {
 
         return client.get(url).body()
     } catch (e: Exception) {
-        println("Error getting languages: ${e.message}")
+        Logger.e("Error getting languages: ${e.message}")
         e.printStackTrace()
         return emptyList()
     }
@@ -202,8 +203,8 @@ suspend fun main() {
     speak("Hello, this is a test of the OpenTTS API.")
 
     val voices = getVoices()
-    println("Available voices: $voices")
+    Logger.i("Available voices: $voices")
 
     val languages = getLanguages()
-    println("Available languages: $languages")
+    Logger.i("Available languages: $languages")
 }

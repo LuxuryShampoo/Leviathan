@@ -17,33 +17,33 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Palette
 import kotlinx.coroutines.launch
+import shampoo.luxury.theme.ThemeManager.updateTheme
 import xyz.malefic.compose.comps.text.typography.Body1
 
 @Composable
 fun ThemeSelector() {
     var expanded by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-
     var selectedTheme by remember { mutableStateOf(Theme.fromPath(ThemeManager.currentThemePath)) }
 
     Row(
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = CenterVertically,
     ) {
         Icon(
-            imageVector = FontAwesomeIcons.Solid.Palette,
-            contentDescription = "Theme",
-            modifier =
-                Modifier
-                    .size(20.dp)
-                    .padding(end = 4.dp),
-            tint = MaterialTheme.colors.onBackground,
+            FontAwesomeIcons.Solid.Palette,
+            "Theme",
+            Modifier
+                .size(20.dp)
+                .padding(end = 4.dp),
+            MaterialTheme.colors.onBackground,
         )
 
         Body1(
@@ -56,7 +56,7 @@ fun ThemeSelector() {
             modifier = Modifier.clickable { expanded = true },
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = CenterVertically,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             ) {
                 Body1(selectedTheme.displayName)
@@ -75,12 +75,12 @@ fun ThemeSelector() {
                         expanded = false
 
                         coroutineScope.launch {
-                            val success = ThemeManager.updateTheme(theme.filePath)
-                            println("Selected theme: ${theme.displayName}, file: ${theme.filePath}, success: $success")
+                            val success = updateTheme(theme.filePath)
+                            Logger.d("Selected theme: ${theme.displayName}, file: ${theme.filePath}, success: $success")
                         }
                     },
                 ) {
-                    Text(text = theme.displayName)
+                    Text(theme.displayName)
                 }
             }
         }

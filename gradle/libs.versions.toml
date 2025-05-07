@@ -15,6 +15,7 @@ ktor = "3.1.2"
 kotlinx-serialization = "1.8.0"
 font-awesome = "1.1.1"
 kermit = "2.0.4"
+slf4j = "2.0.17"
 
 [libraries]
 precompose = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
@@ -33,6 +34,7 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 font-awesome = { group = "br.com.devsrsouza.compose.icons", name = "font-awesome", version.ref = "font-awesome" }
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
+slf4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 
 [plugins]
 compose-kotlin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.precompose)
     implementation(libs.kermit)
+    implementation(libs.slf4j)
 }
 
 compose.desktop {

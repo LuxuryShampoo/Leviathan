@@ -33,17 +33,17 @@ object ThemeManager {
     private val _themeInputStream = mutableStateOf(grass(currentThemePath))
 
     /**
-     * A reactive signal that emits notifications when the theme changes.
-     * Listeners can connect to this signal to respond to theme updates.
-     */
-    val themeChanges = Signal<Int>()
-
-    /**
      * A public getter for the current theme's input stream.
      * Provides access to the theme data for other parts of the application.
      */
     val themeInputStream: InputStream?
         get() = _themeInputStream.value
+
+    /**
+     * A reactive signal that emits notifications when the theme changes.
+     * Listeners can connect to this signal to respond to theme updates.
+     */
+    val themeChanges = Signal<Int>()
 
     init {
         CoroutineScope(IO).launch {

@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowPosition.Aligned
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -54,7 +55,7 @@ fun main() =
             val themeStream by remember(themeChangeCount) { mutableStateOf(ThemeManager.themeInputStream) }
 
             themeStream?.let { stream ->
-                println("Recomposing with theme stream: $stream")
+                Logger.d("Recomposing with theme stream: $stream")
                 MaleficTheme(stream) {
                     NavigationMenu()
                 }

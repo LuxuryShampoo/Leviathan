@@ -29,8 +29,6 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.decodeToImageBitmap
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Cog
 import compose.icons.fontawesomeicons.solid.QuestionCircle
 import moe.tlaster.precompose.navigation.Navigator
@@ -72,26 +70,26 @@ private fun TopRow() {
     ) {
         Body1("Hello, World!")
         Button(onClick = {
-            println("Button clicked!")
+            Logger.d("Button clicked!")
         }) {
             Body1B("Button")
         }
-        val expanded = remember { mutableStateOf(false) }
+        var expanded by remember { mutableStateOf(false) }
         Box {
-            Button(onClick = { expanded.value = true }) {
+            Button(onClick = { expanded = true }) {
                 Body1B("Menu")
             }
             DropdownMenu(
-                expanded = expanded.value,
-                onDismissRequest = { expanded.value = false },
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
             ) {
                 DropdownText("Option 1") {
-                    println("Option 1")
-                    expanded.value = false
+                    Logger.i("Option 1")
+                    expanded = false
                 }
                 DropdownText("Option 2") {
-                    println("Option 2")
-                    expanded.value = false
+                    Logger.i("Option 2")
+                    expanded = false
                 }
             }
         }
@@ -111,7 +109,7 @@ private fun MiddleBox() {
 
         LaunchedEffect(Unit) {
             file = downloadFile("https://gallery.malefic.xyz/photos/Leviathan/BobAlarm.png", getLocalResourcePath("BobAlarm.png"))
-            println("File downloaded: ${file.absolutePath}")
+            Logger.d("File downloaded: ${file.absolutePath}")
         }
 
         Column(
@@ -147,7 +145,7 @@ private fun BottomRow(navi: Navigator) {
         horizontalArrangement = SpaceEvenly,
         verticalAlignment = CenterVertically,
     ) {
-        Buicon(FontAwesomeIcons.Solid.Cog, "Settings") { navi gate "settings" }
-        Buicon(FontAwesomeIcons.Solid.QuestionCircle, "Help") { println("Help clicked!") }
+        Buicon({ Cog }, "Settings") { navi gate "settings" }
+        Buicon({ QuestionCircle }, "Help") { Logger.i("Help clicked!") }
     }
 }
