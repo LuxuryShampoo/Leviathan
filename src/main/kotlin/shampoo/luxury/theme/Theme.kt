@@ -1,5 +1,11 @@
 package shampoo.luxury.theme
 
+/**
+ * Enum class representing different themes for the application.
+ *
+ * @property displayName The user-friendly name of the theme.
+ * @property filePath The file path to the theme's configuration file.
+ */
 enum class Theme(
     val displayName: String,
     val filePath: String,
@@ -21,8 +27,17 @@ enum class Theme(
     ;
 
     companion object {
+        /**
+         * The total number of themes available.
+         */
         val size by lazy { entries.size }
 
+        /**
+         * Retrieves a theme based on its file path.
+         *
+         * @param path The file path of the theme.
+         * @return The corresponding theme if found, or the default theme (DARK) if not.
+         */
         fun fromPath(path: String) = entries.find { it.filePath == path } ?: DARK
     }
 }

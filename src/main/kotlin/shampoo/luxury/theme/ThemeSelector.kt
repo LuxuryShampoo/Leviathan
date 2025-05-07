@@ -24,11 +24,11 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Palette
 import kotlinx.coroutines.launch
-import shampoo.luxury.components.Body1OS
 import shampoo.luxury.theme.Theme.Companion.fromPath
 import shampoo.luxury.theme.ThemeManager.currentThemePath
 import shampoo.luxury.theme.ThemeManager.updateTheme
 import xyz.malefic.compose.comps.text.typography.Body1
+import xyz.malefic.compose.comps.text.typography.ColorType.OnSecondary
 
 @Composable
 fun ThemeSelector() {
@@ -61,8 +61,8 @@ fun ThemeSelector() {
                 verticalAlignment = CenterVertically,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             ) {
-                Body1OS(selectedTheme.displayName)
-                Body1OS(" ▼")
+                Body1(selectedTheme.displayName, colorType = OnSecondary)
+                Body1(" ▼", colorType = OnSecondary)
             }
         }
 
@@ -82,7 +82,7 @@ fun ThemeSelector() {
                         }
                     },
                 ) {
-                    Body1OS(theme.displayName)
+                    Body1(theme.displayName, colorType = OnSecondary)
                 }
             }
         }

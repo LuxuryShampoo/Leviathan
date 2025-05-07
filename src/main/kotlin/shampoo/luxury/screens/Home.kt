@@ -34,7 +34,7 @@ import shampoo.luxury.io.Resource.BOB_ALARM
 import shampoo.luxury.io.Resource.downloadFile
 import shampoo.luxury.io.Resource.getLocalResourcePath
 import xyz.malefic.compose.comps.text.typography.Body1
-import xyz.malefic.compose.comps.text.typography.Body1B
+import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import java.io.File
 
 @Composable
@@ -67,12 +67,12 @@ private fun TopRow() {
         Button({
             Logger.d("Button clicked!")
         }) {
-            Body1B("Button")
+            Body1("Button", colorType = OnPrimary)
         }
         var expanded by remember { mutableStateOf(false) }
         Box {
             Button({ expanded = true }) {
-                Body1B("Menu")
+                Body1("Menu", colorType = OnPrimary)
             }
             DropdownMenu(
                 expanded,

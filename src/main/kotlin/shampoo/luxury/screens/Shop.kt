@@ -1,16 +1,11 @@
 package shampoo.luxury.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
@@ -24,16 +19,14 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import moe.tlaster.precompose.navigation.Navigator
-import shampoo.luxury.components.Butext
-import shampoo.luxury.components.FileImage
+import shampoo.luxury.components.Carousel
 import shampoo.luxury.components.NavBar
+import shampoo.luxury.components.createCarouselButton
 import shampoo.luxury.io.Resource.BOB_ALARM
 import shampoo.luxury.io.Resource.downloadFile
 import shampoo.luxury.io.Resource.getLocalResourcePath
+import shampoo.luxury.pet.Pet
 import java.io.File
 import kotlin.Int.Companion.MAX_VALUE
 
@@ -61,8 +54,7 @@ private fun TopRow() {
             .fillMaxWidth(),
         SpaceEvenly,
         CenterVertically,
-    ) {
-    }
+    ) {}
 }
 
 @Composable
@@ -73,15 +65,14 @@ private fun MarketBox() {
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        val fileList =
-            listOf(
-                BOB_ALARM to getLocalResourcePath("BobAlarm1.png"),
-                BOB_ALARM to getLocalResourcePath("BobAlarm2.png"),
-                BOB_ALARM to getLocalResourcePath("BobAlarm3.png"),
-                BOB_ALARM to getLocalResourcePath("BobAlarm4.png"),
-            )
-        fileList.forEach {
-            downloadFile(it.first, it.second).apply {
+        listOf(
+            Pet("BobAlarm", BOB_ALARM, getLocalResourcePath("BobAlarm.png")),
+            Pet("BobAlarm1", BOB_ALARM, getLocalResourcePath("BobAlarm1.png")),
+            Pet("BobAlarm2", BOB_ALARM, getLocalResourcePath("BobAlarm2.png")),
+            Pet("BobAlarm3", BOB_ALARM, getLocalResourcePath("BobAlarm3.png")),
+            Pet("BobAlarm4", BOB_ALARM, getLocalResourcePath("BobAlarm4.png")),
+        ).forEach {
+            downloadFile(it.url, it.local).apply {
                 if (exists()) {
                     imageFiles.add(this)
                 }
@@ -96,49 +87,14 @@ private fun MarketBox() {
         Center,
     ) {
         if (imageFiles.isNotEmpty()) {
-            LazyRow(
-                Modifier.fillMaxWidth(),
-                listState,
-                horizontalArrangement = Arrangement.spacedBy(30.dp),
-            ) {
-                items(MAX_VALUE) { index ->
-                    val wrappedIndex = index % imageFiles.size
-                    val file = imageFiles[wrappedIndex]
-                    if (file.exists()) {
-                        FileImage(
-                            file,
-                            "Pet Carousel",
-                        ) { fillMaxSize(0.9f) }
-                    }
-                }
+            Carousel(listState, imageFiles)
+
+            createCarouselButton("<", coroutineScope, { align(CenterStart) }) {
+                listState.animateScrollToItem(listState.firstVisibleItemIndex - 1)
             }
 
-            Butext(
-                "<",
-                {
-                    align(CenterStart)
-                        .padding(start = 16.dp)
-                        .size(50.dp)
-                        .alpha(0.5f)
-                },
-            ) {
-                coroutineScope.launch {
-                    listState.animateScrollToItem(listState.firstVisibleItemIndex - 1)
-                }
-            }
-
-            Butext(
-                ">",
-                {
-                    align(CenterEnd)
-                        .padding(end = 16.dp)
-                        .size(50.dp)
-                        .alpha(0.5f)
-                },
-            ) {
-                coroutineScope.launch {
-                    listState.animateScrollToItem(listState.firstVisibleItemIndex + 1)
-                }
+            createCarouselButton(">", coroutineScope, { align(CenterEnd) }) {
+                listState.animateScrollToItem(listState.firstVisibleItemIndex + 1)
             }
         }
     }

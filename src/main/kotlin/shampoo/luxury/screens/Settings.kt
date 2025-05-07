@@ -16,10 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import compose.icons.fontawesomeicons.solid.Home
-import jdk.internal.classfile.Signature.TypeArg.unbounded
 import moe.tlaster.precompose.navigation.Navigator
-import shampoo.luxury.components.Buicon
+import shampoo.luxury.components.NavBar
 import shampoo.luxury.theme.ThemeSelector
 import xyz.malefic.compose.comps.switch.BooleanSwitch
 import xyz.malefic.compose.comps.text.typography.Heading1
@@ -31,56 +29,51 @@ fun Settings(navi: Navigator) {
     var speakPreference by BooleanPreference("speak_enabled", true)
     val speak = remember { mutableStateOf(speakPreference) }
 
-    Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(16.dp),
-    ) {
-        Box(
-            modifier = Modifier.fillMaxWidth(),
+    Column {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.8f)
+                    .padding(16.dp),
         ) {
-            Buicon(
-                { Home },
-                "homeButton",
-                size = 24.dp,
-                hitBox = 32.dp,
-                unbounded = true,
-                Modifier.align(Alignment.TopEnd),
-            ) { navi.navigate("home") }
-            Heading1("Settings", Modifier.align(Alignment.TopStart))
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Heading1("Settings", Modifier.align(Alignment.TopStart))
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Heading2("Theme")
+
+                ThemeSelector()
+            }
+
+            Divider(modifier = Modifier.padding(vertical = 16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Heading2("Speak")
+
+                BooleanSwitch(
+                    state = speak,
+                    modifier = Modifier,
+                )
+
+                // Update the preference when the state changes
+                speakPreference = speak.value
+            }
         }
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Heading2("Theme")
-
-            ThemeSelector()
-        }
-
-        Divider(modifier = Modifier.padding(vertical = 16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Heading2("Speak")
-
-            BooleanSwitch(
-                state = speak,
-                modifier = Modifier,
-            )
-
-            // Update the preference when the state changes
-            speakPreference = speak.value
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
+        Divider()
+        NavBar(navi)
     }
 }

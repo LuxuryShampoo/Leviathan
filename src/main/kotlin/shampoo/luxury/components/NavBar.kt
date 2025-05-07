@@ -13,6 +13,11 @@ import compose.icons.fontawesomeicons.solid.Store
 import moe.tlaster.precompose.navigation.Navigator
 import xyz.malefic.ext.precompose.gate
 
+/**
+ * A composable function that represents a navigation bar with three buttons: Home, Shop, and Settings.
+ *
+ * @param navi The `Navigator` instance used to handle navigation between different screens.
+ */
 @Composable
 fun NavBar(navi: Navigator) {
     Row(
