@@ -40,38 +40,14 @@ fun Achievements(navi: Navigator) {
             Box(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Heading1("Settings", Modifier.align(Alignment.TopStart))
+                Heading1("Achievements", Modifier.align(Alignment.TopStart))
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Heading2("Theme")
-
-                ThemeSelector()
-            }
-
             Divider(modifier = Modifier.padding(vertical = 16.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Heading2("Speak")
-
-                BooleanSwitch(
-                    state = speak,
-                    modifier = Modifier,
-                )
-
-                // Update the preference when the state changes
-                speakPreference = speak.value
-            }
+            Row {  }
         }
         Divider()
         NavBar(navi)
