@@ -104,8 +104,9 @@ private fun PetContainer() {
             Logger.d { "File downloaded: ${file.absolutePath}" }
         }
 
-        //would you rather livsn a a house where ery few dasy a gust of wind blows in and opens ALL of the doors inside ur house or
+        // would you rather livsn a a house where ery few dasy a gust of wind blows in and opens ALL of the doors inside ur house or
         // know the answer to the squstion "is sun tzu's the ast of wr" still relevant today?s
+        // i would rather know the answer to the question "Is Sun Tzu's The Art of War still relevant today?"
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = CenterHorizontally,
