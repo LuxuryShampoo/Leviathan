@@ -14,7 +14,7 @@ hot-reload = "1.0.0-alpha09"
 ktor = "3.1.2"
 kotlinx-serialization = "1.8.0"
 font-awesome = "1.1.1"
-kermit = "2.0.4"
+kermit = "2.0.5"
 slf4j = "2.0.17"
 whisper = "1.7.1"
 
