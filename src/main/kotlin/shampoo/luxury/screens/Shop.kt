@@ -23,7 +23,6 @@ import moe.tlaster.precompose.navigation.Navigator
 import shampoo.luxury.components.Carousel
 import shampoo.luxury.components.CarouselButton
 import shampoo.luxury.components.NavBar
-import shampoo.luxury.global.Resource.downloadFile
 import shampoo.luxury.global.Values.allPets
 import java.io.File
 import kotlin.Int.Companion.MAX_VALUE
@@ -64,7 +63,7 @@ private fun MarketBox() {
 
     LaunchedEffect(Unit) {
         allPets.forEach {
-            downloadFile(it.url, it.local).apply {
+            it.downloadImage().apply {
                 if (exists()) {
                     imageFiles.add(this)
                 }

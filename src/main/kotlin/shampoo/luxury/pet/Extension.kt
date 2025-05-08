@@ -30,12 +30,3 @@ fun MutableList<Pet>.addPet(
 ) {
     this.add(Pet(name, url, local))
 }
-
-/**
- * Removes all pets with the specified name from the mutable list.
- *
- * @param name The name of the pets to remove.
- */
-fun MutableList<Pet>.removeByName(name: String) {
-    this.removeAll { it.name == name }
-}

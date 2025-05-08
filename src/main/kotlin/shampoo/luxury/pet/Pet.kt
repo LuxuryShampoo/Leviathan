@@ -41,8 +41,13 @@ annotation class PetDsl
  */
 @PetDsl
 class PetBuilder {
+    /** The name of the pet. */
     var name: String = ""
+
+    /** The URL of the pet's image. */
     var url: String = ""
+
+    /** The local path to the pet's image. */
     var local: String = ""
 
     /**
@@ -58,7 +63,7 @@ class PetBuilder {
  */
 @PetDsl
 class PetsBuilder {
-    private val pets = mutableListOf<Pet>() // Internal list to store `Pet` objects.
+    private val pets = mutableListOf<Pet>()
 
     /**
      * Adds a new `Pet` to the list by applying the given DSL block.

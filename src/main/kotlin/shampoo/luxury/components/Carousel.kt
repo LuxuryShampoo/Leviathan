@@ -1,5 +1,6 @@
 package shampoo.luxury.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,10 +42,13 @@ fun Carousel(
             val wrappedIndex = index % imageFiles.size
             val file = imageFiles[wrappedIndex]
             if (file.exists()) {
+                val isFocused = index == listState.firstVisibleItemIndex
+                val scale by animateFloatAsState(targetValue = if (isFocused) 1.5f else 1f)
+
                 FileImage(
                     file,
                     "Pet Carousel",
-                ) { fillMaxSize(0.9f).scale(if (index == listState.firstVisibleItemIndex) 1.2f else 1f) }
+                ) { fillMaxSize(0.9f).scale(scale) }
             }
         }
     }
