@@ -41,9 +41,9 @@ annotation class PetDsl
  */
 @PetDsl
 class PetBuilder {
-    var name: String = "" // The name of the pet.
-    var url: String = "" // The URL of the pet's resource.
-    var local: String = "" // The local path to the pet's resource.
+    var name: String = ""
+    var url: String = ""
+    var local: String = ""
 
     /**
      * Builds and returns a `Pet` object using the current properties.

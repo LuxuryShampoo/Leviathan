@@ -16,10 +16,6 @@ fun List<Pet>.filterByName(name: String): List<Pet> = this.filter { it.name == n
  */
 fun List<Pet>.filterByUrl(url: String): List<Pet> = this.filter { it.url == url }
 
-fun List<Pet>.owned(): List<Pet> = this.filter { it.owned }
-
-fun List<Pet>.unOwned(): List<Pet> = this.filter { !it.owned }
-
 /**
  * Adds a new pet to the mutable list.
  *
