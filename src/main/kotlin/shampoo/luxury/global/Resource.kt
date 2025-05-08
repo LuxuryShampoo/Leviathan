@@ -1,4 +1,4 @@
-package shampoo.luxury.io
+package shampoo.luxury.global
 
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
@@ -7,7 +7,6 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.request.get
 import io.ktor.client.statement.readRawBytes
 import java.io.File
-import java.io.File.separator
 
 /** Utility object for handling resource paths. */
 object Resource {
@@ -23,11 +22,11 @@ object Resource {
 
         return "${
             when {
-                osName.contains("win") -> System.getenv("APPDATA") ?: "$userHome${separator}AppData${separator}Roaming"
-                osName.contains("mac") -> "$userHome${separator}Library${separator}Application Support"
-                else -> "$userHome$separator.config"
+                osName.contains("win") -> System.getenv("APPDATA") ?: "$userHome${File.separator}AppData${File.separator}Roaming"
+                osName.contains("mac") -> "$userHome${File.separator}Library${File.separator}Application Support"
+                else -> "$userHome${File.separator}.config"
             }
-        }${separator}Leviathan${separator}$path"
+        }${File.separator}Leviathan${File.separator}$path"
     }
 
     /**
@@ -45,11 +44,11 @@ object Resource {
         val file = File(destinationPath)
         file.parentFile?.mkdirs()
         if (file.exists() && !update) {
-            Logger.d("File already exists.")
+            Logger.Companion.d("File already exists.")
             return file
         }
 
-        Logger.d("Downloading file ${file.name}.")
+        Logger.Companion.d("Downloading file ${file.name}.")
         HttpClient(CIO) {
             install(HttpTimeout) {
                 requestTimeoutMillis = 120000
@@ -57,10 +56,8 @@ object Resource {
         }.use { client ->
             val fileBytes: ByteArray = client.get(fileURL).readRawBytes()
             file.writeBytes(fileBytes)
-            Logger.d("File downloaded successfully.")
+            Logger.Companion.d("File downloaded successfully.")
         }
         return file
     }
-
-    const val BOB_ALARM = "https://gallery.malefic.xyz/photos/Leviathan/BobAlarm.png"
 }

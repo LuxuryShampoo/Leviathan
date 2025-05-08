@@ -21,12 +21,10 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import moe.tlaster.precompose.navigation.Navigator
 import shampoo.luxury.components.Carousel
+import shampoo.luxury.components.CarouselButton
 import shampoo.luxury.components.NavBar
-import shampoo.luxury.components.createCarouselButton
-import shampoo.luxury.io.Resource.BOB_ALARM
-import shampoo.luxury.io.Resource.downloadFile
-import shampoo.luxury.io.Resource.getLocalResourcePath
-import shampoo.luxury.pet.Pet
+import shampoo.luxury.global.Resource.downloadFile
+import shampoo.luxury.global.Values.allPets
 import java.io.File
 import kotlin.Int.Companion.MAX_VALUE
 
@@ -65,13 +63,7 @@ private fun MarketBox() {
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        listOf(
-            Pet("BobAlarm", BOB_ALARM, getLocalResourcePath("BobAlarm.png")),
-            Pet("BobAlarm1", BOB_ALARM, getLocalResourcePath("BobAlarm1.png")),
-            Pet("BobAlarm2", BOB_ALARM, getLocalResourcePath("BobAlarm2.png")),
-            Pet("BobAlarm3", BOB_ALARM, getLocalResourcePath("BobAlarm3.png")),
-            Pet("BobAlarm4", BOB_ALARM, getLocalResourcePath("BobAlarm4.png")),
-        ).forEach {
+        allPets.forEach {
             downloadFile(it.url, it.local).apply {
                 if (exists()) {
                     imageFiles.add(this)
@@ -89,11 +81,11 @@ private fun MarketBox() {
         if (imageFiles.isNotEmpty()) {
             Carousel(listState, imageFiles)
 
-            createCarouselButton("<", coroutineScope, { align(CenterStart) }) {
+            CarouselButton("<", coroutineScope, { align(CenterStart) }) {
                 listState.animateScrollToItem(listState.firstVisibleItemIndex - 1)
             }
 
-            createCarouselButton(">", coroutineScope, { align(CenterEnd) }) {
+            CarouselButton(">", coroutineScope, { align(CenterEnd) }) {
                 listState.animateScrollToItem(listState.firstVisibleItemIndex + 1)
             }
         }

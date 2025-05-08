@@ -28,6 +28,7 @@ import shampoo.luxury.theme.Theme.Companion.fromPath
 import shampoo.luxury.theme.ThemeManager.currentThemePath
 import shampoo.luxury.theme.ThemeManager.updateTheme
 import xyz.malefic.compose.comps.text.typography.Body1
+import xyz.malefic.compose.comps.text.typography.ColorType.OnBackground
 import xyz.malefic.compose.comps.text.typography.ColorType.OnSecondary
 
 @Composable
@@ -61,8 +62,8 @@ fun ThemeSelector() {
                 verticalAlignment = CenterVertically,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             ) {
-                Body1(selectedTheme.displayName, colorType = OnSecondary)
-                Body1(" ▼", colorType = OnSecondary)
+                Body1(selectedTheme.displayName, colorType = OnBackground)
+                Body1(" ▼", colorType = OnBackground)
             }
         }
 

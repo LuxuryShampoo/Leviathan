@@ -1,8 +1,10 @@
 package shampoo.luxury.components
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnSecondary
 
@@ -18,4 +20,8 @@ fun Butext(
     content: String,
     modifier: Modifier.() -> Modifier = { Modifier },
     onClick: () -> Unit,
-) = Button(onClick, Modifier.modifier()) { Body1(content, colorType = OnSecondary) }
+) = Button(
+    onClick,
+    Modifier.modifier(),
+    contentPadding = PaddingValues(horizontal = 8.dp),
+) { Body1(content, colorType = OnSecondary) }

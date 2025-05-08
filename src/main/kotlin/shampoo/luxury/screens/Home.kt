@@ -30,9 +30,7 @@ import moe.tlaster.precompose.navigation.Navigator
 import shampoo.luxury.components.DropdownText
 import shampoo.luxury.components.FileImage
 import shampoo.luxury.components.NavBar
-import shampoo.luxury.io.Resource.BOB_ALARM
-import shampoo.luxury.io.Resource.downloadFile
-import shampoo.luxury.io.Resource.getLocalResourcePath
+import shampoo.luxury.global.Values.selectedPet
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import java.io.File
@@ -102,7 +100,7 @@ private fun PetContainer() {
         var file by remember { mutableStateOf(File("")) }
 
         LaunchedEffect(Unit) {
-            file = downloadFile(BOB_ALARM, getLocalResourcePath("BobAlarm.png"))
+            file = selectedPet.downloadImage()
             Logger.d { "File downloaded: ${file.absolutePath}" }
         }
 
