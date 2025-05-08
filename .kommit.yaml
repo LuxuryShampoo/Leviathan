@@ -7,10 +7,11 @@ types:
 
 scopes:
   all:
-    - ai
-    - tts
     - ui
     - pet
+    - ai
+    - tts
+    - stt
   docs:
     - readme
   chore:

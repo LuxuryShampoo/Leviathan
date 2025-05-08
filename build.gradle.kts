@@ -32,6 +32,7 @@ dependencies {
     implementation(libs.font.awesome)
     implementation(libs.bundles.ktor)
     implementation(libs.precompose)
+    implementation(libs.whisper)
     implementation(libs.kermit)
     implementation(libs.slf4j)
 }

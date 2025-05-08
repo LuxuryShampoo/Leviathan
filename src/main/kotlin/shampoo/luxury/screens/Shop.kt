@@ -24,6 +24,7 @@ import shampoo.luxury.components.Carousel
 import shampoo.luxury.components.CarouselButton
 import shampoo.luxury.components.NavBar
 import shampoo.luxury.global.Values.allPets
+import shampoo.luxury.global.Values.ownedPets
 import java.io.File
 import kotlin.Int.Companion.MAX_VALUE
 
@@ -62,7 +63,7 @@ private fun MarketBox() {
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        allPets.forEach {
+        allPets.filter { !ownedPets.contains(it) }.forEach {
             it.downloadImage().apply {
                 if (exists()) {
                     imageFiles.add(this)
