@@ -8,6 +8,7 @@ import xyz.malefic.compose.prefs.delegate.SerializablePreference
 
 object Values {
     const val BOB = "https://gallery.malefic.xyz/photos/Leviathan/BobAlarm.png"
+    const val CAT = "https://gallery.malefic.xyz/photos/Leviathan/MaineCoon.png"
     val allPets =
         pets {
             pet {
@@ -16,9 +17,9 @@ object Values {
                 local = getLocalResourcePath("BobAlarm.png")
             }
             pet {
-                name = "BobAlarm1"
-                url = BOB
-                local = getLocalResourcePath("BobAlarm1.png")
+                name = "Cat"
+                url = CAT
+                local = getLocalResourcePath("MaineCoon.png")
             }
             pet {
                 name = "BobAlarm2"
@@ -37,11 +38,11 @@ object Values {
             }
         }
     val ownedPets =
-        PersistentArrayList<Pet>("ownedPets").also {
-            if (it.isEmpty()) {
-                it.addAll(
-                    allPets.filter {
-                        it.name == "Bob"
+        PersistentArrayList<Pet>("ownedPets").also { list ->
+            if (list.isEmpty()) {
+                list.addAll(
+                    allPets.filter { pet ->
+                        pet.name == "Bob"
                     },
                 )
             }
