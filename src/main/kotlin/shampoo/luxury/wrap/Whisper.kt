@@ -1,10 +1,13 @@
 package shampoo.luxury.wrap
 
+import io.github.givimad.whisperjni.WhisperContext
 import io.github.givimad.whisperjni.WhisperFullParams
 import io.github.givimad.whisperjni.WhisperJNI
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import shampoo.luxury.global.Values.listenPreference
 import xyz.malefic.Signal
 import java.nio.file.Path
 import javax.sound.sampled.AudioFormat
@@ -14,25 +17,35 @@ import javax.sound.sampled.TargetDataLine
 import kotlin.math.absoluteValue
 
 /**
- * A wrapper class for the WhisperJNI speech-to-text engine.
- * This class listens for a wake word, starts transcription upon detection,
+ * A singleton object for the WhisperJNI speech-to-text engine.
+ * This object listens for a wake word, starts transcription upon detection,
  * and stops transcription after detecting silence for a specified duration.
- *
- * @property modelPath The path to the Whisper model file.
- * @property wakeWord The wake word to listen for.
- * @property silenceThreshold The duration of silence (in milliseconds) to stop transcription.
  */
-class Whisper(
-    private val modelPath: Path,
-    private val wakeWord: String,
-    private val silenceThreshold: Int = 2000,
-) {
+object Whisper {
+    private lateinit var modelPath: Path
+    private lateinit var wakeWord: String
+    private var silenceThreshold: Int = 2000
     private val transcriptSignal = Signal<String>()
     private var targetDataLine: TargetDataLine? = null
     private val whisper = WhisperJNI()
-    private val ctx = whisper.init(modelPath)
+    private lateinit var ctx: WhisperContext
 
-    init {
+    /**
+     * Initializes the Whisper object with the required parameters.
+     *
+     * @param modelPath The path to the Whisper model file.
+     * @param wakeWord The wake word to listen for.
+     * @param silenceThreshold The duration of silence (in milliseconds) to stop transcription.
+     */
+    fun initialize(
+        modelPath: Path,
+        wakeWord: String,
+        silenceThreshold: Int = 2000,
+    ) {
+        this.modelPath = modelPath
+        this.wakeWord = wakeWord
+        this.silenceThreshold = silenceThreshold
+        ctx = whisper.init(modelPath)
         setupAudioLine()
     }
 
@@ -133,15 +146,23 @@ class Whisper(
      * Stops transcription after detecting silence for the specified duration.
      *
      * @param scope The coroutine scope in which the listening process runs.
+     * @param dispatcher The coroutine dispatcher to use for the listening process.
      */
-    fun startListening(scope: CoroutineScope) {
-        scope.launch(Dispatchers.IO) {
+    fun startListening(
+        scope: CoroutineScope,
+        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    ) {
+        scope.launch(dispatcher) {
             val params = WhisperFullParams()
             var isTranscribing = false
             val silenceBuffer = mutableListOf<Float>()
             val audioBatch = mutableListOf<Float>()
 
             while (true) {
+                if (!listenPreference) {
+                    continue
+                }
+
                 val audioFrame = getNextAudioFrame()
                 audioBatch.addAll(audioFrame.toList())
 
@@ -195,7 +216,7 @@ class Whisper(
      * Releases resources used by WhisperJNI and the audio input line.
      */
     fun close() {
-        ctx.close()
+        whisper.free(ctx)
         targetDataLine?.close()
     }
 }

@@ -28,16 +28,15 @@ import androidx.compose.ui.unit.dp
 import moe.tlaster.precompose.navigation.Navigator
 import shampoo.luxury.components.NavBar
 import shampoo.luxury.components.SettingsOption
+import shampoo.luxury.global.Values.listenPreference
+import shampoo.luxury.global.Values.speakPreference
 import shampoo.luxury.theme.ThemeSelector
 import xyz.malefic.compose.comps.switch.BooleanSwitch
 import xyz.malefic.compose.comps.text.typography.Heading1
-import xyz.malefic.compose.prefs.delegate.BooleanPreference
 
 @Composable
 fun Settings(navi: Navigator) {
     val listState = rememberLazyListState()
-    var speakPreference by BooleanPreference("speak_enabled", true)
-    var listenPreference by BooleanPreference("listen_enabled", true)
     val speak = remember { mutableStateOf(speakPreference) }
     val listen = remember { mutableStateOf(listenPreference) }
 

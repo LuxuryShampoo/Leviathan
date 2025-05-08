@@ -15,6 +15,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import shampoo.luxury.global.Values.speakPreference
 import java.io.ByteArrayInputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.DataLine
@@ -62,6 +63,11 @@ suspend fun speak(
     denoiserStrength: Float? = null,
     cache: Boolean? = null,
 ) {
+    if (!speakPreference) {
+        Logger.i("Speak preference is disabled. Skipping TTS.")
+        return
+    }
+
     try {
         val url =
             URLBuilder(BASE_URL)

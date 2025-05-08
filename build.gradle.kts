@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.hot.reload)
     alias(libs.plugins.kotlinter)
     alias(libs.plugins.compose)
+    idea
 }
 
 group = "shampoo.luxury"
@@ -77,5 +78,12 @@ tasks {
     }
     withType<FormatTask> {
         this.source = this.source.minus(fileTree("build/generated")).asFileTree
+    }
+}
+
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
     }
 }

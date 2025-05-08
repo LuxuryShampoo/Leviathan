@@ -4,9 +4,12 @@ import shampoo.luxury.global.Resource.getLocalResourcePath
 import shampoo.luxury.pet.Pet
 import shampoo.luxury.pet.pets
 import xyz.malefic.compose.prefs.collection.PersistentArrayList
+import xyz.malefic.compose.prefs.delegate.BooleanPreference
 import xyz.malefic.compose.prefs.delegate.SerializablePreference
 
 object Values {
+    var speakPreference by BooleanPreference("speak_enabled", true)
+    var listenPreference by BooleanPreference("listen_enabled", true)
     const val BOB = "https://gallery.malefic.xyz/photos/Leviathan/BobAlarm.png"
     const val CAT = "https://gallery.malefic.xyz/photos/Leviathan/MaineCoon.png"
     val allPets =
