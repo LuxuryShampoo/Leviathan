@@ -33,6 +33,8 @@ import shampoo.luxury.components.NavBar
 import shampoo.luxury.global.Values.selectedPet
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
+import xyz.malefic.ext.precompose.gate
+
 import java.io.File
 
 @Composable
@@ -44,7 +46,7 @@ fun Home(navi: Navigator) {
                 .fillMaxHeight(),
         horizontalAlignment = CenterHorizontally,
     ) {
-        TopRow()
+        TopRow(navi)
         Divider()
         PetContainer()
         Divider()
@@ -53,7 +55,7 @@ fun Home(navi: Navigator) {
 }
 
 @Composable
-private fun TopRow() {
+private fun TopRow(navi: Navigator) {
     Row(
         Modifier
             .fillMaxHeight(0.2f)
@@ -63,7 +65,7 @@ private fun TopRow() {
     ) {
         Body1("Hello, World!")
         Button({
-            Logger.d("Button clicked!")
+            navi.navigate("Achievements")
         }) {
             Body1("Button", colorType = OnPrimary)
         }

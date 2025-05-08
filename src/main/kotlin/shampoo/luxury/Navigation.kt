@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import shampoo.luxury.screens.Achievements
 import shampoo.luxury.screens.Home
 import shampoo.luxury.screens.Settings
 import shampoo.luxury.screens.Shop
@@ -40,4 +41,5 @@ val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
         "Home" to { _ -> Home(navi) },
         "Settings" to { _ -> Settings(navi) },
         "Shop" to { _ -> Shop(navi) },
+        "Achievements" to { _ -> Achievements(navi) },
     )

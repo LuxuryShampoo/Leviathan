@@ -30,30 +30,5 @@ fun Achievements(navi: Navigator) {
     val speak = remember { mutableStateOf(speakPreference) }
 
     Column {
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.8f)
-                    .padding(16.dp),
-        ) {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Heading1("Achievements", Modifier.align(Alignment.TopStart))
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Divider(modifier = Modifier.padding(vertical = 16.dp))
-
-            Row(
-                Modifier
-                    .fillMaxHeight(0.2f)
-                    .fillMaxWidth(),
-            ) {}
-        }
-        Divider()
-        NavBar(navi)
     }
 }

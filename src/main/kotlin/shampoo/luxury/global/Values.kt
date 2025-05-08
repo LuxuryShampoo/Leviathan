@@ -10,8 +10,8 @@ import xyz.malefic.compose.prefs.delegate.SerializablePreference
 object Values {
     var speakPreference by BooleanPreference("speak_enabled", true)
     var listenPreference by BooleanPreference("listen_enabled", true)
-    const val BOB = "https://gallery.malefic.xyz/photos/Leviathan/BobAlarm.png"
-    const val CAT = "https://gallery.malefic.xyz/photos/Leviathan/MaineCoon.png"
+    const val BOB = "https://rishthewizard.github.io/Icarus/assets/madTesting.png"
+    const val CAT = "https://rishthewizard.github.io/Icarus/assets/madTesting.png"
     val allPets =
         pets {
             pet {
