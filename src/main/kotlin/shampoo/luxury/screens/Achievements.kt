@@ -47,7 +47,11 @@ fun Achievements(navi: Navigator) {
 
             Divider(modifier = Modifier.padding(vertical = 16.dp))
 
-            Row {  }
+            Row(
+                Modifier
+                    .fillMaxHeight(0.2f)
+                    .fillMaxWidth(),
+            ) {}
         }
         Divider()
         NavBar(navi)
