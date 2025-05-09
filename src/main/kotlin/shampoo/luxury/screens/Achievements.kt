@@ -30,5 +30,6 @@ fun Achievements(navi: Navigator) {
     val speak = remember { mutableStateOf(speakPreference) }
 
     Column {
+        Box(Modifier.fillMaxWidth().fillMaxHeight(0.2f)) {}
     }
 }
