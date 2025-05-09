@@ -9,9 +9,7 @@ scopes:
   all:
     - ui
     - pet
-    - ai
-    - tts
-    - stt
+    - wrap
   docs:
     - readme
   chore:

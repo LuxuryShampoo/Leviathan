@@ -96,6 +96,11 @@ fun CarouselButton(
     }
 }
 
+/**
+ * A composable function that displays the cost of the focused pet in the carousel.
+ *
+ * @param focusedPetCost The cost of the currently focused pet, displayed as a `Double`.
+ */
 @Composable
 fun BoxScope.CarouselCost(focusedPetCost: Double) {
     Box(

@@ -39,7 +39,7 @@ fun NavigationMenu() {
 val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
     mapOf(
         "Home" to { _ -> Home(navi) },
-        "Settings" to { _ -> Settings(navi) },
-        "Shop" to { _ -> Shop(navi) },
-        "Achievements" to { _ -> Achievements(navi) },
+        "Settings" to { _ -> Settings() },
+        "Shop" to { _ -> Shop() },
+        "Achievements" to { _ -> Achievements() },
     )

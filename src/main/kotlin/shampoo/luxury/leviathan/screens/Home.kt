@@ -29,27 +29,19 @@ import co.touchlab.kermit.Logger
 import moe.tlaster.precompose.navigation.Navigator
 import shampoo.luxury.leviathan.components.DropdownText
 import shampoo.luxury.leviathan.components.FileImage
-import shampoo.luxury.leviathan.components.NavBar
+import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.global.Values.selectedPet
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import java.io.File
 
 @Composable
-fun Home(navi: Navigator) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        horizontalAlignment = CenterHorizontally,
-    ) {
+fun Home(navi: Navigator) =
+    PageScope {
         TopRow(navi)
         Divider()
         PetContainer()
-        Divider()
-        NavBar(navi)
     }
-}
 
 @Composable
 private fun TopRow(navi: Navigator) {
@@ -64,7 +56,7 @@ private fun TopRow(navi: Navigator) {
         Button({
             navi.navigate("Achievements")
         }) {
-            Body1("Button", colorType = OnPrimary)
+            Body1("Achievements", colorType = OnPrimary)
         }
         var expanded by remember { mutableStateOf(false) }
         Box {

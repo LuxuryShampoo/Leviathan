@@ -1,16 +1,14 @@
 package shampoo.luxury.leviathan.screens
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import moe.tlaster.precompose.navigation.Navigator
+import shampoo.luxury.leviathan.components.PageScope
 
 @Composable
-fun Achievements(navi: Navigator) {
-    Column {
+fun Achievements() =
+    PageScope {
         Box(Modifier.fillMaxWidth().fillMaxHeight(0.2f)) {}
     }
-}

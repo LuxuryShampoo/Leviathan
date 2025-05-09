@@ -2,7 +2,6 @@ package shampoo.luxury.leviathan.screens
 
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,15 +17,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterEnd
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import moe.tlaster.precompose.navigation.Navigator
 import shampoo.luxury.leviathan.components.Carousel
 import shampoo.luxury.leviathan.components.CarouselButton
 import shampoo.luxury.leviathan.components.CarouselCost
-import shampoo.luxury.leviathan.components.NavBar
+import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.global.Values.allPets
 import shampoo.luxury.leviathan.global.Values.unownedPets
 import xyz.malefic.compose.comps.text.typography.Heading3
@@ -34,22 +31,14 @@ import java.io.File
 import kotlin.Int.Companion.MAX_VALUE
 
 @Composable
-fun Shop(navi: Navigator) {
-    var focusedPetName by remember { mutableStateOf("") }
+fun Shop() =
+    PageScope {
+        var focusedPetName by remember { mutableStateOf("") }
 
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        horizontalAlignment = CenterHorizontally,
-    ) {
         TopRow(focusedPetName)
         Divider()
         MarketBox { focusedPetName = it }
-        Divider()
-        NavBar(navi)
     }
-}
 
 @Composable
 private fun TopRow(focusedPetName: String) {

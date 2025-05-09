@@ -25,8 +25,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.unit.dp
-import moe.tlaster.precompose.navigation.Navigator
-import shampoo.luxury.leviathan.components.NavBar
+import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.components.SettingsOption
 import shampoo.luxury.leviathan.global.Values.Prefs.listenPreference
 import shampoo.luxury.leviathan.global.Values.Prefs.speakPreference
@@ -35,22 +34,22 @@ import xyz.malefic.compose.comps.switch.BooleanSwitch
 import xyz.malefic.compose.comps.text.typography.Heading1
 
 @Composable
-fun Settings(navi: Navigator) {
-    val listState = rememberLazyListState()
-    val speak = remember { mutableStateOf(speakPreference) }
-    val listen = remember { mutableStateOf(listenPreference) }
+fun Settings() =
+    PageScope {
+        val listState = rememberLazyListState()
+        val speak = remember { mutableStateOf(speakPreference) }
+        val listen = remember { mutableStateOf(listenPreference) }
 
-    LaunchedEffect(speak.value) {
-        speakPreference = speak.value
-        listenPreference = listen.value
-    }
+        LaunchedEffect(speak.value) {
+            speakPreference = speak.value
+            listenPreference = listen.value
+        }
 
-    val gradientAlpha by animateFloatAsState(
-        if (listState.canScrollForward) 1f else 0f,
-        tween(durationMillis = 1000),
-    )
+        val gradientAlpha by animateFloatAsState(
+            if (listState.canScrollForward) 1f else 0f,
+            tween(durationMillis = 1000),
+        )
 
-    Column {
         Column(
             Modifier
                 .fillMaxWidth()
@@ -117,8 +116,4 @@ fun Settings(navi: Navigator) {
                 }
             }
         }
-
-        Divider()
-        NavBar(navi)
     }
-}
