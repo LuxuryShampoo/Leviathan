@@ -48,6 +48,51 @@ private val client =
 private const val BASE_URL = "https://tts.malefic.xyz"
 
 /**
+ * Function to play WAV audio from a byte array
+ *
+ * @param audioData The WAV audio data as a byte array
+ */
+private fun playWavAudio(audioData: ByteArray) {
+    try {
+        val audioInputStream = AudioSystem.getAudioInputStream(ByteArrayInputStream(audioData))
+        val format = audioInputStream.format
+        val info = DataLine.Info(SourceDataLine::class.java, format)
+
+        val line = AudioSystem.getLine(info) as SourceDataLine
+        line.open(format)
+        line.start()
+
+        val buffer = ByteArray(4096)
+        var bytesRead = 0
+
+        while (audioInputStream.read(buffer).also { bytesRead = it } != -1) {
+            line.write(buffer, 0, bytesRead)
+        }
+
+        line.drain()
+        line.stop()
+        line.close()
+        audioInputStream.close()
+    } catch (e: Exception) {
+        Logger.e("Error playing audio: ${e.message}")
+        e.printStackTrace()
+    }
+}
+
+/**
+ * Data class representing a voice in the OpenTTS API
+ */
+@Serializable
+data class Voice(
+    val id: String,
+    val name: String,
+    val language: String? = null,
+    val locale: String? = null,
+    val gender: String? = null,
+    @SerialName("tts_name") val ttsName: String? = null,
+)
+
+/**
  * Function to speak text using the OpenTTS API
  *
  * @param text The text to speak
@@ -97,51 +142,6 @@ suspend fun speak(
         e.printStackTrace()
     }
 }
-
-/**
- * Function to play WAV audio from a byte array
- *
- * @param audioData The WAV audio data as a byte array
- */
-private fun playWavAudio(audioData: ByteArray) {
-    try {
-        val audioInputStream = AudioSystem.getAudioInputStream(ByteArrayInputStream(audioData))
-        val format = audioInputStream.format
-        val info = DataLine.Info(SourceDataLine::class.java, format)
-
-        val line = AudioSystem.getLine(info) as SourceDataLine
-        line.open(format)
-        line.start()
-
-        val buffer = ByteArray(4096)
-        var bytesRead = 0
-
-        while (audioInputStream.read(buffer).also { bytesRead = it } != -1) {
-            line.write(buffer, 0, bytesRead)
-        }
-
-        line.drain()
-        line.stop()
-        line.close()
-        audioInputStream.close()
-    } catch (e: Exception) {
-        Logger.e("Error playing audio: ${e.message}")
-        e.printStackTrace()
-    }
-}
-
-/**
- * Data class representing a voice in the OpenTTS API
- */
-@Serializable
-data class Voice(
-    val id: String,
-    val name: String,
-    val language: String? = null,
-    val locale: String? = null,
-    val gender: String? = null,
-    @SerialName("tts_name") val ttsName: String? = null,
-)
 
 /**
  * Function to get available voices from the OpenTTS API
