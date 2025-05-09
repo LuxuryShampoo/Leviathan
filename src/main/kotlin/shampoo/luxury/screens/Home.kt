@@ -33,8 +33,6 @@ import shampoo.luxury.components.NavBar
 import shampoo.luxury.global.Values.selectedPet
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
-import xyz.malefic.ext.precompose.gate
-
 import java.io.File
 
 @Composable
