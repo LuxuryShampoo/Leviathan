@@ -1,13 +1,13 @@
-package shampoo.luxury
+package shampoo.luxury.leviathan
 
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import shampoo.luxury.screens.Achievements
-import shampoo.luxury.screens.Home
-import shampoo.luxury.screens.Settings
-import shampoo.luxury.screens.Shop
+import shampoo.luxury.leviathan.screens.Achievements
+import shampoo.luxury.leviathan.screens.Home
+import shampoo.luxury.leviathan.screens.Settings
+import shampoo.luxury.leviathan.screens.Shop
 import xyz.malefic.compose.engine.factory.ColumnFactory
 import xyz.malefic.compose.engine.factory.div
 import xyz.malefic.compose.engine.factory.timesAssign

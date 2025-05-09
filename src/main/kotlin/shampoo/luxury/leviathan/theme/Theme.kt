@@ -1,4 +1,4 @@
-package shampoo.luxury.theme
+package shampoo.luxury.leviathan.theme
 
 /**
  * Enum class representing different themes for the application.

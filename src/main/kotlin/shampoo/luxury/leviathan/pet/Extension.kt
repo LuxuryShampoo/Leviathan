@@ -1,4 +1,4 @@
-package shampoo.luxury.pet
+package shampoo.luxury.leviathan.pet
 
 /**
  * Filters the list of pets by their name.

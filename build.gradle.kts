@@ -40,7 +40,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "shampoo.luxury.MainKt"
+        mainClass = "shampoo.luxury.leviathan.MainKt"
 
         nativeDistributions {
             targetFormats(Dmg, Msi, Deb)

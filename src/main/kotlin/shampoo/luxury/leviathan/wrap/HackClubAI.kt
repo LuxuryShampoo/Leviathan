@@ -1,4 +1,4 @@
-package shampoo.luxury.wrap
+package shampoo.luxury.leviathan.wrap
 
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient

@@ -1,4 +1,4 @@
-package shampoo.luxury.theme
+package shampoo.luxury.leviathan.theme
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -24,12 +24,12 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Palette
 import kotlinx.coroutines.launch
-import shampoo.luxury.theme.Theme.Companion.fromPath
-import shampoo.luxury.theme.ThemeManager.currentThemePath
-import shampoo.luxury.theme.ThemeManager.updateTheme
+import shampoo.luxury.leviathan.theme.Theme.Companion.fromPath
+import shampoo.luxury.leviathan.theme.ThemeManager.currentThemePath
+import shampoo.luxury.leviathan.theme.ThemeManager.updateTheme
 import xyz.malefic.compose.comps.text.typography.Body1
-import xyz.malefic.compose.comps.text.typography.ColorType.OnBackground
 import xyz.malefic.compose.comps.text.typography.ColorType.OnSecondary
+import xyz.malefic.compose.comps.text.typography.ColorType.OnSurface
 
 @Composable
 fun ThemeSelector() {
@@ -62,8 +62,8 @@ fun ThemeSelector() {
                 verticalAlignment = CenterVertically,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             ) {
-                Body1(selectedTheme.displayName, colorType = OnBackground)
-                Body1(" ▼", colorType = OnBackground)
+                Body1(selectedTheme.displayName, colorType = OnSurface)
+                Body1(" ▼", colorType = OnSurface)
             }
         }
 
@@ -72,18 +72,20 @@ fun ThemeSelector() {
             { expanded = false },
         ) {
             Theme.entries.forEach { theme ->
-                DropdownMenuItem(
-                    onClick = {
-                        selectedTheme = theme
-                        expanded = false
+                Surface(color = MaterialTheme.colors.surface) {
+                    DropdownMenuItem(
+                        {
+                            selectedTheme = theme
+                            expanded = false
 
-                        coroutineScope.launch {
-                            val success = updateTheme(theme.filePath)
-                            Logger.d("Selected theme: ${theme.displayName}, file: ${theme.filePath}, success: $success")
-                        }
-                    },
-                ) {
-                    Body1(theme.displayName, colorType = OnSecondary)
+                            coroutineScope.launch {
+                                val success = updateTheme(theme.filePath)
+                                Logger.d("Selected theme: ${theme.displayName}, file: ${theme.filePath}, success: $success")
+                            }
+                        },
+                    ) {
+                        Body1(theme.displayName, colorType = OnSecondary)
+                    }
                 }
             }
         }

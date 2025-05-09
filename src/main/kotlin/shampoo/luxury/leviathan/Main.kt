@@ -1,4 +1,4 @@
-package shampoo.luxury
+package shampoo.luxury.leviathan
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -15,7 +15,7 @@ import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import shampoo.luxury.theme.ThemeManager
+import shampoo.luxury.leviathan.theme.ThemeManager
 import xyz.malefic.compose.comps.precompose.NavWindow
 import xyz.malefic.compose.nav.RouteManager
 import xyz.malefic.compose.nav.config.MalefiConfigLoader

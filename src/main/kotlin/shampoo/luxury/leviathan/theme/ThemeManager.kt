@@ -1,4 +1,4 @@
-package shampoo.luxury.theme
+package shampoo.luxury.leviathan.theme
 
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope

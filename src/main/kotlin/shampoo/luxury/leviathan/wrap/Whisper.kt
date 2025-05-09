@@ -1,4 +1,4 @@
-package shampoo.luxury.wrap
+package shampoo.luxury.leviathan.wrap
 
 import io.github.givimad.whisperjni.WhisperContext
 import io.github.givimad.whisperjni.WhisperFullParams
@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import shampoo.luxury.global.Values.listenPreference
+import shampoo.luxury.leviathan.global.Values.Prefs.listenPreference
 import xyz.malefic.Signal
 import java.nio.file.Path
 import javax.sound.sampled.AudioFormat
@@ -171,13 +171,13 @@ object Whisper {
                 processAudioBatch(audioBatch, params)
 
                 when {
-                    !isTranscribing && detectWakeWord() -> {
+                    !isTranscribing and detectWakeWord() -> {
                         isTranscribing = true
                         silenceBuffer.clear()
                     }
                     isTranscribing -> {
                         silenceBuffer.addAll(audioFrame.toList())
-                        if (silenceBuffer.size > silenceThreshold * 16 && detectSilence(silenceBuffer)) {
+                        if ((silenceBuffer.size > silenceThreshold * 16) and detectSilence(silenceBuffer)) {
                             emitTranscript()
                             isTranscribing = false
                             silenceBuffer.clear()

@@ -1,4 +1,4 @@
-package shampoo.luxury.screens
+package shampoo.luxury.leviathan.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

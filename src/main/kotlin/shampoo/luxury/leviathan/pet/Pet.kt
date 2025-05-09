@@ -1,7 +1,6 @@
-package shampoo.luxury.pet
+package shampoo.luxury.leviathan.pet
 
-import kotlinx.serialization.Serializable
-import shampoo.luxury.global.Resource.downloadFile
+import shampoo.luxury.leviathan.global.Resource.downloadFile
 import java.io.Serializable as JavaSerializable
 
 /**
@@ -10,12 +9,13 @@ import java.io.Serializable as JavaSerializable
  * @property name The name of the pet.
  * @property url The URL pointing to the pet's online image.
  * @property local The local file path where the pet's image is stored.
+ * @property cost The cost of the pet.
  */
-@Serializable
 data class Pet(
     val name: String,
     val url: String,
     val local: String,
+    val cost: Double = 0.0,
 ) : JavaSerializable {
     /**
      * Downloads the pet's image from the specified URL and saves it to the local file path.
@@ -38,24 +38,28 @@ annotation class PetDsl
  * @property name The name of the pet.
  * @property url The URL of the pet's image or resource.
  * @property local The local path to the pet's resource.
+ * @property cost The cost of the pet.
  */
 @PetDsl
 class PetBuilder {
     /** The name of the pet. */
-    var name: String = ""
+    var name = ""
 
     /** The URL of the pet's image. */
-    var url: String = ""
+    var url = ""
 
     /** The local path to the pet's image. */
-    var local: String = ""
+    var local = ""
+
+    /** The cost of the pet. */
+    var cost = 0.0
 
     /**
      * Builds and returns a `Pet` object using the current properties.
      *
      * @return A new `Pet` instance.
      */
-    fun build(): Pet = Pet(name, url, local)
+    fun build() = Pet(name, url, local, cost)
 }
 
 /**
@@ -63,7 +67,7 @@ class PetBuilder {
  */
 @PetDsl
 class PetsBuilder {
-    private val pets = mutableListOf<Pet>()
+    private val pets = mutableSetOf<Pet>()
 
     /**
      * Adds a new `Pet` to the list by applying the given DSL block.

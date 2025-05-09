@@ -1,4 +1,4 @@
-package shampoo.luxury.screens
+package shampoo.luxury.leviathan.screens
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -26,11 +26,11 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.unit.dp
 import moe.tlaster.precompose.navigation.Navigator
-import shampoo.luxury.components.NavBar
-import shampoo.luxury.components.SettingsOption
-import shampoo.luxury.global.Values.listenPreference
-import shampoo.luxury.global.Values.speakPreference
-import shampoo.luxury.theme.ThemeSelector
+import shampoo.luxury.leviathan.components.NavBar
+import shampoo.luxury.leviathan.components.SettingsOption
+import shampoo.luxury.leviathan.global.Values.Prefs.listenPreference
+import shampoo.luxury.leviathan.global.Values.Prefs.speakPreference
+import shampoo.luxury.leviathan.theme.ThemeSelector
 import xyz.malefic.compose.comps.switch.BooleanSwitch
 import xyz.malefic.compose.comps.text.typography.Heading1
 

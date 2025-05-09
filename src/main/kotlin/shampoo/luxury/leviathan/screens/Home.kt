@@ -1,4 +1,4 @@
-package shampoo.luxury.screens
+package shampoo.luxury.leviathan.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
@@ -27,10 +27,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import moe.tlaster.precompose.navigation.Navigator
-import shampoo.luxury.components.DropdownText
-import shampoo.luxury.components.FileImage
-import shampoo.luxury.components.NavBar
-import shampoo.luxury.global.Values.selectedPet
+import shampoo.luxury.leviathan.components.DropdownText
+import shampoo.luxury.leviathan.components.FileImage
+import shampoo.luxury.leviathan.components.NavBar
+import shampoo.luxury.leviathan.global.Values.selectedPet
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import java.io.File
@@ -38,10 +38,9 @@ import java.io.File
 @Composable
 fun Home(navi: Navigator) {
     Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
         horizontalAlignment = CenterHorizontally,
     ) {
         TopRow(navi)
@@ -104,9 +103,6 @@ private fun PetContainer() {
             Logger.d { "File downloaded: ${file.absolutePath}" }
         }
 
-        // would you rather livsn a a house where ery few dasy a gust of wind blows in and opens ALL of the doors inside ur house or
-        // know the answer to the squstion "is sun tzu's the ast of wr" still relevant today?s
-        // i would rather know the answer to the question "Is Sun Tzu's The Art of War still relevant today?"
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = CenterHorizontally,

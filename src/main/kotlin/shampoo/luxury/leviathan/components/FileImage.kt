@@ -1,4 +1,4 @@
-package shampoo.luxury.components
+package shampoo.luxury.leviathan.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable

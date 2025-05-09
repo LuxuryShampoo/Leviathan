@@ -1,4 +1,4 @@
-package shampoo.luxury.wrap
+package shampoo.luxury.leviathan.wrap
 
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
@@ -15,7 +15,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import shampoo.luxury.global.Values.speakPreference
+import shampoo.luxury.leviathan.global.Values.Prefs.speakPreference
 import java.io.ByteArrayInputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.DataLine
