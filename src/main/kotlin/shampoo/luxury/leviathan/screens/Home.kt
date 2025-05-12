@@ -13,11 +13,13 @@ import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -31,6 +33,9 @@ import shampoo.luxury.leviathan.components.DropdownText
 import shampoo.luxury.leviathan.components.FileImage
 import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.global.Values.selectedPet
+import shampoo.luxury.leviathan.wrap.Whisper
+import shampoo.luxury.leviathan.wrap.parse
+import shampoo.luxury.leviathan.wrap.speak
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import java.io.File
@@ -38,6 +43,24 @@ import java.io.File
 @Composable
 fun Home(navi: Navigator) =
     PageScope {
+        val scope = rememberCoroutineScope()
+
+        LaunchedEffect(Unit) {
+            Whisper.startListening(scope)
+            Whisper.onTranscript(scope) { transcript ->
+                Logger.i { "Transcript received: $transcript" }
+                val ai = parse("This was a transcript from a speech to text so there may be some errors. Here's your prompt: $transcript")
+                Logger.i { ai }
+                speak(ai)
+            }
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                Whisper.close()
+            }
+        }
+
         TopRow(navi)
         Divider()
         PetContainer()

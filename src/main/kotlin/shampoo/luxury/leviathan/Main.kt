@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.theme.ThemeManager
+import shampoo.luxury.leviathan.wrap.Whisper
 import xyz.malefic.compose.comps.precompose.NavWindow
 import xyz.malefic.compose.nav.RouteManager
 import xyz.malefic.compose.nav.config.MalefiConfigLoader
@@ -28,6 +29,8 @@ fun main() =
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         val windowWidth = (screenSize.width * 0.3).dp
         val windowHeight = (screenSize.height * 0.7).dp
+
+        Whisper.initialize("hello")
 
         NavWindow(
             onCloseRequest = ::exitApplication,

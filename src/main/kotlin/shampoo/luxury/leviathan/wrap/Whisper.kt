@@ -1,5 +1,6 @@
 package shampoo.luxury.leviathan.wrap
 
+import co.touchlab.kermit.Logger
 import io.github.givimad.whisperjni.WhisperContext
 import io.github.givimad.whisperjni.WhisperFullParams
 import io.github.givimad.whisperjni.WhisperJNI
@@ -7,14 +8,15 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import shampoo.luxury.leviathan.global.Resource.getLocalResourcePath
 import shampoo.luxury.leviathan.global.Values.Prefs.listenPreference
 import xyz.malefic.Signal
-import java.nio.file.Path
+import java.io.File
+import java.nio.file.Paths
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.DataLine
 import javax.sound.sampled.TargetDataLine
-import kotlin.math.absoluteValue
 
 /**
  * A singleton object for the WhisperJNI speech-to-text engine.
@@ -22,30 +24,55 @@ import kotlin.math.absoluteValue
  * and stops transcription after detecting silence for a specified duration.
  */
 object Whisper {
-    private lateinit var modelPath: Path
+    private var isClosed = false // Flag to track if Whisper is closed
     private lateinit var wakeWord: String
-    private var silenceThreshold: Int = 2000
-    private val transcriptSignal = Signal<String>()
-    private var targetDataLine: TargetDataLine? = null
-    private val whisper = WhisperJNI()
-    private lateinit var ctx: WhisperContext
+    private var modelPath =
+        getLocalResourcePath("ggml-tiny.en.bin").let { localPath ->
+            val localFile = File(localPath)
+            if (!localFile.exists()) {
+                Logger.d("Model file not found locally. Extracting from JAR...")
+                this::class.java.getResourceAsStream("/model/ggml-tiny.en.bin")?.use { inputStream ->
+                    localFile.parentFile?.mkdirs()
+                    localFile.outputStream().use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                } ?: error("Model file not found in JAR")
+                Logger.d("Model file extracted to: $localPath")
+            } else {
+                Logger.d("Model file already exists at: $localPath")
+            }
+            Paths.get(localPath)
+        }
+    private var silenceThreshold = 2000 // Duration of silence (in milliseconds) to stop transcription
+    private val transcriptSignal = Signal<String>() // Signal to emit transcribed text
+    private var targetDataLine: TargetDataLine? = null // Audio input line for capturing microphone data
+    private var whisper: WhisperJNI // WhisperJNI instance for speech-to-text processing
+    private var ctx: WhisperContext // Whisper context for managing transcription state
+
+    init {
+        // Load the WhisperJNI library and initialize the Whisper context
+        WhisperJNI.loadLibrary()
+        WhisperJNI.setLibraryLogger {
+            WhisperJNI.LibraryLogger {
+                Logger.d("WhisperJNI: $it")
+            }
+        }
+        whisper = WhisperJNI()
+        ctx = whisper.init(modelPath)
+    }
 
     /**
      * Initializes the Whisper object with the required parameters.
      *
-     * @param modelPath The path to the Whisper model file.
      * @param wakeWord The wake word to listen for.
      * @param silenceThreshold The duration of silence (in milliseconds) to stop transcription.
      */
     fun initialize(
-        modelPath: Path,
         wakeWord: String,
         silenceThreshold: Int = 2000,
     ) {
-        this.modelPath = modelPath
         this.wakeWord = wakeWord
         this.silenceThreshold = silenceThreshold
-        ctx = whisper.init(modelPath)
         setupAudioLine()
     }
 
@@ -71,7 +98,7 @@ object Whisper {
      * @return A float array representing the audio frame.
      */
     private fun getNextAudioFrame(): FloatArray {
-        val buffer = ByteArray(2048) // Buffer to hold raw audio data.
+        val buffer = ByteArray(2048) // Buffer to hold raw audio data
         val bytesRead = targetDataLine?.read(buffer, 0, buffer.size) ?: 0
         val floatBuffer = FloatArray(bytesRead / 2)
         for (i in floatBuffer.indices) {
@@ -92,6 +119,7 @@ object Whisper {
         audioBatch: MutableList<Float>,
         params: WhisperFullParams,
     ): Boolean {
+        if (isClosed) return false
         val result = whisper.full(ctx, params, audioBatch.toFloatArray(), audioBatch.size)
         audioBatch.clear()
         if (result != 0) {
@@ -101,90 +129,138 @@ object Whisper {
     }
 
     /**
-     * Detects if the wake word is present in the transcribed segments.
+     * Processes the audio batch and logs the processing status.
      *
-     * @return True if the wake word is detected, false otherwise.
+     * @param audioBatch The batch of audio data to process.
+     * @param params The parameters for Whisper transcription.
      */
-    private fun detectWakeWord(): Boolean {
-        val numSegments = whisper.fullNSegments(ctx)
+    private fun processAudio(
+        audioBatch: MutableList<Float>,
+        params: WhisperFullParams,
+    ) {
+        Logger.d("Processing audio batch of size: ${audioBatch.size}")
+        processAudioBatch(audioBatch, params)
+        Logger.d("Audio batch processed.")
+    }
+
+    /**
+     * Handles transcription segments, updates silence count, and manages transcription state.
+     *
+     * @param numSegments The number of transcription segments.
+     * @param isTranscribing The current transcription state.
+     * @param transcriptBuffer The buffer to store meaningful transcription segments.
+     * @param silenceCount The current count of consecutive silence segments.
+     * @return A pair containing the updated transcription state and silence count.
+     */
+    private fun handleSegments(
+        numSegments: Int,
+        isTranscribing: Boolean,
+        transcriptBuffer: MutableList<String>,
+        silenceCount: Int,
+        setter: (Boolean, Int) -> Unit,
+    ) {
+        var transcribing = isTranscribing
+        var silence = silenceCount
+
         for (i in 0 until numSegments) {
-            val text = whisper.fullGetSegmentText(ctx, i)
-            if (text.contains(wakeWord, ignoreCase = true)) {
-                return true
-            }
-        }
-        return false
-    }
+            val text = whisper.fullGetSegmentText(ctx, i).trim()
+            Logger.d("Segment text: $text")
 
-    /**
-     * Detects if the audio is silent based on the average amplitude.
-     *
-     * @param silenceBuffer The buffer containing audio data to analyze.
-     * @return True if the audio is silent, false otherwise.
-     */
-    private fun detectSilence(silenceBuffer: List<Float>): Boolean {
-        val averageAmplitude = silenceBuffer.map { it.absoluteValue }.average()
-        return averageAmplitude < 0.01
-    }
-
-    /**
-     * Emits the final transcript by concatenating all transcribed segments.
-     */
-    private suspend fun emitTranscript() {
-        val numSegments = whisper.fullNSegments(ctx)
-        val transcript =
-            buildString {
-                (0 until numSegments).forEach { i ->
-                    append(whisper.fullGetSegmentText(ctx, i))
+            if (text.startsWith("[") && text.endsWith("]") || text.startsWith("(") && text.endsWith(")")) {
+                silence++
+                Logger.d("Silence count incremented: $silence")
+            } else {
+                silence = 0
+                if (transcribing) {
+                    transcriptBuffer.add(text)
+                }
+                if (!transcribing && text.contains(wakeWord, ignoreCase = true)) {
+                    Logger.d("Wake word detected: $wakeWord")
+                    transcribing = true
+                    transcriptBuffer.clear()
                 }
             }
-        transcriptSignal.emit(transcript.toString())
+        }
+
+        setter(transcribing, silence)
     }
 
     /**
-     * Starts listening for the wake word and transcribes audio after detection.
-     * Stops transcription after detecting silence for the specified duration.
+     * Emits the transcript if a prolonged silence is detected.
+     *
+     * This function checks the silence count and determines if the transcription
+     * should be emitted. If the silence count exceeds the threshold and transcription
+     * is ongoing, it emits the final transcript, clears the buffer, and resets the
+     * transcription state. Otherwise, it updates the transcription state and silence count.
+     *
+     * @param isTranscribing Indicates whether transcription is currently active.
+     * @param silenceCount The current count of consecutive silence segments.
+     * @param transcriptBuffer A buffer containing the accumulated transcription segments.
+     * @param setter A function to update the transcription state and silence count.
+     */
+    private suspend fun emitTranscriptIfSilent(
+        isTranscribing: Boolean,
+        silenceCount: Int,
+        transcriptBuffer: MutableList<String>,
+        setter: (Boolean, Int) -> Unit,
+    ) {
+        Logger.d("Checking silence count: $silenceCount, isTranscribing: $isTranscribing")
+        if (isTranscribing && silenceCount >= 3) {
+            Logger.d("Silence detected. Emitting transcript...")
+            val finalTranscript = transcriptBuffer.joinToString(" ")
+            transcriptSignal.emit(finalTranscript)
+            transcriptBuffer.clear()
+            setter(false, 0)
+            return
+        }
+        setter(isTranscribing, silenceCount)
+    }
+
+    /**
+     * Starts listening for audio input, processes transcription, and emits transcripts.
      *
      * @param scope The coroutine scope in which the listening process runs.
-     * @param dispatcher The coroutine dispatcher to use for the listening process.
+     * @param dispatcher The coroutine dispatcher for managing background tasks.
      */
     fun startListening(
         scope: CoroutineScope,
         dispatcher: CoroutineDispatcher = Dispatchers.IO,
     ) {
+        if (isClosed) return
         scope.launch(dispatcher) {
             val params = WhisperFullParams()
             var isTranscribing = false
-            val silenceBuffer = mutableListOf<Float>()
+            var silenceCount = 0
             val audioBatch = mutableListOf<Float>()
+            val transcriptBuffer = mutableListOf<String>()
 
-            while (true) {
+            Logger.d("Listening started...")
+
+            while (!isClosed) {
                 if (!listenPreference) {
+                    Logger.d("Listening preference is disabled. Skipping...")
                     continue
                 }
 
                 val audioFrame = getNextAudioFrame()
                 audioBatch.addAll(audioFrame.toList())
 
-                if (audioBatch.size < 16000) continue
+                if (audioBatch.size < 48000) continue
 
-                processAudioBatch(audioBatch, params)
+                processAudio(audioBatch, params)
 
-                when {
-                    !isTranscribing and detectWakeWord() -> {
-                        isTranscribing = true
-                        silenceBuffer.clear()
-                    }
-                    isTranscribing -> {
-                        silenceBuffer.addAll(audioFrame.toList())
-                        if ((silenceBuffer.size > silenceThreshold * 16) and detectSilence(silenceBuffer)) {
-                            emitTranscript()
-                            isTranscribing = false
-                            silenceBuffer.clear()
-                        }
-                    }
+                handleSegments(whisper.fullNSegments(ctx), isTranscribing, transcriptBuffer, silenceCount) { bool, int ->
+                    isTranscribing = bool
+                    silenceCount = int
+                }
+
+                emitTranscriptIfSilent(isTranscribing, silenceCount, transcriptBuffer) { bool, int ->
+                    isTranscribing = bool
+                    silenceCount = int
                 }
             }
+
+            Logger.d("Listening stopped.")
         }
     }
 
@@ -203,19 +279,12 @@ object Whisper {
     }
 
     /**
-     * Registers a listener to receive transcribed text.
-     * This version does not require a coroutine scope.
-     *
-     * @param action The action to perform on each emitted transcript.
-     */
-    fun onTranscript(action: suspend (String) -> Unit) {
-        transcriptSignal.connect(action)
-    }
-
-    /**
      * Releases resources used by WhisperJNI and the audio input line.
+     * Ensures that no further operations are performed after closure.
      */
     fun close() {
+        if (isClosed) return
+        isClosed = true
         whisper.free(ctx)
         targetDataLine?.close()
     }
