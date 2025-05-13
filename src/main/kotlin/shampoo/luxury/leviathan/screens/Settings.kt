@@ -42,6 +42,9 @@ fun Settings() =
 
         LaunchedEffect(speak.value) {
             speakPreference = speak.value
+        }
+
+        LaunchedEffect(listen.value) {
             listenPreference = listen.value
         }
 

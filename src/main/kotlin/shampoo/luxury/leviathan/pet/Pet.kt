@@ -1,43 +1,32 @@
 package shampoo.luxury.leviathan.pet
 
-import shampoo.luxury.leviathan.global.Resource.downloadFile
+import shampoo.luxury.leviathan.global.Resource.extractResourceToLocal
 import java.io.Serializable as JavaSerializable
 
 /**
  * A data class representing a pet with its associated information.
  *
  * @property name The name of the pet.
- * @property url The URL pointing to the pet's online image.
- * @property local The local file path where the pet's image is stored.
+ * @property resourcePath The relative path to the pet's resource in the JAR.
  * @property cost The cost of the pet.
  */
 data class Pet(
     val name: String,
-    val url: String,
-    val local: String,
+    private val resourcePath: String,
     val cost: Double = 0.0,
 ) : JavaSerializable {
     /**
-     * Downloads the pet's image from the specified URL and saves it to the local file path.
-     *
-     * This function is a suspend function and should be called within a coroutine or another suspend function.
+     * Resolves the local file path for the pet's resource using `extractResourceToLocal`.
+     * The value is computed once and cached.
      */
-    suspend fun downloadImage() = downloadFile(url, local)
+    val localPath: String by lazy { extractResourceToLocal(resourcePath).absolutePath }
 }
-
-/**
- * Annotation to mark DSL-specific classes and functions.
- * Ensures that the DSL scope is properly restricted.
- */
-@DslMarker
-annotation class PetDsl
 
 /**
  * Builder class for creating a single `Pet` object.
  *
  * @property name The name of the pet.
- * @property url The URL of the pet's image or resource.
- * @property local The local path to the pet's resource.
+ * @property resourcePath The relative path to the pet's resource in the JAR.
  * @property cost The cost of the pet.
  */
 @PetDsl
@@ -45,11 +34,8 @@ class PetBuilder {
     /** The name of the pet. */
     var name = ""
 
-    /** The URL of the pet's image. */
-    var url = ""
-
-    /** The local path to the pet's image. */
-    var local = ""
+    /** The relative path to the pet's resource in the JAR. */
+    var resourcePath = ""
 
     /** The cost of the pet. */
     var cost = 0.0
@@ -59,8 +45,15 @@ class PetBuilder {
      *
      * @return A new `Pet` instance.
      */
-    fun build() = Pet(name, url, local, cost)
+    fun build() = Pet(name, resourcePath, cost)
 }
+
+/**
+ * Annotation to mark DSL-specific classes and functions.
+ * Ensures that the DSL scope is properly restricted.
+ */
+@DslMarker
+annotation class PetDsl
 
 /**
  * Builder class for creating a list of `Pet` objects.

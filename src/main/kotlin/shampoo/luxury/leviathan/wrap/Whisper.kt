@@ -8,11 +8,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import shampoo.luxury.leviathan.global.Resource.getLocalResourcePath
+import shampoo.luxury.leviathan.global.Resource.extractResourceToLocal
 import shampoo.luxury.leviathan.global.Values.Prefs.listenPreference
 import xyz.malefic.Signal
-import java.io.File
-import java.nio.file.Paths
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.DataLine
@@ -24,33 +22,16 @@ import javax.sound.sampled.TargetDataLine
  * and stops transcription after detecting silence for a specified duration.
  */
 object Whisper {
-    private var isClosed = false // Flag to track if Whisper is closed
+    private var isClosed = false
     private lateinit var wakeWord: String
-    private var modelPath =
-        getLocalResourcePath("ggml-tiny.en.bin").let { localPath ->
-            val localFile = File(localPath)
-            if (!localFile.exists()) {
-                Logger.d("Model file not found locally. Extracting from JAR...")
-                this::class.java.getResourceAsStream("/model/ggml-tiny.en.bin")?.use { inputStream ->
-                    localFile.parentFile?.mkdirs()
-                    localFile.outputStream().use { outputStream ->
-                        inputStream.copyTo(outputStream)
-                    }
-                } ?: error("Model file not found in JAR")
-                Logger.d("Model file extracted to: $localPath")
-            } else {
-                Logger.d("Model file already exists at: $localPath")
-            }
-            Paths.get(localPath)
-        }
-    private var silenceThreshold = 2000 // Duration of silence (in milliseconds) to stop transcription
-    private val transcriptSignal = Signal<String>() // Signal to emit transcribed text
-    private var targetDataLine: TargetDataLine? = null // Audio input line for capturing microphone data
-    private var whisper: WhisperJNI // WhisperJNI instance for speech-to-text processing
-    private var ctx: WhisperContext // Whisper context for managing transcription state
+    private var modelPath = extractResourceToLocal("model/ggml-tiny.en.bin").toPath()
+    private var silenceThreshold = 2000
+    private val transcriptSignal = Signal<String>()
+    private var targetDataLine: TargetDataLine? = null
+    private var whisper: WhisperJNI
+    private var ctx: WhisperContext
 
     init {
-        // Load the WhisperJNI library and initialize the Whisper context
         WhisperJNI.loadLibrary()
         WhisperJNI.setLibraryLogger {
             WhisperJNI.LibraryLogger {

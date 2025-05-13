@@ -215,4 +215,6 @@ suspend fun main() {
 
     val languages = getLanguages()
     Logger.i("Available languages: $languages")
+
+    println(System.getProperty("user.dir"))
 }

@@ -37,5 +37,7 @@ fun clearPreferences(nodePath: String) {
 }
 
 fun main() {
+    clearPreferences("xyz.malefic.compose.prefs.Common")
+    clearPreferences("leviathan")
     listAllPreferences()
 }

@@ -1,12 +1,8 @@
 package shampoo.luxury.leviathan.global
 
-import co.touchlab.kermit.Logger
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.request.get
-import io.ktor.client.statement.readRawBytes
 import java.io.File
+import kotlin.io.copyTo
 
 /** Utility object for handling resource paths. */
 object Resource {
@@ -30,34 +26,33 @@ object Resource {
     }
 
     /**
-     * Downloads a file from the specified URL and saves it to the given destination path.
+     * Extracts a resource from the JAR file and saves it to a local destination.
      *
-     * @param fileURL The URL of the file to download.
-     * @param destinationPath The path where the downloaded file will be saved.
-     * @return The downloaded file.
+     * @param resourcePath The path to the resource within the JAR file.
+     * @param destinationPath The relative path where the resource will be saved locally.
+     * @param overwrite If true, the resource will be extracted even if the file already exists. Defaults to false.
+     * @return The `File` object representing the extracted resource.
      */
-    suspend fun downloadFile(
-        fileURL: String,
-        destinationPath: String,
-        update: Boolean = false,
+    fun extractResourceToLocal(
+        resourcePath: String,
+        destinationPath: String = resourcePath,
+        overwrite: Boolean = false,
     ): File {
-        val file = File(destinationPath)
-        file.parentFile?.mkdirs()
-        if (file.exists() && !update) {
-            Logger.Companion.d("File already exists.")
-            return file
+        val destinationFile = File(getLocalResourcePath(destinationPath))
+
+        if (destinationFile.exists() && !overwrite) {
+            return destinationFile
         }
 
-        Logger.Companion.d("Downloading file ${file.name}.")
-        HttpClient(CIO) {
-            install(HttpTimeout) {
-                requestTimeoutMillis = 120000
+        val inputStream = ClassLoader.getSystemResourceAsStream(resourcePath)
+        requireNotNull(inputStream) { "Resource $resourcePath not found in JAR." }
+
+        destinationFile.parentFile?.mkdirs()
+        inputStream.buffered().use { input ->
+            destinationFile.outputStream().buffered().use { output ->
+                input.copyTo(output)
             }
-        }.use { client ->
-            val fileBytes: ByteArray = client.get(fileURL).readRawBytes()
-            file.writeBytes(fileBytes)
-            Logger.Companion.d("File downloaded successfully.")
         }
-        return file
+        return destinationFile
     }
 }

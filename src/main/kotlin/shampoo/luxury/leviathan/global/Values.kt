@@ -1,6 +1,5 @@
 package shampoo.luxury.leviathan.global
 
-import shampoo.luxury.leviathan.global.Resource.getLocalResourcePath
 import shampoo.luxury.leviathan.pet.Pet
 import shampoo.luxury.leviathan.pet.pets
 import xyz.malefic.compose.prefs.collection.PersistentHashSet
@@ -16,40 +15,37 @@ object Values {
         var listenPreference by BooleanPreference("listen_enabled", true, prefs)
     }
 
-    const val BOB = "https://omydagreat.github.io/FileHosting/FileHosting/BobAlarm.png"
-    const val RISHI = "https://rishthewizard.github.io/Icarus/assets/madTesting.png"
-
     val allPets =
         pets {
             pet {
                 name = "Bob"
-                url = BOB
-                local = getLocalResourcePath("BobAlarm.png")
+                resourcePath = "image/BobAlarm.png"
                 cost = 50.0
             }
             pet {
                 name = "Rishi"
-                url = RISHI
-                local = getLocalResourcePath("Rishi.png")
+                resourcePath = "image/Rishi.png"
                 cost = -1.0
             }
             pet {
-                name = "BobAlarm2"
-                url = BOB
-                local = getLocalResourcePath("BobAlarm2.png")
-                cost = 51.0
+                name = "MaineCoon"
+                resourcePath = "image/MaineCoon.png"
+                cost = 101.0
             }
             pet {
-                name = "BobAlarm3"
-                url = BOB
-                local = getLocalResourcePath("BobAlarm3.png")
-                cost = 52.0
+                name = "Supreme"
+                resourcePath = "image/Supreme.png"
+                cost = 250.0
             }
             pet {
-                name = "BobAlarm4"
-                url = BOB
-                local = getLocalResourcePath("BobAlarm4.png")
-                cost = 53.0
+                name = "Beluga"
+                resourcePath = "image/Beluga.png"
+                cost = 75.0
+            }
+            pet {
+                name = "Phat"
+                resourcePath = "image/Phat.png"
+                cost = 27.0
             }
         }
 

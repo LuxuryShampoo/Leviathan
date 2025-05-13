@@ -63,7 +63,7 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
 
     LaunchedEffect(Unit) {
         unownedPets.forEach {
-            it.downloadImage().apply {
+            File(it.localPath).apply {
                 if (exists()) {
                     imageFiles.add(this)
                 }
@@ -74,7 +74,7 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
     LaunchedEffect(listState.firstVisibleItemIndex) {
         if (imageFiles.isNotEmpty()) {
             val focusedIndex = listState.firstVisibleItemIndex % imageFiles.size
-            val focusedPet = allPets.find { it.local == imageFiles[focusedIndex].absolutePath }
+            val focusedPet = allPets.find { it.localPath == imageFiles[focusedIndex].absolutePath }
             focusedPet?.let {
                 onFocusChange(it.name)
                 focusedPetCost = it.cost

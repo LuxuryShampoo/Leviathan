@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.theme.ThemeManager
 import shampoo.luxury.leviathan.wrap.Whisper
+import shampoo.luxury.leviathan.wrap.setupTrayIcon
 import xyz.malefic.compose.comps.precompose.NavWindow
 import xyz.malefic.compose.nav.RouteManager
 import xyz.malefic.compose.nav.config.MalefiConfigLoader
@@ -26,19 +27,19 @@ import java.awt.Toolkit
 
 fun main() =
     application {
+        val scope = CoroutineScope(IO)
+        Whisper.initialize("hello")
+        setupTrayIcon(scope)
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         val windowWidth = (screenSize.width * 0.3).dp
         val windowHeight = (screenSize.height * 0.7).dp
 
-        Whisper.initialize("hello")
-
         NavWindow(
-            onCloseRequest = ::exitApplication,
-            state =
-                rememberWindowState(
-                    size = DpSize(windowWidth, windowHeight),
-                    position = Aligned(BottomEnd),
-                ),
+            ::exitApplication,
+            rememberWindowState(
+                size = DpSize(windowWidth, windowHeight),
+                position = Aligned(BottomEnd),
+            ),
             title = "Leviathan",
         ) {
             RouteManager.initialize(

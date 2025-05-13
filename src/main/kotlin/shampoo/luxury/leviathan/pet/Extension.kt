@@ -9,24 +9,16 @@ package shampoo.luxury.leviathan.pet
 fun List<Pet>.filterByName(name: String): List<Pet> = this.filter { it.name == name }
 
 /**
- * Filters the list of pets by their URL.
- *
- * @param url The URL to filter pets by.
- * @return A list of pets that match the given URL.
- */
-fun List<Pet>.filterByUrl(url: String): List<Pet> = this.filter { it.url == url }
-
-/**
  * Adds a new pet to the mutable list.
  *
  * @param name The name of the pet to add.
- * @param url The URL associated with the pet.
- * @param local The local path for the pet.
+ * @param resourcePath The relative path to the pet's resource in the JAR.
+ * @param cost The cost of the pet. Default is 0.0.
  */
 fun MutableList<Pet>.addPet(
     name: String,
-    url: String,
-    local: String,
+    resourcePath: String,
+    cost: Double = 0.0,
 ) {
-    this.add(Pet(name, url, local))
+    this.add(Pet(name, resourcePath, cost))
 }
