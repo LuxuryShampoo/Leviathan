@@ -1,0 +1,52 @@
+= Leviathan: Personal Assistant and Pet Simulator
+
+Leviathan is a unique application that combines the functionality of a personal assistant with the fun and engagement of a pet simulator. It is designed to help users stay productive while enjoying interactive features like games and pet management. Leviathan offers tools for time management, reminders, and entertainment, making it a versatile companion for both work and leisure.
+
+== Features
+
+=== Planned Features
+- **Pet Simulator**: Adopt and care for virtual pets, each with unique traits and behaviors.
+- **Games**: Play mini-games with your pets to earn rewards and strengthen your bond.
+- **Personal Assistant**: Set reminders, manage tasks, and organize your schedule.
+- **Time Management Tools**: Use productivity features to track and optimize your daily activities.
+- **Interactive UI**: Enjoy a visually appealing and user-friendly interface.
+
+=== Completed Features
+- **Shop Screen**: A marketplace to browse and purchase pets, with a carousel for easy navigation.
+- **Audio Transcription**: A background service for transcribing audio input, with silence detection and transcript emission.
+- **Settings Screen**: A dedicated screen for configuring application preferences and managing user settings.
+
+== Technical Details
+
+Leviathan is built using the following technologies:
+
+- **Language**: Kotlin
+- **Framework**: Jetpack Compose UI
+- **Build System**: Gradle
+- **Dependencies**:
+- Font Awesome: Provides a wide range of icons for the UI.
+- Ktor: Handles networking and API communication.
+- Whisper: Processes audio input for transcription.
+- Kermit: Facilitates logging and debugging.
+- SLF4J: A simple logging facade for various logging frameworks.
+- Malefic Compose: Offers additional Compose utilities and components.
+- Malefic Extensions: Provides extended functionality for Compose and PreCompose.
+- Malefic Signal: Enables reactive programming and state management.
+- Compose Desktop: Supports building desktop applications with Jetpack Compose.
+- Compose Components Resources: Adds utilities for resource management in Compose applications.
+- PreCompose: Simplifies navigation in Compose applications.
+
+== How to Build and Run
+
+1. Clone the repository.
+2. Ensure you have JDK 21 installed.
+3. Run `./gradlew build` to build the project.
+4. Use `./gradlew run` to start the application.
+
+== Contribution
+
+Contributions are welcome! Please follow the commit message conventions defined in `.kommit.yaml` or use link:https://github.com/OmyDaGreat/Kommit[Kommit] for automatic formatting.
+
+== License
+
+This project is licensed under the link:LICENSE[MIT License].

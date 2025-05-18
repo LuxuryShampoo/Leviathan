@@ -49,8 +49,8 @@ fun Carousel(
     LazyRow(
         Modifier.fillMaxWidth(),
         listState,
+        PaddingValues(horizontal = 130.dp),
         horizontalArrangement = Arrangement.spacedBy(30.dp),
-        contentPadding = PaddingValues(horizontal = 100.dp),
     ) {
         items(MAX_VALUE) { index ->
             val wrappedIndex = index % imageFiles.size

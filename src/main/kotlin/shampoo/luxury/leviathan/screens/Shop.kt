@@ -84,12 +84,19 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
 
     Box(
         Modifier
-            .fillMaxHeight(0.75f)
+            .fillMaxHeight()
             .fillMaxWidth(),
         Center,
     ) {
         if (imageFiles.isNotEmpty()) {
-            Carousel(listState, imageFiles)
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.6f),
+                Center,
+            ) {
+                Carousel(listState, imageFiles)
+            }
 
             CarouselButton("<", coroutineScope, { align(CenterStart) }) {
                 listState.animateScrollToItem(listState.firstVisibleItemIndex - 1)

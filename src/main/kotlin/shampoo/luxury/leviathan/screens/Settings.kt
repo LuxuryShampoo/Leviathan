@@ -65,7 +65,7 @@ fun Settings() =
         Box(
             Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.8f),
+                .fillMaxHeight(),
         ) {
             LazyColumn(
                 Modifier

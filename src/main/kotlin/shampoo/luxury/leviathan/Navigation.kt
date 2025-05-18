@@ -1,20 +1,19 @@
 package shampoo.luxury.leviathan
 
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import shampoo.luxury.leviathan.screens.Achievements
 import shampoo.luxury.leviathan.screens.Home
 import shampoo.luxury.leviathan.screens.Settings
 import shampoo.luxury.leviathan.screens.Shop
+import shampoo.luxury.leviathan.screens.Tasks
 import xyz.malefic.compose.engine.factory.ColumnFactory
 import xyz.malefic.compose.engine.factory.div
 import xyz.malefic.compose.engine.factory.timesAssign
 import xyz.malefic.compose.engine.fuel.background
 import xyz.malefic.compose.engine.fuel.center
 import xyz.malefic.compose.nav.RouteManager.RoutedNavHost
-import xyz.malefic.compose.nav.RouteManager.navi
 
 /**
  * Composable function that defines the navigation menu layout. It includes a sidebar and a
@@ -25,7 +24,7 @@ fun NavigationMenu() {
     ColumnFactory {
         RoutedNavHost()
     } / {
-        modifier = Modifier.fillMaxWidth().fillMaxHeight()
+        modifier = Modifier.fillMaxSize()
     } *= {
         center()
         background()
@@ -38,8 +37,9 @@ fun NavigationMenu() {
  */
 val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
     mapOf(
-        "Home" to { _ -> Home(navi) },
+        "Home" to { _ -> Home() },
         "Settings" to { _ -> Settings() },
         "Shop" to { _ -> Shop() },
+        "Tasks" to { _ -> Tasks() },
         "Achievements" to { _ -> Achievements() },
     )

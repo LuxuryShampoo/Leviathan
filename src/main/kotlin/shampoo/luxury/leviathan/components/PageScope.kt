@@ -23,7 +23,13 @@ fun PageScope(content: @Composable () -> Unit) {
             .fillMaxHeight(),
         horizontalAlignment = CenterHorizontally,
     ) {
-        content()
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.8f),
+        ) {
+            content()
+        }
         Divider()
         NavBar(navi)
     }

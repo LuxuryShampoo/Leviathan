@@ -2,3 +2,5 @@ routes:
   home* -> Home
   settings -> Settings
   shop -> Shop
+  achievements -> Achievements
+  tasks -> Tasks

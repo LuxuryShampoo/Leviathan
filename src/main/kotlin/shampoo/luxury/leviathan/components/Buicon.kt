@@ -1,12 +1,12 @@
 package shampoo.luxury.leviathan.components
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
@@ -37,27 +37,27 @@ fun Buicon(
     size: Dp = 32.dp,
     hitBox: Dp = 64.dp,
     unbounded: Boolean = false,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    Box(
-        modifier,
-        Center,
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier.size(hitBox),
+        colors =
+            ButtonDefaults.outlinedButtonColors(
+                backgroundColor = Transparent,
+                contentColor = MaterialTheme.colors.onBackground,
+            ),
+        contentPadding = PaddingValues(0.dp), // Remove default padding
     ) {
-        Button(
-            onClick,
-            Modifier.size(hitBox),
-            colors =
-                ButtonDefaults.buttonColors(
-                    backgroundColor = Transparent,
-                    MaterialTheme.colors.onBackground,
-                ),
-        ) {}
         Icon(
-            imageVector(FontAwesomeIcons.Solid),
-            contentDescription,
-            Modifier.size(size).modifyIf(!unbounded, Modifier.wrapContentSize(Center)),
-            MaterialTheme.colors.onBackground,
+            imageVector = imageVector(FontAwesomeIcons.Solid),
+            contentDescription = contentDescription,
+            modifier =
+                Modifier
+                    .size(size)
+                    .modifyIf(!unbounded, Modifier.wrapContentSize(Center)),
+            tint = MaterialTheme.colors.onBackground,
         )
     }
 }

@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.runtime.Composable
@@ -26,9 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import moe.tlaster.precompose.navigation.Navigator
+import compose.icons.fontawesomeicons.SolidGroup
+import compose.icons.fontawesomeicons.solid.Bars
+import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.DropdownText
 import shampoo.luxury.leviathan.components.FileImage
+import shampoo.luxury.leviathan.components.NavButton
 import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.global.Values.selectedPet
 import xyz.malefic.compose.comps.text.typography.Body1
@@ -36,15 +39,15 @@ import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import java.io.File
 
 @Composable
-fun Home(navi: Navigator) =
+fun Home() =
     PageScope {
-        TopRow(navi)
+        TopRow()
         Divider()
         PetContainer()
     }
 
 @Composable
-private fun TopRow(navi: Navigator) {
+private fun TopRow() {
     Row(
         Modifier
             .fillMaxHeight(0.2f)
@@ -52,17 +55,14 @@ private fun TopRow(navi: Navigator) {
         SpaceEvenly,
         CenterVertically,
     ) {
-        Body1("Hello, World!")
-        Button({
-            navi.navigate("Achievements")
-        }) {
-            Body1("Achievements", colorType = OnPrimary)
-        }
         var expanded by remember { mutableStateOf(false) }
         Box {
-            Button({ expanded = true }) {
-                Body1("Menu", colorType = OnPrimary)
-            }
+            Buicon(
+                { SolidGroup.Bars },
+                "Menu",
+                32.dp,
+                48.dp,
+            ) { expanded = true }
             DropdownMenu(
                 expanded,
                 { expanded = false },
@@ -77,6 +77,12 @@ private fun TopRow(navi: Navigator) {
                 }
             }
         }
+        NavButton("tasks") {
+            Body1("Tasks", colorType = OnPrimary)
+        }
+        NavButton("achievements") {
+            Body1("Achievements", colorType = OnPrimary)
+        }
     }
 }
 
@@ -84,8 +90,7 @@ private fun TopRow(navi: Navigator) {
 private fun PetContainer() {
     Box(
         Modifier
-            .fillMaxHeight(0.75f)
-            .fillMaxWidth(),
+            .fillMaxSize(),
         Center,
     ) {
         var file by remember { mutableStateOf(File("")) }
