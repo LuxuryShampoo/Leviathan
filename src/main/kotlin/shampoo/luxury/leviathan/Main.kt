@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.theme.ThemeManager
 import shampoo.luxury.leviathan.wrap.Whisper
+import shampoo.luxury.leviathan.wrap.data.initializeDatabase
 import shampoo.luxury.leviathan.wrap.setupTrayIcon
 import xyz.malefic.compose.comps.precompose.NavWindow
 import xyz.malefic.compose.nav.RouteManager
@@ -25,7 +26,9 @@ import xyz.malefic.compose.theming.MaleficTheme
 import xyz.malefic.ext.stream.grass
 import java.awt.Toolkit
 
-fun main() =
+fun main() {
+    initializeDatabase()
+
     application {
         val scope = CoroutineScope(IO)
         Whisper.initialize("hello")
@@ -66,3 +69,4 @@ fun main() =
             } ?: CoroutineScope(IO).launch { ThemeManager.updateTheme(ThemeManager.DEFAULT_THEME) }
         }
     }
+}

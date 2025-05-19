@@ -30,6 +30,7 @@ malefic-prefs = { group = "xyz.malefic.compose", name = "prefs", version.ref = "
 malefic-nav = { group = "xyz.malefic.compose", name = "nav", version.ref = "maleficnav" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
@@ -49,4 +50,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 [bundles]
 malefic-ext = ['malefic-ext-core', 'malefic-ext-compose']
 malefic-compose = ['malefic-components', 'malefic-nav', 'malefic-theming', 'malefic-engine', 'malefic-prefs']
-ktor = ['ktor-client-core', 'ktor-client-cio', 'ktor-client-content-negotiation', 'ktor-serialization-kotlinx-json', 'kotlinx-serialization-json']
+ktor = ['ktor-client-core', 'ktor-client-cio', 'ktor-client-auth', 'ktor-client-content-negotiation', 'ktor-serialization-kotlinx-json', 'kotlinx-serialization-json']

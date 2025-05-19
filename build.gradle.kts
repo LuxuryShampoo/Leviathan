@@ -36,6 +36,10 @@ dependencies {
     implementation(libs.whisper)
     implementation(libs.kermit)
     implementation(libs.slf4j)
+    implementation("org.jetbrains.exposed:exposed-core:0.61.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.61.0")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.61.0")
+    implementation("mysql:mysql-connector-java:8.0.33")
 }
 
 compose.desktop {

@@ -89,8 +89,7 @@ private fun TopRow() {
 @Composable
 private fun PetContainer() {
     Box(
-        Modifier
-            .fillMaxSize(),
+        Modifier.fillMaxSize(),
         Center,
     ) {
         var file by remember { mutableStateOf(File("")) }
