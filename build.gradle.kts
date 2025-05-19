@@ -25,10 +25,11 @@ repositories {
 }
 
 dependencies {
+    implementation(compose.components.resources)
     implementation(libs.bundles.malefic.compose)
     implementation(compose.desktop.currentOs)
-    implementation(compose.components.resources)
     implementation(libs.bundles.malefic.ext)
+    implementation(libs.bundles.exposed)
     implementation(libs.malefic.signal)
     implementation(libs.font.awesome)
     implementation(libs.bundles.ktor)
@@ -36,10 +37,7 @@ dependencies {
     implementation(libs.whisper)
     implementation(libs.kermit)
     implementation(libs.slf4j)
-    implementation("org.jetbrains.exposed:exposed-core:0.61.0")
-    implementation("org.jetbrains.exposed:exposed-dao:0.61.0")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.61.0")
-    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation(libs.mysql)
 }
 
 compose.desktop {

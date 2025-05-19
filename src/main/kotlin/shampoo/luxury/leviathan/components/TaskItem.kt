@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.wrap.data.tasks
+package shampoo.luxury.leviathan.components
 
 import androidx.compose.foundation.layout.Arrangement.Absolute.SpaceBetween
 import androidx.compose.foundation.layout.Column
@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.Trash
-import shampoo.luxury.leviathan.components.Buicon
 
 /**
  * A composable function that represents a single tasks item in a tasks list.

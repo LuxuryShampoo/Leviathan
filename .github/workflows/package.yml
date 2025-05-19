@@ -10,7 +10,7 @@ on:
       release_type:
         description: 'Release Type'
         required: true
-        default: 'minor'
+        default: 'patch'
         type: choice
         options:
           - patch

@@ -18,15 +18,19 @@ fun addTask(
     }
 }
 
-fun getAllTasks(): List<Map<String, Any?>> =
-    transaction {
-        Tasks.selectAll().map { row ->
-            mapOf(
-                "id" to row[Tasks.id],
-                "title" to row[Tasks.title],
-                "description" to row[Tasks.description],
-                "isCompleted" to row[Tasks.isCompleted],
-            )
+fun fetchTasks(): List<Task> =
+    buildList {
+        transaction {
+            Tasks.selectAll().map { row ->
+                add(
+                    Task(
+                        row[Tasks.id],
+                        row[Tasks.title],
+                        row[Tasks.description],
+                        row[Tasks.isCompleted],
+                    ),
+                )
+            }
         }
     }
 

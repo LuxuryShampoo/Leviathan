@@ -16,8 +16,8 @@ object TiApiClient {
                 basic {
                     credentials {
                         BasicAuthCredentials(
-                            username = "427JROK0",
-                            password = "327a3ed5-554e-4787-ad2b-a2ad744286d0",
+                            "427JROK0",
+                            "327a3ed5-554e-4787-ad2b-a2ad744286d0",
                         )
                     }
                 }
@@ -32,5 +32,5 @@ object TiApiClient {
                 )
             }
         }
-    val baseUrl = "https://us-west-2.data.tidbcloud.com/api/v1beta/app/dataapp-eoBVSUPi/endpoint/"
+    const val BASE_URL = "https://us-west-2.data.tidbcloud.com/api/v1beta/app/dataapp-eoBVSUPi/endpoint"
 }

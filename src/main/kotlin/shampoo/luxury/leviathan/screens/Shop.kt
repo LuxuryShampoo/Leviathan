@@ -24,11 +24,9 @@ import shampoo.luxury.leviathan.components.Carousel
 import shampoo.luxury.leviathan.components.CarouselButton
 import shampoo.luxury.leviathan.components.CarouselCost
 import shampoo.luxury.leviathan.components.PageScope
-import shampoo.luxury.leviathan.global.Values.allPets
 import shampoo.luxury.leviathan.global.Values.unownedPets
 import xyz.malefic.compose.comps.text.typography.Heading3
 import java.io.File
-import kotlin.Int.Companion.MAX_VALUE
 
 @Composable
 fun Shop() =
@@ -56,29 +54,24 @@ private fun TopRow(focusedPetName: String) {
 @Composable
 private fun MarketBox(onFocusChange: (String) -> Unit) {
     val imageFiles = remember { mutableStateListOf<File>() }
-    val startIndex = MAX_VALUE / 2
-    val listState = rememberLazyListState(startIndex)
+    val sortedUnownedPets = remember { unownedPets.sortedBy { it.cost } }
+    val focusedPet = remember { mutableStateOf(sortedUnownedPets.firstOrNull()) }
     val coroutineScope = rememberCoroutineScope()
-    var focusedPetCost by remember { mutableStateOf(0.0) }
 
     LaunchedEffect(Unit) {
-        unownedPets.forEach {
-            File(it.localPath).apply {
-                if (exists()) {
-                    imageFiles.add(this)
-                }
-            }
-        }
+        imageFiles.addAll(
+            sortedUnownedPets
+                .filter { File(it.localPath).exists() }
+                .map { File(it.localPath) },
+        )
     }
 
+    val listState = rememberLazyListState()
+
     LaunchedEffect(listState.firstVisibleItemIndex) {
-        if (imageFiles.isNotEmpty()) {
-            val focusedIndex = listState.firstVisibleItemIndex % imageFiles.size
-            val focusedPet = allPets.find { it.localPath == imageFiles[focusedIndex].absolutePath }
-            focusedPet?.let {
-                onFocusChange(it.name)
-                focusedPetCost = it.cost
-            }
+        focusedPet.value = sortedUnownedPets.getOrNull(listState.firstVisibleItemIndex)
+        focusedPet.value?.let {
+            onFocusChange(it.name)
         }
     }
 
@@ -106,7 +99,7 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
                 listState.animateScrollToItem(listState.firstVisibleItemIndex + 1)
             }
 
-            CarouselCost(focusedPetCost)
+            CarouselCost(focusedPet.value?.cost ?: 0.0)
         }
     }
 }

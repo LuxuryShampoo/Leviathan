@@ -17,6 +17,8 @@ font-awesome = "1.1.1"
 kermit = "2.0.5"
 slf4j = "2.0.17"
 whisper = "1.7.1"
+exposed = "0.61.0"
+mysql = "8.0.33"
 
 [libraries]
 precompose = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
@@ -38,6 +40,10 @@ font-awesome = { group = "br.com.devsrsouza.compose.icons", name = "font-awesome
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 slf4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 whisper = { group = "io.github.givimad", name = "whisper-jni", version.ref = "whisper"}
+exposed-core = { group = "org.jetbrains.exposed", name = "exposed-core", version.ref = "exposed" }
+exposed-dao = { group = "org.jetbrains.exposed", name = "exposed-dao", version.ref = "exposed" }
+exposed-jdbc = { group = "org.jetbrains.exposed", name = "exposed-jdbc", version.ref = "exposed" }
+mysql = { group = "mysql", name = "mysql-connector-java", version.ref = "mysql" }
 
 [plugins]
 compose-kotlin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -51,3 +57,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 malefic-ext = ['malefic-ext-core', 'malefic-ext-compose']
 malefic-compose = ['malefic-components', 'malefic-nav', 'malefic-theming', 'malefic-engine', 'malefic-prefs']
 ktor = ['ktor-client-core', 'ktor-client-cio', 'ktor-client-auth', 'ktor-client-content-negotiation', 'ktor-serialization-kotlinx-json', 'kotlinx-serialization-json']
+exposed = ['exposed-core', 'exposed-dao', 'exposed-jdbc']
