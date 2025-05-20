@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import shampoo.luxury.leviathan.screens.Achievements
 import shampoo.luxury.leviathan.screens.Home
+import shampoo.luxury.leviathan.screens.Pomodoro
 import shampoo.luxury.leviathan.screens.Settings
 import shampoo.luxury.leviathan.screens.Shop
 import shampoo.luxury.leviathan.screens.Tasks
@@ -42,4 +43,5 @@ val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
         "Shop" to { _ -> Shop() },
         "Tasks" to { _ -> Tasks() },
         "Achievements" to { _ -> Achievements() },
+        "Pomodoro" to { _ -> Pomodoro() },
     )

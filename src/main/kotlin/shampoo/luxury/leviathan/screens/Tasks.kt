@@ -42,9 +42,9 @@ fun Tasks() {
             TaskInputForm(
                 newTaskTitle,
                 newTaskDescription,
-                onTitleChange = { newTaskTitle = it },
-                onDescriptionChange = { newTaskDescription = it },
-                onAddTask = {
+                { newTaskTitle = it },
+                { newTaskDescription = it },
+                {
                     scope.launch {
                         addTask(newTaskTitle, newTaskDescription.ifBlank { null })
                         tasks = fetchTasks()

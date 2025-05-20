@@ -4,3 +4,4 @@ routes:
   shop -> Shop
   achievements -> Achievements
   tasks -> Tasks
+  pomodoro -> Pomodoro
