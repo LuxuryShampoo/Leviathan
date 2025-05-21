@@ -6,6 +6,12 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
+/**
+ * Adds a new task to the database.
+ *
+ * @param title The title of the task. Cannot be null.
+ * @param description An optional description of the task.
+ */
 fun addTask(
     title: String,
     description: String?,
@@ -18,7 +24,12 @@ fun addTask(
     }
 }
 
-fun fetchTasks(): List<Task> =
+/**
+ * Fetches all tasks from the database.
+ *
+ * @return A list of tasks, where each task is represented as a `Task` object.
+ */
+fun fetchTasks() =
     buildList {
         transaction {
             Tasks.selectAll().map { row ->
@@ -34,6 +45,12 @@ fun fetchTasks(): List<Task> =
         }
     }
 
+/**
+ * Updates the completion status of a task in the database.
+ *
+ * @param id The unique identifier of the task to update.
+ * @param isCompleted The new completion status of the task.
+ */
 fun updateTask(
     id: Int,
     isCompleted: Boolean,
@@ -45,6 +62,11 @@ fun updateTask(
     }
 }
 
+/**
+ * Deletes a task from the database.
+ *
+ * @param id The unique identifier of the task to delete.
+ */
 fun deleteTask(id: Int) {
     transaction {
         Tasks.deleteWhere { with(it) { Tasks.id eq id } }

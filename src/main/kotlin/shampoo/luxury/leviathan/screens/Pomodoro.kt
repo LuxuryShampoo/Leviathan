@@ -6,19 +6,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.ArrowRight
 import compose.icons.fontawesomeicons.solid.Pause
+import compose.icons.fontawesomeicons.solid.UndoAlt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.wrap.data.tasks.Task
 import shampoo.luxury.leviathan.wrap.data.tasks.fetchTasks
+import xyz.malefic.compose.comps.text.typography.Body1
+import xyz.malefic.compose.comps.text.typography.Heading3
 import xyz.malefic.compose.comps.text.typography.Heading4
+import xyz.malefic.compose.comps.text.typography.Heading6
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -50,21 +54,18 @@ fun Pomodoro() =
             Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            Arrangement.spacedBy(16.dp),
+            CenterHorizontally,
         ) {
             Heading4("Pomodoro Timer")
 
             if (selectedTask != null) {
-                Text("Working on: ${selectedTask!!.title}", style = MaterialTheme.typography.h6)
+                Heading6("Working on: ${selectedTask!!.title}")
             } else {
-                Text("Select a task to work on", style = MaterialTheme.typography.h6)
+                Heading6("Select a task to work on")
             }
 
-            Text(
-                String.format("%02d:%02d", timeLeft / 60, timeLeft % 60),
-                style = MaterialTheme.typography.h3,
-            )
+            Heading3("${timeLeft / 60}:${timeLeft % 60}")
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Buicon(
@@ -77,12 +78,14 @@ fun Pomodoro() =
                     "Pause",
                     onClick = { isRunning = false },
                 )
-                Button(onClick = {
-                    isRunning = false
-                    timeLeft = 25 * 60
-                }) {
-                    Text("Reset")
-                }
+                Buicon(
+                    { SolidGroup.UndoAlt },
+                    "Reset",
+                    onClick = {
+                        isRunning = false
+                        timeLeft = 25 * 60
+                    },
+                )
             }
 
             Divider()
@@ -91,8 +94,8 @@ fun Pomodoro() =
                 items(tasks) { task ->
                     ListItem(
                         Modifier.clickable { selectedTask = task },
-                        text = { Text(task.title) },
-                        secondaryText = { Text(task.description ?: "No description") },
+                        text = { Body1(task.title) },
+                        secondaryText = { Body1(task.description ?: "No description") },
                     )
                 }
             }

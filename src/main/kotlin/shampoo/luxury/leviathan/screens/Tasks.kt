@@ -17,19 +17,19 @@ import shampoo.luxury.leviathan.wrap.data.tasks.updateTask
 import xyz.malefic.compose.comps.text.typography.Heading4
 
 @Composable
-fun Tasks() {
-    val scope = rememberCoroutineScope()
-    var tasks by remember { mutableStateOf(emptyList<Task>()) }
-    var newTaskTitle by remember { mutableStateOf("") }
-    var newTaskDescription by remember { mutableStateOf("") }
-
-    LaunchedEffect(Unit) {
-        scope.launch {
-            tasks = fetchTasks()
-        }
-    }
-
+fun Tasks() =
     PageScope {
+        val scope = rememberCoroutineScope()
+        var tasks by remember { mutableStateOf(emptyList<Task>()) }
+        var newTaskTitle by remember { mutableStateOf("") }
+        var newTaskDescription by remember { mutableStateOf("") }
+
+        LaunchedEffect(Unit) {
+            scope.launch {
+                tasks = fetchTasks()
+            }
+        }
+
         Column(
             Modifier
                 .fillMaxSize()
@@ -71,4 +71,3 @@ fun Tasks() {
             )
         }
     }
-}
