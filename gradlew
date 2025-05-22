@@ -71,7 +71,7 @@ app_path=$0
 
 # Need this for daisy-chained symlinks.
 while
-    APP_HOME=${app_path%"${app_path##*/}"}  # leaves a trailing /; empty if no leading io
+    APP_HOME=${app_path%"${app_path##*/}"}  # leaves a trailing /; empty if no leading path
     [ -h "$app_path" ]
 do
     ls=$( ls -ld "$app_path" )
@@ -166,13 +166,13 @@ fi
 #   * the main class name
 #   * -classpath
 #   * -D...appname settings
-#   * --module-io (only if needed)
+#   * --module-path (only if needed)
 #   * DEFAULT_JVM_OPTS, JAVA_OPTS, and GRADLE_OPTS environment variables.
 
 # For Cygwin or MSYS, switch paths to Windows format before running java
 if "$cygwin" || "$msys" ; then
-    APP_HOME=$( cygpath --io --mixed "$APP_HOME" )
-    CLASSPATH=$( cygpath --io --mixed "$CLASSPATH" )
+    APP_HOME=$( cygpath --path --mixed "$APP_HOME" )
+    CLASSPATH=$( cygpath --path --mixed "$CLASSPATH" )
 
     JAVACMD=$( cygpath --unix "$JAVACMD" )
 
@@ -186,7 +186,7 @@ if "$cygwin" || "$msys" ; then
               *)    false ;;
             esac
         then
-            arg=$( cygpath --io --ignore --mixed "$arg" )
+            arg=$( cygpath --path --ignore --mixed "$arg" )
         fi
         # Roll the args list around exactly as many times as the number of
         # args, so each arg winds up back in the position where it started, but
