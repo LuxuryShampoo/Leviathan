@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.ArrowRight
+import compose.icons.fontawesomeicons.solid.CalendarDay
 import compose.icons.fontawesomeicons.solid.Pause
 import compose.icons.fontawesomeicons.solid.UndoAlt
 import kotlinx.coroutines.delay
@@ -23,6 +24,8 @@ import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Heading3
 import xyz.malefic.compose.comps.text.typography.Heading4
 import xyz.malefic.compose.comps.text.typography.Heading6
+import xyz.malefic.compose.nav.RouteManager.navi
+import xyz.malefic.ext.precompose.gate
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -36,18 +39,16 @@ fun Pomodoro() =
 
         LaunchedEffect(Unit) {
             scope.launch {
-                tasks = fetchTasks()
+                tasks = fetchTasks().filter { !it.isCompleted }
             }
         }
 
         LaunchedEffect(isRunning) {
-            if (isRunning) {
-                while (timeLeft > 0) {
-                    delay(1000L)
-                    timeLeft -= 1
-                }
-                isRunning = false
+            while (isRunning && timeLeft > 0) {
+                delay(1000L)
+                timeLeft -= 1
             }
+            isRunning = false
         }
 
         Column(
@@ -57,35 +58,40 @@ fun Pomodoro() =
             Arrangement.spacedBy(16.dp),
             CenterHorizontally,
         ) {
-            Heading4("Pomodoro Timer")
-
-            if (selectedTask != null) {
-                Heading6("Working on: ${selectedTask!!.title}")
-            } else {
-                Heading6("Select a task to work on")
+            Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
+                Buicon(
+                    { SolidGroup.CalendarDay },
+                    "Tasks",
+                    24.dp,
+                    32.dp,
+                ) {
+                    navi gate "tasks"
+                }
+                Heading4("Pomodoro")
             }
 
-            Heading3("${timeLeft / 60}:${timeLeft % 60}")
+            Divider()
+
+            Heading6("Working on: ${selectedTask!!.title}".takeUnless { selectedTask == null } ?: "Select a task to work on")
+
+            Heading3("%02d:%02d".format(timeLeft / 60, timeLeft % 60))
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Buicon(
                     { SolidGroup.ArrowRight },
                     "Start",
-                    onClick = { isRunning = true },
-                )
+                ) { isRunning = true }
                 Buicon(
                     { SolidGroup.Pause },
                     "Pause",
-                    onClick = { isRunning = false },
-                )
+                ) { isRunning = false }
                 Buicon(
                     { SolidGroup.UndoAlt },
                     "Reset",
-                    onClick = {
-                        isRunning = false
-                        timeLeft = 25 * 60
-                    },
-                )
+                ) {
+                    isRunning = false
+                    timeLeft = 25 * 60
+                }
             }
 
             Divider()
@@ -94,9 +100,8 @@ fun Pomodoro() =
                 items(tasks) { task ->
                     ListItem(
                         Modifier.clickable { selectedTask = task },
-                        text = { Body1(task.title) },
                         secondaryText = { Body1(task.description ?: "No description") },
-                    )
+                    ) { Body1(task.title) }
                 }
             }
         }

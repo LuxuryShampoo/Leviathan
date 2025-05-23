@@ -7,7 +7,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import compose.icons.fontawesomeicons.SolidGroup
-import compose.icons.fontawesomeicons.solid.Hourglass
+import compose.icons.fontawesomeicons.solid.HourglassStart
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.PageScope
@@ -50,7 +50,7 @@ fun Tasks() =
             ) {
                 Heading4("Tasks")
                 Buicon(
-                    { SolidGroup.Hourglass },
+                    { SolidGroup.HourglassStart },
                     "Pomodoro",
                     24.dp,
                     32.dp,
@@ -75,7 +75,7 @@ fun Tasks() =
             )
 
             TaskList(
-                tasks.filter { !it.isCompleted },
+                tasks,
                 { id, isCompleted ->
                     scope.launch {
                         updateTask(id, isCompleted)

@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import shampoo.luxury.leviathan.wrap.data.tasks.Task
+import xyz.malefic.compose.comps.text.typography.Body1
 import androidx.compose.foundation.lazy.items as iii
 
 @Composable
@@ -16,8 +17,8 @@ fun TaskList(
     onDeleteTask: (Int) -> Unit,
 ) {
     LazyColumn(
+        Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.fillMaxSize(),
     ) {
         iii(tasks) { task ->
             TaskItem(
@@ -30,6 +31,10 @@ fun TaskList(
                 { id, isCompleted -> onTaskCompleted(id, isCompleted) },
                 { id -> onDeleteTask(id) },
             )
+        }.takeUnless { tasks.isEmpty() } ?: run {
+            item {
+                Body1("No tasks available")
+            }
         }
     }
 }
