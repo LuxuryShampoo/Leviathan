@@ -17,18 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import shampoo.luxury.leviathan.components.BooleanSetting
 import shampoo.luxury.leviathan.components.PageScope
-import shampoo.luxury.leviathan.global.Values.Prefs.listenPreference
-import shampoo.luxury.leviathan.global.Values.Prefs.speakPreference
+import shampoo.luxury.leviathan.global.Values.Prefs.listenSetting
+import shampoo.luxury.leviathan.global.Values.Prefs.speakSetting
 import xyz.malefic.compose.comps.text.typography.Heading1
 
 @Composable
 fun Settings() {
-    var localSpeakPreference by remember { mutableStateOf(speakPreference) }
-    var localListenPreference by remember { mutableStateOf(listenPreference) }
+    var localSpeakSetting by remember { mutableStateOf(speakSetting) }
+    var localListenSetting by remember { mutableStateOf(listenSetting) }
 
     val saveSettings = {
-        speakPreference = localSpeakPreference
-        listenPreference = localListenPreference
+        speakSetting = localSpeakSetting
+        listenSetting = localListenSetting
     }
 
     PageScope(saveSettings) {
@@ -49,11 +49,11 @@ fun Settings() {
             item {
                 Spacer(Modifier.height(8.dp))
 
-                BooleanSetting("Speak", localSpeakPreference) { localSpeakPreference = it }
+                BooleanSetting("Speak", localSpeakSetting) { localSpeakSetting = it }
 
                 Divider(Modifier.padding(vertical = 16.dp))
 
-                BooleanSetting("Listen", localListenPreference) { localListenPreference = it }
+                BooleanSetting("Listen", localListenSetting) { localListenSetting = it }
 
                 Spacer(Modifier.height(8.dp))
             }

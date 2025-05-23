@@ -1,13 +1,14 @@
 package shampoo.luxury.leviathan.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
+import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.Bars
+import compose.icons.fontawesomeicons.solid.Trophy
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.DropdownText
 import shampoo.luxury.leviathan.components.FileImage
@@ -36,6 +38,8 @@ import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.global.Values.selectedPet
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
+import xyz.malefic.compose.nav.RouteManager.navi
+import xyz.malefic.ext.precompose.gate
 import java.io.File
 
 @Composable
@@ -51,37 +55,48 @@ private fun TopRow() {
     Row(
         Modifier
             .fillMaxHeight(0.2f)
-            .fillMaxWidth(),
-        SpaceEvenly,
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        SpaceBetween,
         CenterVertically,
     ) {
-        var expanded by remember { mutableStateOf(false) }
-        Box {
-            Buicon(
-                { SolidGroup.Bars },
-                "Menu",
-                32.dp,
-                48.dp,
-            ) { expanded = true }
-            DropdownMenu(
-                expanded,
-                { expanded = false },
-            ) {
-                DropdownText("Option 1") {
-                    Logger.i("Option 1")
-                    expanded = false
-                }
-                DropdownText("Option 2") {
-                    Logger.i("Option 2")
-                    expanded = false
-                }
-            }
-        }
+        Burger()
         NavButton("tasks") {
             Body1("Tasks", colorType = OnPrimary)
         }
-        NavButton("achievements") {
-            Body1("Achievements", colorType = OnPrimary)
+        Buicon(
+            { SolidGroup.Trophy },
+            "Achievements",
+            32.dp,
+            48.dp,
+        ) {
+            navi gate "achievements"
+        }
+    }
+}
+
+@Composable
+private fun Burger() {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        Buicon(
+            { SolidGroup.Bars },
+            "Menu",
+            32.dp,
+            48.dp,
+        ) { expanded = true }
+        DropdownMenu(
+            expanded,
+            { expanded = false },
+        ) {
+            DropdownText("Option 1") {
+                Logger.i("Option 1")
+                expanded = false
+            }
+            DropdownText("Option 2") {
+                Logger.i("Option 2")
+                expanded = false
+            }
         }
     }
 }

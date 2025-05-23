@@ -31,7 +31,7 @@ import java.io.File
 @Composable
 fun Shop() =
     PageScope {
-        var focusedPetName by remember { mutableStateOf("") }
+        var focusedPetName by remember { mutableStateOf("Woah!") }
 
         TopRow(focusedPetName)
         Divider()
@@ -55,8 +55,20 @@ private fun TopRow(focusedPetName: String) {
 private fun MarketBox(onFocusChange: (String) -> Unit) {
     val imageFiles = remember { mutableStateListOf<File>() }
     val sortedUnownedPets = remember { unownedPets.sortedBy { it.cost } }
-    val focusedPet = remember { mutableStateOf(sortedUnownedPets.firstOrNull()) }
+    var focusedPet by remember { mutableStateOf(sortedUnownedPets.firstOrNull()) }
     val coroutineScope = rememberCoroutineScope()
+
+    if (sortedUnownedPets.isEmpty()) {
+        Box(
+            Modifier
+                .fillMaxHeight(0.6f)
+                .fillMaxWidth(),
+            Center,
+        ) {
+            Heading3("All Gone!")
+        }
+        return
+    }
 
     LaunchedEffect(Unit) {
         imageFiles.addAll(
@@ -69,8 +81,8 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState.firstVisibleItemIndex) {
-        focusedPet.value = sortedUnownedPets.getOrNull(listState.firstVisibleItemIndex)
-        focusedPet.value?.let {
+        focusedPet = sortedUnownedPets.getOrNull(listState.firstVisibleItemIndex)
+        focusedPet?.let {
             onFocusChange(it.name)
         }
     }
@@ -92,14 +104,16 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
             }
 
             CarouselButton("<", coroutineScope, { align(CenterStart) }) {
-                listState.animateScrollToItem(listState.firstVisibleItemIndex - 1)
+                val prevIndex = (listState.firstVisibleItemIndex - 1 + imageFiles.size) % imageFiles.size
+                listState.animateScrollToItem(prevIndex)
             }
 
             CarouselButton(">", coroutineScope, { align(CenterEnd) }) {
-                listState.animateScrollToItem(listState.firstVisibleItemIndex + 1)
+                val nextIndex = (listState.firstVisibleItemIndex + 1) % unownedPets.size
+                listState.animateScrollToItem(nextIndex)
             }
 
-            CarouselCost(focusedPet.value?.cost ?: 0.0)
+            CarouselCost(focusedPet)
         }
     }
 }

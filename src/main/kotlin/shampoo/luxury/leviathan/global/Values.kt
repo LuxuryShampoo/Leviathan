@@ -4,6 +4,7 @@ import shampoo.luxury.leviathan.pet.Pet
 import shampoo.luxury.leviathan.pet.pets
 import shampoo.luxury.leviathan.wrap.data.settings.SettingsDelegate
 import xyz.malefic.compose.prefs.collection.PersistentHashSet
+import xyz.malefic.compose.prefs.delegate.IntPreference
 import xyz.malefic.compose.prefs.delegate.SerializablePreference
 import java.util.prefs.Preferences
 import java.util.prefs.Preferences.userRoot
@@ -12,9 +13,11 @@ object Values {
     object Prefs {
         val prefs: Preferences = userRoot().node("leviathan")
 
-        var speakPreference by SettingsDelegate("speak_enabled", true)
-        var listenPreference by SettingsDelegate("listen_enabled", true)
+        var speakSetting by SettingsDelegate("speak_enabled", true)
+        var listenSetting by SettingsDelegate("listen_enabled", true)
     }
+
+    var user by IntPreference("current_user", -1)
 
     val allPets =
         pets {

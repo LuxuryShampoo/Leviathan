@@ -1,10 +1,12 @@
 package shampoo.luxury.leviathan.wrap.data.tasks
 
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import shampoo.luxury.leviathan.global.Values.user
 
 /**
  * Adds a new task to the database.
@@ -18,6 +20,7 @@ fun addTask(
 ) {
     transaction {
         Tasks.insert {
+            it[userId] = user
             it[Tasks.title] = title
             it[Tasks.description] = description
         }
@@ -32,7 +35,7 @@ fun addTask(
 fun fetchTasks() =
     buildList {
         transaction {
-            Tasks.selectAll().map { row ->
+            Tasks.select(Tasks.userId eq user).map { row ->
                 add(
                     Task(
                         row[Tasks.id].value,
@@ -56,7 +59,7 @@ fun updateTask(
     isCompleted: Boolean,
 ) {
     transaction {
-        Tasks.update({ Tasks.id eq id }) {
+        Tasks.update({ Tasks.id eq id and (Tasks.userId eq user) }) {
             it[Tasks.isCompleted] = isCompleted
         }
     }
@@ -69,6 +72,6 @@ fun updateTask(
  */
 fun deleteTask(id: Int) {
     transaction {
-        Tasks.deleteWhere { with(it) { Tasks.id eq id } }
+        Tasks.deleteWhere { with(it) { Tasks.id eq id and (userId eq user) } }
     }
 }

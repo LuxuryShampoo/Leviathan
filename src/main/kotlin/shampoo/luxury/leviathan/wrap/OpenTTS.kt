@@ -15,7 +15,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import shampoo.luxury.leviathan.global.Values.Prefs.speakPreference
+import shampoo.luxury.leviathan.global.Values.Prefs.speakSetting
 import java.io.ByteArrayInputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.DataLine
@@ -108,7 +108,7 @@ suspend fun speak(
     denoiserStrength: Float? = null,
     cache: Boolean? = null,
 ) {
-    if (!speakPreference) {
+    if (!speakSetting) {
         Logger.i("Speak preference is disabled. Skipping TTS.")
         return
     }

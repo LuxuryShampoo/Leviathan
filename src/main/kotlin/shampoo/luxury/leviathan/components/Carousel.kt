@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -23,7 +24,6 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.unit.dp
 import compose.icons.FontAwesomeIcons
@@ -31,15 +31,18 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.DollarSign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import shampoo.luxury.leviathan.pet.Pet
 import xyz.malefic.compose.comps.text.typography.Body1
 import java.io.File
-import kotlin.Int.Companion.MAX_VALUE
 
 /**
- * A composable function that displays a horizontally scrollable carousel of images.
+ * Displays a horizontal carousel of images using a `LazyRow`.
  *
- * @param listState The state of the lazy list, used to control and observe the scroll position.
- * @param imageFiles A list of image files to be displayed in the carousel.
+ * @param listState The state object to control and observe the scroll position of the carousel.
+ * @param imageFiles A list of image files to display in the carousel.
+ *
+ * Each image is scaled up if it is the currently focused (first visible) item.
+ * Only existing files are displayed.
  */
 @Composable
 fun Carousel(
@@ -52,9 +55,8 @@ fun Carousel(
         PaddingValues(horizontal = 130.dp),
         horizontalArrangement = Arrangement.spacedBy(30.dp),
     ) {
-        items(MAX_VALUE) { index ->
-            val wrappedIndex = index % imageFiles.size
-            val file = imageFiles[wrappedIndex]
+        items(imageFiles.size) { index ->
+            val file = imageFiles[index]
             if (file.exists()) {
                 val isFocused = index == listState.firstVisibleItemIndex
                 val scale by animateFloatAsState(targetValue = if (isFocused) 1.25f else 1f)
@@ -99,10 +101,10 @@ fun CarouselButton(
 /**
  * A composable function that displays the cost of the focused pet in the carousel.
  *
- * @param focusedPetCost The cost of the currently focused pet, displayed as a `Double`.
+ * @param focusedPet The currently focused pet, which may be null.
  */
 @Composable
-fun BoxScope.CarouselCost(focusedPetCost: Double) {
+fun BoxScope.CarouselCost(focusedPet: Pet?) {
     Box(
         Modifier
             .align(BottomCenter)
@@ -115,11 +117,11 @@ fun BoxScope.CarouselCost(focusedPetCost: Double) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 FontAwesomeIcons.Solid.DollarSign,
-                "Currency Icon",
+                "Currency",
                 Modifier.size(16.dp),
-                Color.White,
+                MaterialTheme.colors.onPrimary,
             )
-            Body1(focusedPetCost.toString(), Modifier.padding(start = 4.dp))
+            Body1(focusedPet?.cost?.toString() ?: "N/A", Modifier.padding(start = 4.dp))
         }
     }
 }

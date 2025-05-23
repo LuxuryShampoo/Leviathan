@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import shampoo.luxury.leviathan.screens.Achievements
-import shampoo.luxury.leviathan.screens.Home
+import shampoo.luxury.leviathan.screens.HomeWithAuth
 import shampoo.luxury.leviathan.screens.Pomodoro
 import shampoo.luxury.leviathan.screens.Settings
 import shampoo.luxury.leviathan.screens.Shop
@@ -38,7 +38,7 @@ fun NavigationMenu() {
  */
 val composableMap: Map<String, @Composable (List<String?>) -> Unit> =
     mapOf(
-        "Home" to { _ -> Home() },
+        "Home" to { _ -> HomeWithAuth() },
         "Settings" to { _ -> Settings() },
         "Shop" to { _ -> Shop() },
         "Tasks" to { _ -> Tasks() },

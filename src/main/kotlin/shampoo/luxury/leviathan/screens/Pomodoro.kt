@@ -9,10 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import compose.icons.fontawesomeicons.SolidGroup
-import compose.icons.fontawesomeicons.solid.ArrowRight
-import compose.icons.fontawesomeicons.solid.CalendarDay
+import compose.icons.fontawesomeicons.solid.ArrowLeft
+import compose.icons.fontawesomeicons.solid.Edit
 import compose.icons.fontawesomeicons.solid.Pause
+import compose.icons.fontawesomeicons.solid.Play
 import compose.icons.fontawesomeicons.solid.UndoAlt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -27,6 +29,7 @@ import xyz.malefic.compose.comps.text.typography.Heading4
 import xyz.malefic.compose.comps.text.typography.Heading6
 import xyz.malefic.compose.nav.RouteManager.navi
 import xyz.malefic.ext.precompose.gate
+import javax.swing.JColorChooser.showDialog
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -37,6 +40,25 @@ fun Pomodoro() =
         var selectedTask by remember { mutableStateOf<Task?>(null) }
         var timeLeft by remember { mutableStateOf(25 * 60) }
         var isRunning by remember { mutableStateOf(false) }
+        var showDialog by remember { mutableStateOf(false) }
+        var workDuration by remember { mutableStateOf(25) }
+        var shortBreakDuration by remember { mutableStateOf(5) }
+        var longBreakDuration by remember { mutableStateOf(15) }
+        val periods by remember {
+            derivedStateOf {
+                listOf(
+                    workDuration * 60,
+                    shortBreakDuration * 60,
+                    workDuration * 60,
+                    shortBreakDuration * 60,
+                    workDuration * 60,
+                    shortBreakDuration * 60,
+                    workDuration * 60,
+                    longBreakDuration * 60,
+                )
+            }
+        }
+        var currentPeriodIndex by remember { mutableStateOf(0) }
 
         LaunchedEffect(Unit) {
             scope.launch {
@@ -44,12 +66,59 @@ fun Pomodoro() =
             }
         }
 
-        LaunchedEffect(isRunning) {
+        LaunchedEffect(isRunning, currentPeriodIndex) {
             while (isRunning && timeLeft > 0) {
                 delay(1000L)
                 timeLeft -= 1
             }
-            isRunning = false
+            if (timeLeft == 0) {
+                isRunning = false
+                currentPeriodIndex = (currentPeriodIndex + 1) % periods.size
+                timeLeft = periods[currentPeriodIndex]
+            }
+        }
+
+        if (showDialog) {
+            Dialog(onDismissRequest = { showDialog = false }) {
+                Surface(
+                    Modifier.padding(16.dp),
+                    MaterialTheme.shapes.medium,
+                    elevation = 8.dp,
+                ) {
+                    Column(
+                        Modifier.padding(16.dp),
+                        Arrangement.spacedBy(8.dp),
+                    ) {
+                        Heading6("Customize Durations")
+                        OutlinedTextField(
+                            workDuration.toString(),
+                            { workDuration = it.toIntOrNull() ?: workDuration },
+                            label = { Body1("Work Duration (minutes)") },
+                        )
+                        OutlinedTextField(
+                            shortBreakDuration.toString(),
+                            { shortBreakDuration = it.toIntOrNull() ?: shortBreakDuration },
+                            label = { Body1("Short Break Duration (minutes)") },
+                        )
+                        OutlinedTextField(
+                            longBreakDuration.toString(),
+                            { longBreakDuration = it.toIntOrNull() ?: longBreakDuration },
+                            label = { Body1("Long Break Duration (minutes)") },
+                        )
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            Arrangement.End,
+                        ) {
+                            TextButton(onClick = { showDialog = false }) {
+                                Body1("Cancel")
+                            }
+                            TextButton(onClick = { showDialog = false }) {
+                                Body1("Save")
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         Column(
@@ -61,7 +130,7 @@ fun Pomodoro() =
         ) {
             Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
                 Buicon(
-                    { SolidGroup.CalendarDay },
+                    { SolidGroup.ArrowLeft },
                     "Tasks",
                     24.dp,
                     32.dp,
@@ -73,13 +142,20 @@ fun Pomodoro() =
 
             Divider()
 
-            Heading6("Working on: ${selectedTask?.title}".takeUnless { selectedTask == null } ?: "Select a task to work on")
+            Heading6(
+                when (periods[currentPeriodIndex] / 60) {
+                    workDuration -> "Working on: ${selectedTask?.title}".takeUnless { selectedTask == null } ?: "Select a task to work on"
+                    shortBreakDuration -> "Short Break!"
+                    longBreakDuration -> "Long Break!"
+                    else -> ""
+                },
+            )
 
             Heading3("%02d:%02d".format(timeLeft / 60, timeLeft % 60))
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Buicon(
-                    { SolidGroup.ArrowRight },
+                    { SolidGroup.Play },
                     "Start",
                 ) { isRunning = true }
                 Buicon(
@@ -91,8 +167,13 @@ fun Pomodoro() =
                     "Reset",
                 ) {
                     isRunning = false
-                    timeLeft = 25 * 60
+                    currentPeriodIndex = 0
+                    timeLeft = periods[currentPeriodIndex]
                 }
+                Buicon(
+                    { SolidGroup.Edit },
+                    "Customize",
+                ) { showDialog = true }
             }
 
             Divider()

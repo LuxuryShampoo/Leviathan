@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.global.Resource.extractResourceToLocal
-import shampoo.luxury.leviathan.global.Values.Prefs.listenPreference
+import shampoo.luxury.leviathan.global.Values.Prefs.listenSetting
 import xyz.malefic.Signal
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioSystem
@@ -218,7 +218,7 @@ object Whisper {
             Logger.d("Listening started...")
 
             while (!isClosed) {
-                if (!listenPreference) {
+                if (!listenSetting) {
                     Logger.d("Listening preference is disabled. Skipping...")
                     continue
                 }
