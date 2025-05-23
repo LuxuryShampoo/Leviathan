@@ -203,7 +203,7 @@ object Whisper {
      * @param scope The coroutine scope in which the listening process runs.
      * @param dispatcher The coroutine dispatcher for managing background tasks.
      */
-    fun startListening(
+    fun listen(
         scope: CoroutineScope,
         dispatcher: CoroutineDispatcher = Dispatchers.IO,
     ) {

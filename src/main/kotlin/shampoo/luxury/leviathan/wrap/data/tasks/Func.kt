@@ -35,9 +35,9 @@ fun fetchTasks() =
             Tasks.selectAll().map { row ->
                 add(
                     Task(
-                        row[Tasks.id],
+                        row[Tasks.id].value,
                         row[Tasks.title],
-                        row[Tasks.description],
+                        row[Tasks.description] ?: "",
                         row[Tasks.isCompleted],
                     ),
                 )

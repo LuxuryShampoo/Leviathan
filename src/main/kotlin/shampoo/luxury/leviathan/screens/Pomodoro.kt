@@ -21,6 +21,7 @@ import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.wrap.data.tasks.Task
 import shampoo.luxury.leviathan.wrap.data.tasks.fetchTasks
 import xyz.malefic.compose.comps.text.typography.Body1
+import xyz.malefic.compose.comps.text.typography.Body2
 import xyz.malefic.compose.comps.text.typography.Heading3
 import xyz.malefic.compose.comps.text.typography.Heading4
 import xyz.malefic.compose.comps.text.typography.Heading6
@@ -72,7 +73,7 @@ fun Pomodoro() =
 
             Divider()
 
-            Heading6("Working on: ${selectedTask!!.title}".takeUnless { selectedTask == null } ?: "Select a task to work on")
+            Heading6("Working on: ${selectedTask?.title}".takeUnless { selectedTask == null } ?: "Select a task to work on")
 
             Heading3("%02d:%02d".format(timeLeft / 60, timeLeft % 60))
 
@@ -100,7 +101,7 @@ fun Pomodoro() =
                 items(tasks) { task ->
                     ListItem(
                         Modifier.clickable { selectedTask = task },
-                        secondaryText = { Body1(task.description ?: "No description") },
+                        secondaryText = { Body2(task.description ?: "") },
                     ) { Body1(task.title) }
                 }
             }

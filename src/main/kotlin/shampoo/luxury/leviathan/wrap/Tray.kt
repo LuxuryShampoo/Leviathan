@@ -1,18 +1,16 @@
 package shampoo.luxury.leviathan.wrap
 
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.global.Resource.extractResourceToLocal
-import shampoo.luxury.leviathan.wrap.Whisper
-import shampoo.luxury.leviathan.wrap.parse
-import shampoo.luxury.leviathan.wrap.speak
 import java.awt.*
 import java.awt.TrayIcon.MessageType.INFO
 import kotlin.system.exitProcess
 
 fun setupTrayIcon(scope: CoroutineScope) {
     if (!SystemTray.isSupported()) {
-        println("SystemTray is not supported")
+        Logger.e("SystemTray is not supported")
         return
     }
 
@@ -29,12 +27,12 @@ fun setupTrayIcon(scope: CoroutineScope) {
     popup.addSeparator()
     popup.add(exit)
 
-    val trayIcon = TrayIcon(image, "Whisper Background Service", popup)
+    val trayIcon = TrayIcon(image, "Leviathan Whisper", popup)
     trayIcon.isImageAutoSize = true
 
     startListening.addActionListener {
         scope.launch {
-            Whisper.startListening(scope)
+            Whisper.listen(scope)
             Whisper.onTranscript(scope) { transcript ->
                 val aiResponse =
                     parse("This was a transcript from a speech to text so there may be some errors. Here's your prompt: $transcript")

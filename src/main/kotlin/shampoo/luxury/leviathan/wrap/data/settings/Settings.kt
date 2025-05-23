@@ -1,21 +1,16 @@
 package shampoo.luxury.leviathan.wrap.data.settings
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.id.IntIdTable
+import java.awt.SystemColor.text
 
 /**
  * Represents the `Settings` table in the database.
  * This table is used to store application settings in a key-value format,
  * with an additional column to specify the data type of the value.
  */
-object Settings : Table() {
-    /**
-     * Auto-incrementing primary key for the settings table.
-     */
-    val id = integer("id").autoIncrement()
-
+object Settings : IntIdTable() {
     /**
      * The unique key or name of the setting.
-     * This column is indexed to ensure uniqueness.
      */
     val key = varchar("key", 255).uniqueIndex()
 
@@ -30,9 +25,4 @@ object Settings : Table() {
      * This helps in interpreting the value correctly in the application logic.
      */
     val type = varchar("type", 50)
-
-    /**
-     * Defines the primary key for the table, which is the `id` column.
-     */
-    override val primaryKey = PrimaryKey(id)
 }
