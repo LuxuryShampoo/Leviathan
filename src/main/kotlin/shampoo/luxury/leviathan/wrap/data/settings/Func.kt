@@ -4,6 +4,7 @@ import co.touchlab.kermit.Logger
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import shampoo.luxury.leviathan.global.Values.user
@@ -22,7 +23,7 @@ fun getBooleanSetting(
 ) = transaction {
     val logger = Logger.withTag("Settings")
 
-    val queryResult = Settings.select(Settings.key eq key, Settings.userId eq user, Settings.value).singleOrNull()
+    val queryResult = Settings.selectAll().where { Settings.userId eq user and (Settings.key eq key) }.singleOrNull()
 
     if (queryResult == null) {
         logger.d { "Setting not found for key: $key. Using default value: $defaultValue" }
@@ -47,7 +48,7 @@ fun setBooleanSetting(
 ) = transaction {
     val logger = Logger.withTag("Settings")
 
-    if (Settings.select(Settings.key eq key, Settings.userId eq user).empty()) {
+    if (Settings.selectAll().where { Settings.userId eq user and (Settings.key eq key) }.empty()) {
         logger.d { "Inserting new boolean setting: key=$key, value=$value" }
         Settings.insert {
             it[userId] = user

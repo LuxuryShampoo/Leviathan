@@ -24,7 +24,7 @@ import shampoo.luxury.leviathan.components.Carousel
 import shampoo.luxury.leviathan.components.CarouselButton
 import shampoo.luxury.leviathan.components.CarouselCost
 import shampoo.luxury.leviathan.components.PageScope
-import shampoo.luxury.leviathan.global.Values.unownedPets
+import shampoo.luxury.leviathan.wrap.data.pets.unownedPets
 import xyz.malefic.compose.comps.text.typography.Heading3
 import java.io.File
 

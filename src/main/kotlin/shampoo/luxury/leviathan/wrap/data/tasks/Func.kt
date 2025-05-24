@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import shampoo.luxury.leviathan.global.Values.user
@@ -35,7 +36,7 @@ fun addTask(
 fun fetchTasks() =
     buildList {
         transaction {
-            Tasks.select(Tasks.userId eq user).map { row ->
+            Tasks.selectAll().where { Tasks.userId eq user }.map { row ->
                 add(
                     Task(
                         row[Tasks.id].value,

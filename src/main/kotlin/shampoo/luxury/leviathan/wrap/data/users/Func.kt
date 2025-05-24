@@ -3,6 +3,7 @@ package shampoo.luxury.leviathan.wrap.data.users
 import at.favre.lib.crypto.bcrypt.BCrypt
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
@@ -42,7 +43,8 @@ fun checkPassword(
     transaction {
         val hashed =
             Users
-                .select(Users.username eq username, Users.password)
+                .selectAll()
+                .where { Users.username eq username }
                 .singleOrNull()
                 ?.get(Users.password) ?: return@transaction false
         return@transaction BCrypt.verifyer().verify(password.toCharArray(), hashed).verified
@@ -58,7 +60,8 @@ fun checkPassword(
 fun getUserIdByUsername(username: String): Int =
     transaction {
         Users
-            .select(Users.username eq username, Users.id)
+            .select(Users.id)
+            .where { Users.username eq username }
             .singleOrNull()
             ?.get(Users.id)
             ?.value ?: throw IllegalStateException("User not found.")

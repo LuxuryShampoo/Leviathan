@@ -13,6 +13,7 @@ import androidx.compose.ui.window.Dialog
 import co.touchlab.kermit.Logger
 import shampoo.luxury.leviathan.global.Values.Prefs.prefs
 import shampoo.luxury.leviathan.global.Values.user
+import shampoo.luxury.leviathan.wrap.data.pets.initializePets
 import shampoo.luxury.leviathan.wrap.data.users.checkPassword
 import shampoo.luxury.leviathan.wrap.data.users.getUserIdByUsername
 import shampoo.luxury.leviathan.wrap.data.users.insertUser
@@ -207,6 +208,7 @@ private fun registerUser(
 fun HomeWithAuth() {
     var prefIsAuthenticated by BooleanPreference("isAuthenticated", false, prefs)
     var isAuthenticated by remember { mutableStateOf(prefIsAuthenticated) }
+    var petsInitialized by remember { mutableStateOf(false) }
 
     if (!isAuthenticated) {
         AuthDialog {
@@ -216,6 +218,20 @@ fun HomeWithAuth() {
             Logger.i("User ID set to $user and logged in as $it")
         }
     } else {
-        Home()
+        LaunchedEffect(Unit) {
+            initializePets()
+            petsInitialized = true
+        }
+
+        if (!petsInitialized) {
+            Box(
+                Modifier.fillMaxSize(),
+                Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            Home()
+        }
     }
 }

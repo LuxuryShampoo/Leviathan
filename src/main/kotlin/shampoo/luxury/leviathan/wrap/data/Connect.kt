@@ -3,7 +3,7 @@ package shampoo.luxury.leviathan.wrap.data
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import shampoo.luxury.leviathan.screens.Settings
+import shampoo.luxury.leviathan.wrap.data.pets.Pets
 import shampoo.luxury.leviathan.wrap.data.settings.Settings
 import shampoo.luxury.leviathan.wrap.data.tasks.Tasks
 import shampoo.luxury.leviathan.wrap.data.users.Users
@@ -18,6 +18,6 @@ fun connectToDatabase() {
 fun initializeDatabase() {
     connectToDatabase()
     transaction {
-        SchemaUtils.create(Users, Tasks, Settings)
+        SchemaUtils.create(Users, Tasks, Settings, Pets)
     }
 }

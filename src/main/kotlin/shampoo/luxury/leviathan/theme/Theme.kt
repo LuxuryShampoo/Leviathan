@@ -1,5 +1,7 @@
 package shampoo.luxury.leviathan.theme
 
+import shampoo.luxury.leviathan.theme.ThemeManager.DEFAULT_THEME
+
 /**
  * Enum class representing different themes for the application.
  *
@@ -36,8 +38,8 @@ enum class Theme(
          * Retrieves a theme based on its file path.
          *
          * @param path The file path of the theme.
-         * @return The corresponding theme if found, or the default theme (DARK) if not.
+         * @return The corresponding theme if found, or the default theme (GRASSY) if not.
          */
-        fun fromPath(path: String) = entries.find { it.filePath == path } ?: DARK
+        fun fromPath(path: String): Theme = entries.find { it.filePath == path } ?: fromPath(DEFAULT_THEME)
     }
 }

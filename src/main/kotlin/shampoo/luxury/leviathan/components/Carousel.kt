@@ -31,7 +31,7 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.DollarSign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import shampoo.luxury.leviathan.pet.Pet
+import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import xyz.malefic.compose.comps.text.typography.Body1
 import java.io.File
 
