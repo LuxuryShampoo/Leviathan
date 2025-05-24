@@ -6,6 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap.Companion.Round
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -228,7 +229,7 @@ fun HomeWithAuth() {
                 Modifier.fillMaxSize(),
                 Alignment.Center,
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(strokeCap = Round)
             }
         } else {
             Home()
