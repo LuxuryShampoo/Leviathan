@@ -1,6 +1,5 @@
 package shampoo.luxury.leviathan.wrap.data.achievements
 
-import shampoo.luxury.leviathan.screens.AchievementCategory
 import java.io.Serializable
 
 /**

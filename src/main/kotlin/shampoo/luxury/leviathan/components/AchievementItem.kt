@@ -22,8 +22,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import shampoo.luxury.leviathan.components.PageScope
-import shampoo.luxury.leviathan.screens.Achievement
+import shampoo.luxury.leviathan.wrap.data.achievements.Achievement
 import sun.java2d.loops.ProcessPath.drawPath
 import sun.swing.SwingUtilities2.drawRect
 

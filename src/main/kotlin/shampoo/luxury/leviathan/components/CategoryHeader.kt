@@ -6,7 +6,12 @@ import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import shampoo.luxury.leviathan.screens.AchievementCategory
+import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory
+import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory.PET_CARE
+import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory.POMODORO
+import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory.PRODUCTIVITY
+import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory.SPECIAL
+import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory.TASKS
 import xyz.malefic.compose.comps.text.typography.Heading2
 
 /**
@@ -18,11 +23,11 @@ import xyz.malefic.compose.comps.text.typography.Heading2
 fun CategoryHeader(category: AchievementCategory) {
     val categoryName =
         when (category) {
-            AchievementCategory.PET_CARE -> "Pet Care"
-            AchievementCategory.PRODUCTIVITY -> "Productivity"
-            AchievementCategory.POMODORO -> "Pomodoro"
-            AchievementCategory.TASKS -> "Tasks"
-            AchievementCategory.SPECIAL -> "Special"
+            PET_CARE -> "Pet Care"
+            PRODUCTIVITY -> "Productivity"
+            POMODORO -> "Pomodoro"
+            TASKS -> "Tasks"
+            SPECIAL -> "Special"
         }
 
     Column(Modifier.padding(vertical = 8.dp)) {
