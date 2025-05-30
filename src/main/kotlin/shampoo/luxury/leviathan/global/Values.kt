@@ -1,8 +1,14 @@
 package shampoo.luxury.leviathan.global
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.wrap.data.achievements.Achievement
 import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory
-import shampoo.luxury.leviathan.wrap.data.pets.ownedPets
+import shampoo.luxury.leviathan.wrap.data.pets.Pet
+import shampoo.luxury.leviathan.wrap.data.pets.getOwnedPets
 import shampoo.luxury.leviathan.wrap.data.settings.SettingsDelegate
 import xyz.malefic.compose.prefs.collection.PersistentHashSet
 import xyz.malefic.compose.prefs.delegate.IntPreference
@@ -19,7 +25,15 @@ object Values {
 
     var user by IntPreference("current_user", -1)
 
-    val selectedPet by lazy { ownedPets.first() }
+    private val _selectedPet = MutableStateFlow<Pet?>(null)
+    val selectedPet: StateFlow<Pet?> = _selectedPet
+
+    init {
+        CoroutineScope(IO).launch {
+            val pets = getOwnedPets()
+            _selectedPet.value = pets.firstOrNull()
+        }
+    }
 
     val completedAchievements =
         PersistentHashSet<String>(

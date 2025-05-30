@@ -46,25 +46,20 @@ object ThemeManager {
     val themeChanges = Signal<Int>()
 
     init {
-        CoroutineScope(IO).launch {
-            updateTheme(currentThemePath)
-        }
+        updateTheme(currentThemePath)
     }
 
     /**
      * Updates the current theme.
      *
      * @param themePath The io to the theme file.
-     * @return True if the theme was updated successfully, false otherwise.
      */
-    suspend fun updateTheme(themePath: String): Boolean {
-        val stream = grass(themePath)
-        if (stream != null) {
-            currentThemePath = themePath
-            _themeInputStream.value = stream
-            themeChanges.emit(themeChanges.hashCode())
-            return true
+    fun updateTheme(themePath: String) =
+        CoroutineScope(IO).launch {
+            grass(themePath)?.let {
+                currentThemePath = themePath
+                _themeInputStream.value = it
+                themeChanges.emit(themeChanges.hashCode())
+            }
         }
-        return false
-    }
 }

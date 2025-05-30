@@ -14,26 +14,25 @@ import androidx.compose.ui.window.rememberWindowState
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
+import shampoo.luxury.leviathan.components.AppRoot
 import shampoo.luxury.leviathan.theme.ThemeManager
+import shampoo.luxury.leviathan.theme.ThemeManager.DEFAULT_THEME
+import shampoo.luxury.leviathan.theme.ThemeManager.themeInputStream
 import shampoo.luxury.leviathan.wrap.Whisper
-import shampoo.luxury.leviathan.wrap.data.initializeDatabase
 import shampoo.luxury.leviathan.wrap.setupTrayIcon
 import xyz.malefic.compose.comps.precompose.NavWindow
 import xyz.malefic.compose.nav.RouteManager
 import xyz.malefic.compose.nav.config.MalefiConfigLoader
 import xyz.malefic.compose.theming.MaleficTheme
 import xyz.malefic.ext.stream.grass
-import java.awt.Toolkit
+import java.awt.Toolkit.getDefaultToolkit
 
-fun main() {
-    initializeDatabase()
-
+fun main() =
     application {
         val scope = CoroutineScope(IO)
         Whisper.initialize("hello")
         setupTrayIcon(scope)
-        val screenSize = Toolkit.getDefaultToolkit().screenSize
+        val screenSize = getDefaultToolkit().screenSize
         val windowWidth = (screenSize.width * 0.3).dp
         val windowHeight = (screenSize.height * 0.7).dp
 
@@ -45,28 +44,29 @@ fun main() {
             ),
             title = "Leviathan",
         ) {
-            RouteManager.initialize(
-                composableMap,
-                grass("/routes.mcf")!!,
-                MalefiConfigLoader(),
-            )
+            AppRoot {
+                RouteManager.initialize(
+                    composableMap,
+                    grass("/routes.mcf")!!,
+                    MalefiConfigLoader(),
+                )
 
-            var themeChangeCount by remember { mutableStateOf(0) }
+                var themeChangeCount by remember { mutableStateOf(0) }
 
-            LaunchedEffect(Unit) {
-                ThemeManager.themeChanges.connect { _ ->
-                    themeChangeCount++
+                LaunchedEffect(Unit) {
+                    ThemeManager.themeChanges.connect { _ ->
+                        themeChangeCount++
+                    }
                 }
+
+                val themeStream by remember(themeChangeCount) { mutableStateOf(themeInputStream) }
+
+                themeStream?.let { stream ->
+                    Logger.d("Recomposing with theme stream: $stream")
+                    MaleficTheme(stream) {
+                        NavigationMenu()
+                    }
+                } ?: ThemeManager.updateTheme(DEFAULT_THEME)
             }
-
-            val themeStream by remember(themeChangeCount) { mutableStateOf(ThemeManager.themeInputStream) }
-
-            themeStream?.let { stream ->
-                Logger.d("Recomposing with theme stream: $stream")
-                MaleficTheme(stream) {
-                    NavigationMenu()
-                }
-            } ?: CoroutineScope(IO).launch { ThemeManager.updateTheme(ThemeManager.DEFAULT_THEME) }
         }
     }
-}

@@ -66,3 +66,28 @@ fun getUserIdByUsername(username: String): Int =
             ?.get(Users.id)
             ?.value ?: throw IllegalStateException("User not found.")
     }
+
+/**
+ * Checks if the provided username is valid.
+ *
+ * A valid username must be between 3 and 20 characters long and may only contain
+ * letters, digits, or underscores.
+ *
+ * @param username The username to validate.
+ * @return `true` if the username is valid, `false` otherwise.
+ */
+fun isValidUsername(username: String): Boolean = username.length in 3..20 && username.all { it.isLetterOrDigit() || it == '_' }
+
+/**
+ * Checks if the provided password is valid.
+ *
+ * A valid password must be at least 8 characters long and contain at least one letter
+ * and one digit.
+ *
+ * @param password The password to validate.
+ * @return `true` if the password is valid, `false` otherwise.
+ */
+fun isValidPassword(password: String): Boolean =
+    password.length >= 8 &&
+        password.any { it.isLetter() } &&
+        password.any { it.isDigit() }

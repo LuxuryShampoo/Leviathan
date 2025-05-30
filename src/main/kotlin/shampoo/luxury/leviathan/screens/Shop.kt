@@ -23,15 +23,17 @@ import androidx.compose.ui.Modifier
 import shampoo.luxury.leviathan.components.Carousel
 import shampoo.luxury.leviathan.components.CarouselButton
 import shampoo.luxury.leviathan.components.CarouselCost
+import shampoo.luxury.leviathan.components.MaxLoading
 import shampoo.luxury.leviathan.components.PageScope
-import shampoo.luxury.leviathan.wrap.data.pets.unownedPets
+import shampoo.luxury.leviathan.wrap.data.pets.Pet
+import shampoo.luxury.leviathan.wrap.data.pets.getUnownedPets
 import xyz.malefic.compose.comps.text.typography.Heading3
 import java.io.File
 
 @Composable
 fun Shop() =
     PageScope {
-        var focusedPetName by remember { mutableStateOf("Woah!") }
+        var focusedPetName by remember { mutableStateOf("Loading...") }
 
         TopRow(focusedPetName)
         Divider()
@@ -54,36 +56,50 @@ private fun TopRow(focusedPetName: String) {
 @Composable
 private fun MarketBox(onFocusChange: (String) -> Unit) {
     val imageFiles = remember { mutableStateListOf<File>() }
-    val sortedUnownedPets = remember { unownedPets.sortedBy { it.cost } }
-    var focusedPet by remember { mutableStateOf(sortedUnownedPets.firstOrNull()) }
+    var sortedUnownedPets by remember { mutableStateOf<List<Pet>>(emptyList()) }
+    var focusedPet by remember { mutableStateOf<Pet?>(null) }
+    var loading by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
-
-    if (sortedUnownedPets.isEmpty()) {
-        Box(
-            Modifier
-                .fillMaxHeight(0.6f)
-                .fillMaxWidth(),
-            Center,
-        ) {
-            Heading3("All Gone!")
-        }
-        return
-    }
+    val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
+        loading = true
+        val unownedPets = getUnownedPets()
+        sortedUnownedPets = unownedPets.sortedBy { it.cost }
+        imageFiles.clear()
         imageFiles.addAll(
             sortedUnownedPets
                 .filter { File(it.localPath).exists() }
                 .map { File(it.localPath) },
         )
+        focusedPet = sortedUnownedPets.firstOrNull()
+        onFocusChange(focusedPet?.name ?: "Loading...")
+        loading = false
     }
-
-    val listState = rememberLazyListState()
 
     LaunchedEffect(listState.firstVisibleItemIndex) {
         focusedPet = sortedUnownedPets.getOrNull(listState.firstVisibleItemIndex)
         focusedPet?.let {
             onFocusChange(it.name)
+        }
+    }
+
+    when {
+        loading -> {
+            MaxLoading()
+            return
+        }
+        sortedUnownedPets.isEmpty() -> {
+            Box(
+                Modifier
+                    .fillMaxHeight(0.6f)
+                    .fillMaxWidth(),
+                Center,
+            ) {
+                Heading3("All Gone!")
+            }
+            onFocusChange("Woah!")
+            return
         }
     }
 
@@ -109,7 +125,7 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
             }
 
             CarouselButton(">", coroutineScope, { align(CenterEnd) }) {
-                val nextIndex = (listState.firstVisibleItemIndex + 1) % unownedPets.size
+                val nextIndex = (listState.firstVisibleItemIndex + 1) % imageFiles.size
                 listState.animateScrollToItem(nextIndex)
             }
 

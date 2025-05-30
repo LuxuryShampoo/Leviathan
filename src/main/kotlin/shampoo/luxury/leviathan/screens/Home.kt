@@ -15,6 +15,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -107,10 +108,11 @@ private fun PetContainer() {
         Modifier.fillMaxSize(),
         Center,
     ) {
+        val pet by selectedPet.collectAsState()
         var file by remember { mutableStateOf(File("")) }
 
-        LaunchedEffect(Unit) {
-            file = File(selectedPet.localPath)
+        LaunchedEffect(pet) {
+            file = pet?.localPath?.let { File(it) } ?: File("")
             Logger.d { "File downloaded: ${file.absolutePath}" }
         }
 

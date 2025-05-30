@@ -23,7 +23,6 @@ import co.touchlab.kermit.Logger
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Palette
-import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.theme.Theme.Companion.fromPath
 import shampoo.luxury.leviathan.theme.ThemeManager.currentThemePath
 import shampoo.luxury.leviathan.theme.ThemeManager.updateTheme
@@ -78,9 +77,8 @@ fun ThemeSelector() {
                             selectedTheme = theme
                             expanded = false
 
-                            coroutineScope.launch {
-                                val success = updateTheme(theme.filePath)
-                                Logger.d("Selected theme: ${theme.displayName}, file: ${theme.filePath}, success: $success")
+                            updateTheme(theme.filePath).invokeOnCompletion {
+                                Logger.d("Selected theme: ${theme.displayName}, file: ${theme.filePath}")
                             }
                         },
                     ) {
