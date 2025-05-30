@@ -1,10 +1,21 @@
 package shampoo.luxury.leviathan.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import xyz.malefic.compose.comps.text.typography.Body2
@@ -24,18 +35,44 @@ fun AuthDialogFields(
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
 ) {
+    val usernameFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
     TextField(
         username,
         onUsernameChange,
-        Modifier.fillMaxWidth(),
+        Modifier
+            .fillMaxWidth()
+            .focusRequester(usernameFocusRequester)
+            .onPreviewKeyEvent { event ->
+                if (event.key == Key.Tab && event.type == KeyEventType.KeyDown) {
+                    passwordFocusRequester.requestFocus()
+                    true
+                } else {
+                    false
+                }
+            },
         label = { Body2("Username") },
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+        keyboardActions =
+            KeyboardActions(
+                onNext = { passwordFocusRequester.requestFocus() },
+            ),
     )
+
     TextField(
         password,
         onPasswordChange,
-        Modifier.fillMaxWidth(),
+        Modifier
+            .fillMaxWidth()
+            .focusRequester(passwordFocusRequester),
         label = { Body2("Password") },
         visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+        keyboardActions =
+            KeyboardActions(
+                onDone = { focusManager.clearFocus() },
+            ),
     )
 }

@@ -18,7 +18,8 @@ import kotlinx.coroutines.withContext
 import shampoo.luxury.leviathan.components.AuthDialogError
 import shampoo.luxury.leviathan.components.AuthDialogFields
 import shampoo.luxury.leviathan.components.AuthDialogHeader
-import shampoo.luxury.leviathan.components.MaxLoading
+import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
+import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.global.Values.Prefs.prefs
 import shampoo.luxury.leviathan.global.Values.user
 import shampoo.luxury.leviathan.wrap.data.pets.initializePets
@@ -26,6 +27,7 @@ import shampoo.luxury.leviathan.wrap.data.users.checkPassword
 import shampoo.luxury.leviathan.wrap.data.users.getUserIdByUsername
 import shampoo.luxury.leviathan.wrap.data.users.insertUser
 import shampoo.luxury.leviathan.wrap.data.users.isValidPassword
+import shampoo.luxury.leviathan.wrap.data.users.isValidUsername
 import xyz.malefic.compose.comps.text.typography.Body2
 import xyz.malefic.compose.prefs.delegate.BooleanPreference
 
@@ -42,22 +44,6 @@ fun AuthDialog(onAuthenticated: (String) -> Unit) {
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(false) }
-
-    fun validateInputs(): Boolean {
-        if (!isLogin) {
-            when {
-                !isValidPassword(username) -> {
-                    errorMessage = "Username must be 3-20 characters, letters, digits, or underscores."
-                    return false
-                }
-                !isValidPassword(password) -> {
-                    errorMessage = "Password must be at least 8 characters, with at least one letter and one digit."
-                    return false
-                }
-            }
-        }
-        return true
-    }
 
     Dialog(onDismissRequest = {}) {
         Surface(
@@ -81,7 +67,12 @@ fun AuthDialog(onAuthenticated: (String) -> Unit) {
                         },
                         {
                             errorMessage = null
-                            if (!validateInputs()) return@AuthDialogActions
+                            if (!validate(isLogin, username, password) {
+                                    errorMessage = it
+                                }
+                            ) {
+                                return@AuthDialogActions
+                            }
                             loading = true
                             val action = if (isLogin) ::authenticateUser else ::registerUser
                             action(username, password, { user ->
@@ -97,7 +88,7 @@ fun AuthDialog(onAuthenticated: (String) -> Unit) {
                 if (loading) {
                     Box(
                         Modifier
-                            .fillMaxSize()
+                            .fillMaxSize(0.5f)
                             .background(MaterialTheme.colors.surface.copy(alpha = 0.6f)),
                         contentAlignment = Center,
                     ) {
@@ -107,6 +98,28 @@ fun AuthDialog(onAuthenticated: (String) -> Unit) {
             }
         }
     }
+}
+
+private fun validate(
+    isLogin: Boolean,
+    username: String,
+    password: String,
+    onError: (String) -> Unit,
+): Boolean {
+    if (!isLogin) {
+        when {
+            !isValidUsername(username) -> {
+                onError("Username must be 3-20 characters, letters, digits, or underscores.")
+                return false
+            }
+
+            !isValidPassword(password) -> {
+                onError("Password must be at least 8 characters, with at least one letter and one digit.")
+                return false
+            }
+        }
+    }
+    return true
 }
 
 /**
@@ -200,7 +213,6 @@ private fun registerUser(
 fun HomeWithAuth() {
     var prefIsAuthenticated by BooleanPreference("isAuthenticated", false, prefs)
     var isAuthenticated by remember { mutableStateOf(prefIsAuthenticated) }
-    var petsInitialized by remember { mutableStateOf(false) }
 
     if (!isAuthenticated) {
         AuthDialog {
@@ -211,10 +223,11 @@ fun HomeWithAuth() {
         }
     } else {
         LaunchedEffect(Unit) {
+            addLoading("pets initialization")
             initializePets()
-            petsInitialized = true
+            removeLoading("pets initialization")
         }
 
-        Home().takeIf { petsInitialized } ?: MaxLoading()
+        Home()
     }
 }

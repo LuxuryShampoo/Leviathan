@@ -1,20 +1,24 @@
 package shampoo.luxury.leviathan.components
 
 import androidx.compose.runtime.*
+import shampoo.luxury.leviathan.global.GlobalLoadingState
+import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
+import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.wrap.data.initializeDatabase
+import xyz.malefic.compose.comps.box.BackgroundBox
 
 @Composable
 fun AppRoot(content: @Composable () -> Unit) {
-    var dbReady by remember { mutableStateOf(false) }
+    val loading by GlobalLoadingState.isLoading
 
     LaunchedEffect(Unit) {
+        addLoading("database initialization")
         initializeDatabase()
-        dbReady = true
+        removeLoading("database initialization")
     }
 
-    if (dbReady) {
+    BackgroundBox {
+        MaxLoading().takeIf { loading }
         content()
-    } else {
-        MaxLoading()
     }
 }

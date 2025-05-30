@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material.DropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,13 +26,12 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import co.touchlab.kermit.Logger
 import compose.icons.fontawesomeicons.SolidGroup
-import compose.icons.fontawesomeicons.solid.Bars
 import compose.icons.fontawesomeicons.solid.Trophy
 import shampoo.luxury.leviathan.components.Buicon
-import shampoo.luxury.leviathan.components.DropdownText
+import shampoo.luxury.leviathan.components.Burger
 import shampoo.luxury.leviathan.components.FileImage
+import shampoo.luxury.leviathan.components.MaxLoading
 import shampoo.luxury.leviathan.components.NavButton
 import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.global.Values.selectedPet
@@ -77,32 +75,6 @@ private fun TopRow() {
 }
 
 @Composable
-private fun Burger() {
-    var expanded by remember { mutableStateOf(false) }
-    Box {
-        Buicon(
-            { SolidGroup.Bars },
-            "Menu",
-            32.dp,
-            48.dp,
-        ) { expanded = true }
-        DropdownMenu(
-            expanded,
-            { expanded = false },
-        ) {
-            DropdownText("Option 1") {
-                Logger.i("Option 1")
-                expanded = false
-            }
-            DropdownText("Option 2") {
-                Logger.i("Option 2")
-                expanded = false
-            }
-        }
-    }
-}
-
-@Composable
 private fun PetContainer() {
     Box(
         Modifier.fillMaxSize(),
@@ -110,10 +82,14 @@ private fun PetContainer() {
     ) {
         val pet by selectedPet.collectAsState()
         var file by remember { mutableStateOf(File("")) }
+        var loading by remember { mutableStateOf(true) }
 
         LaunchedEffect(pet) {
             file = pet?.localPath?.let { File(it) } ?: File("")
-            Logger.d { "File downloaded: ${file.absolutePath}" }
+        }
+
+        LaunchedEffect(file) {
+            loading = !file.exists()
         }
 
         Column(
@@ -121,12 +97,12 @@ private fun PetContainer() {
             horizontalAlignment = CenterHorizontally,
         ) {
             key(file.absolutePath) {
-                Logger.d { "File exists: ${file.exists()}" }
-                if (file.exists()) {
-                    Logger.d("Recomposed the image")
+                if (loading) {
+                    MaxLoading()
+                } else if (file.exists()) {
                     FileImage(
                         file,
-                        "Character Image",
+                        pet?.name ?: "Pet",
                     ) { size(400.dp).clip(RoundedCornerShape(8.dp)) }
                 }
             }
