@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import shampoo.luxury.leviathan.global.Values.updateSelectedPet
 import shampoo.luxury.leviathan.global.Values.user
 
 /**
@@ -38,6 +39,7 @@ suspend fun initializePets() =
                 }
             }
         }
+        updateSelectedPet()
     }
 
 /**

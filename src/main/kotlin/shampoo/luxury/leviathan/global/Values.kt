@@ -1,10 +1,7 @@
 package shampoo.luxury.leviathan.global
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.wrap.data.achievements.Achievement
 import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
@@ -34,11 +31,9 @@ object Values {
     private val _selectedPet = MutableStateFlow<Pet?>(null)
     val selectedPet: StateFlow<Pet?> = _selectedPet
 
-    init {
-        CoroutineScope(IO).launch {
-            val pets = getOwnedPets()
-            _selectedPet.value = pets.firstOrNull()
-        }
+    suspend fun updateSelectedPet() {
+        val pets = getOwnedPets()
+        _selectedPet.value = pets.firstOrNull()
     }
 
     val completedAchievements =

@@ -4,6 +4,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.unit.DpSize
@@ -12,7 +13,6 @@ import androidx.compose.ui.window.WindowPosition.Aligned
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import co.touchlab.kermit.Logger
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import shampoo.luxury.leviathan.components.AppRoot
 import shampoo.luxury.leviathan.theme.ThemeManager
@@ -29,7 +29,7 @@ import java.awt.Toolkit.getDefaultToolkit
 
 fun main() =
     application {
-        val scope = CoroutineScope(IO)
+        val scope = rememberCoroutineScope { IO }
         Whisper.initialize("hello")
         setupTrayIcon(scope)
         val screenSize = getDefaultToolkit().screenSize

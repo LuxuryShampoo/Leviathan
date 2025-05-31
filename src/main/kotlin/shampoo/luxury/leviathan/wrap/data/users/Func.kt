@@ -81,13 +81,21 @@ fun isValidUsername(username: String): Boolean = username.length in 3..20 && use
 /**
  * Checks if the provided password is valid.
  *
- * A valid password must be at least 8 characters long and contain at least one letter
- * and one digit.
+ * A valid password must be at least 8 characters long, contain at least one letter,
+ * one digit, and at least one allowed symbol. The password must not contain any whitespace
+ * and may only include letters, digits, or the specified allowed symbols.
+ *
+ * Allowed symbols: !@#\$%^&*()-_=+[]{}|;:',.<>?/`~
  *
  * @param password The password to validate.
  * @return `true` if the password is valid, `false` otherwise.
  */
-fun isValidPassword(password: String): Boolean =
-    password.length >= 8 &&
+fun isValidPassword(password: String): Boolean {
+    val allowedSymbols = "!@#\\$%^&*()-_=+[]{}|;:',.<>?/`~"
+    return password.length >= 8 &&
         password.any { it.isLetter() } &&
-        password.any { it.isDigit() }
+        password.any { it.isDigit() } &&
+        password.any { it in allowedSymbols } &&
+        password.all { it.isLetterOrDigit() || it in allowedSymbols } &&
+        !password.any { it.isWhitespace() }
+}

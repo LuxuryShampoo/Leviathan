@@ -114,7 +114,9 @@ private fun validate(
             }
 
             !isValidPassword(password) -> {
-                onError("Password must be at least 8 characters, with at least one letter and one digit.")
+                onError(
+                    "Password must be at least 8 characters, include at least one letter, one digit, one special character (!@#\\$%^&*()-_=+[]{}|;:',.<>?/`~), and contain no whitespace.",
+                )
                 return false
             }
         }
@@ -134,17 +136,15 @@ private fun AuthDialogActions(
     isLogin: Boolean,
     onSwitchMode: () -> Unit,
     onSubmit: () -> Unit,
+) = Row(
+    Modifier.fillMaxWidth(),
+    Arrangement.spacedBy(8.dp),
 ) {
-    Row(
-        Modifier.fillMaxWidth(),
-        Arrangement.spacedBy(8.dp),
-    ) {
-        Button(onSwitchMode, Modifier.weight(1f)) {
-            Body2(if (isLogin) "Switch to Sign Up" else "Switch to Log In")
-        }
-        Button(onSubmit, Modifier.weight(1f)) {
-            Body2("Submit")
-        }
+    Button(onSwitchMode, Modifier.weight(1f)) {
+        Body2(if (isLogin) "Switch to Sign Up" else "Switch to Log In")
+    }
+    Button(onSubmit, Modifier.weight(1f)) {
+        Body2("Submit")
     }
 }
 
@@ -161,17 +161,15 @@ private fun authenticateUser(
     password: String,
     onSuccess: (String) -> Unit,
     onError: (String) -> Unit,
-) {
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val isValid = checkPassword(username, password)
-            withContext(Dispatchers.Main) {
-                if (isValid) onSuccess(username) else onError("Invalid username or password.")
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                onError("An error occurred: ${e.message}")
-            }
+) = CoroutineScope(Dispatchers.IO).launch {
+    try {
+        val isValid = checkPassword(username, password)
+        withContext(Dispatchers.Main) {
+            if (isValid) onSuccess(username) else onError("Invalid username or password.")
+        }
+    } catch (e: Exception) {
+        withContext(Dispatchers.Main) {
+            onError("An error occurred: ${e.message}")
         }
     }
 }
@@ -189,18 +187,16 @@ private fun registerUser(
     password: String,
     onSuccess: (String) -> Unit,
     onError: (String) -> Unit,
-) {
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            insertUser(username, password)
-            withContext(Dispatchers.Main) {
-                onSuccess(username)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            withContext(Dispatchers.Main) {
-                onError("An error occurred: ${e.message}")
-            }
+) = CoroutineScope(Dispatchers.IO).launch {
+    try {
+        insertUser(username, password)
+        withContext(Dispatchers.Main) {
+            onSuccess(username)
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        withContext(Dispatchers.Main) {
+            onError("An error occurred: ${e.message}")
         }
     }
 }

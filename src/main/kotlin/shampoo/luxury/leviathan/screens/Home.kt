@@ -31,9 +31,9 @@ import compose.icons.fontawesomeicons.solid.Trophy
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.Burger
 import shampoo.luxury.leviathan.components.FileImage
-import shampoo.luxury.leviathan.components.MaxLoading
 import shampoo.luxury.leviathan.components.NavButton
 import shampoo.luxury.leviathan.components.PageScope
+import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.global.Values.selectedPet
@@ -82,7 +82,6 @@ private fun PetContainer() {
     ) {
         val pet by selectedPet.collectAsState()
         var file by remember { mutableStateOf(File("")) }
-        var loading by remember { mutableStateOf(true) }
 
         LaunchedEffect(Unit) {
             removeLoading("navigation to home")
@@ -93,7 +92,11 @@ private fun PetContainer() {
         }
 
         LaunchedEffect(file) {
-            loading = !file.exists()
+            if (!file.exists()) {
+                addLoading("home pet image")
+            } else {
+                removeLoading("home pet image")
+            }
         }
 
         Column(
@@ -101,14 +104,10 @@ private fun PetContainer() {
             horizontalAlignment = CenterHorizontally,
         ) {
             key(file.absolutePath) {
-                if (loading) {
-                    MaxLoading()
-                } else if (file.exists()) {
-                    FileImage(
-                        file,
-                        pet?.name ?: "Pet",
-                    ) { size(400.dp).clip(RoundedCornerShape(8.dp)) }
-                }
+                FileImage(
+                    file,
+                    pet?.name ?: "Pet",
+                ) { size(400.dp).clip(RoundedCornerShape(8.dp)) }
             }
         }
     }
