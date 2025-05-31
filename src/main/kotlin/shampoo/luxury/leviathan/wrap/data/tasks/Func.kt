@@ -1,6 +1,5 @@
 package shampoo.luxury.leviathan.wrap.data.tasks
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -8,7 +7,6 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import shampoo.luxury.leviathan.global.Values.user
 
@@ -34,9 +32,9 @@ suspend fun addTask(
  *
  * @return A list of tasks, where each task is represented as a `Task` object.
  */
-fun fetchTasks() =
+suspend fun fetchTasks() =
     buildList {
-        transaction {
+        newSuspendedTransaction(IO) {
             Tasks.selectAll().where { Tasks.userId eq user }.map { row ->
                 add(
                     Task(
@@ -59,7 +57,7 @@ fun fetchTasks() =
 suspend fun updateTask(
     id: Int,
     isCompleted: Boolean,
-) = newSuspendedTransaction(Dispatchers.IO) {
+) = newSuspendedTransaction(IO) {
     Tasks.update({ Tasks.id eq id and (Tasks.userId eq user) }) {
         it[Tasks.isCompleted] = isCompleted
     }
@@ -71,6 +69,6 @@ suspend fun updateTask(
  * @param id The unique identifier of the task to delete.
  */
 suspend fun deleteTask(id: Int) =
-    newSuspendedTransaction(Dispatchers.IO) {
+    newSuspendedTransaction(IO) {
         Tasks.deleteWhere { Tasks.id eq id and (userId eq user) }
     }

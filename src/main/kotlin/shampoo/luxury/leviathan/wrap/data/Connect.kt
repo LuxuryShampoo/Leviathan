@@ -1,10 +1,9 @@
 package shampoo.luxury.leviathan.wrap.data
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import shampoo.luxury.leviathan.wrap.data.currency.Currency
 import shampoo.luxury.leviathan.wrap.data.pets.Pets
 import shampoo.luxury.leviathan.wrap.data.settings.Settings
 import shampoo.luxury.leviathan.wrap.data.tasks.Tasks
@@ -17,10 +16,9 @@ fun connectToDatabase() {
     )
 }
 
-suspend fun initializeDatabase() =
-    withContext(Dispatchers.IO) {
-        connectToDatabase()
-        transaction {
-            SchemaUtils.create(Users, Tasks, Settings, Pets)
-        }
+suspend fun initializeDatabase() {
+    connectToDatabase()
+    newSuspendedTransaction {
+        SchemaUtils.create(Users, Tasks, Settings, Pets, Currency)
     }
+}

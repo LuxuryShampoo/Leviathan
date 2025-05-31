@@ -104,10 +104,12 @@ private fun PetContainer() {
             horizontalAlignment = CenterHorizontally,
         ) {
             key(file.absolutePath) {
-                FileImage(
-                    file,
-                    pet?.name ?: "Pet",
-                ) { size(400.dp).clip(RoundedCornerShape(8.dp)) }
+                if (file.exists()) {
+                    FileImage(
+                        file,
+                        pet?.name ?: "Pet",
+                    ) { size(400.dp).clip(RoundedCornerShape(8.dp)) }
+                }
             }
         }
     }

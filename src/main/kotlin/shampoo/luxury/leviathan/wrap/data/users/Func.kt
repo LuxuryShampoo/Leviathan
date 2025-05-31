@@ -1,10 +1,13 @@
 package shampoo.luxury.leviathan.wrap.data.users
 
 import at.favre.lib.crypto.bcrypt.BCrypt
+import kotlinx.coroutines.Dispatchers.IO
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import shampoo.luxury.leviathan.wrap.data.currency.Currency
 
 /**
  * Inserts a new user into the database if the user does not already exist.
@@ -14,18 +17,23 @@ import org.jetbrains.exposed.sql.transactions.transaction
  *
  * @throws IllegalStateException if a user with the given userId already exists.
  */
-fun insertUser(
+suspend fun insertUser(
     username: String,
     password: String,
 ): Unit =
-    transaction {
-        val existingUser = Users.select(Users.username eq username).singleOrNull()
+    newSuspendedTransaction(IO) {
+        val existingUser = Users.selectAll().where { Users.username eq username }.singleOrNull()
 
         check(existingUser == null) { "User with name $username already exists." }
 
         Users.insert {
             it[Users.username] = username
             it[Users.password] = BCrypt.withDefaults().hashToString(12, password.toCharArray())
+        }
+
+        Currency.insert {
+            it[Currency.user] = getUserIdByUsername(username)
+            it[Currency.amount] = 0.00.toBigDecimal()
         }
     }
 
@@ -39,16 +47,15 @@ fun insertUser(
 fun checkPassword(
     username: String,
     password: String,
-): Boolean =
-    transaction {
-        val hashed =
-            Users
-                .selectAll()
-                .where { Users.username eq username }
-                .singleOrNull()
-                ?.get(Users.password) ?: return@transaction false
-        return@transaction BCrypt.verifyer().verify(password.toCharArray(), hashed).verified
-    }
+) = transaction {
+    val hashed =
+        Users
+            .selectAll()
+            .where { Users.username eq username }
+            .singleOrNull()
+            ?.get(Users.password) ?: return@transaction false
+    return@transaction BCrypt.verifyer().verify(password.toCharArray(), hashed).verified
+}
 
 /**
  * Retrieves the user ID for a given username.

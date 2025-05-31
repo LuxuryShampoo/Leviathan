@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
@@ -19,15 +20,21 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Carousel
 import shampoo.luxury.leviathan.components.CarouselButton
 import shampoo.luxury.leviathan.components.CarouselCost
 import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
+import shampoo.luxury.leviathan.wrap.data.currency.getMoney
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import shampoo.luxury.leviathan.wrap.data.pets.getUnownedPets
+import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Heading3
 import java.io.File
 
@@ -35,10 +42,27 @@ import java.io.File
 fun Shop() =
     PageScope {
         var focusedPetName by remember { mutableStateOf("Loading...") }
+        var balance by remember { mutableStateOf("...") }
+        val scope = rememberCoroutineScope { IO }
+
+        LaunchedEffect(Unit) {
+            scope.launch {
+                balance = getMoney().toPlainString()
+            }
+        }
 
         TopRow(focusedPetName)
         Divider()
-        MarketBox { focusedPetName = it }
+        Box {
+            MarketBox { focusedPetName = it }
+            Box(
+                Modifier
+                    .align(TopEnd)
+                    .padding(16.dp),
+            ) {
+                Body1("$$balance")
+            }
+        }
     }
 
 @Composable
@@ -63,7 +87,7 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
     val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        addLoading("shop market load")
+        addLoading("shop market")
         removeLoading("navigation to shop")
         val unownedPets = getUnownedPets()
         sortedUnownedPets = unownedPets.sortedBy { it.cost }
@@ -75,7 +99,7 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
         )
         focusedPet = sortedUnownedPets.firstOrNull()
         onFocusChange(focusedPet?.name ?: "Loading...")
-        removeLoading("shop market load")
+        removeLoading("shop market")
     }
 
     LaunchedEffect(listState.firstVisibleItemIndex) {

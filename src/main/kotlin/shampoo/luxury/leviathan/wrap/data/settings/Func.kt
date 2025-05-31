@@ -1,13 +1,11 @@
 package shampoo.luxury.leviathan.wrap.data.settings
 
 import co.touchlab.kermit.Logger
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.update
 import shampoo.luxury.leviathan.global.Values.Prefs.setListenSetting
 import shampoo.luxury.leviathan.global.Values.Prefs.setSpeakSetting
@@ -24,21 +22,20 @@ import shampoo.luxury.leviathan.global.Values.user
 suspend fun getBooleanSetting(
     key: String,
     defaultValue: Boolean,
-): Boolean =
-    withContext(IO) {
-        val logger = Logger.withTag("Settings")
-        val queryResult =
-            transaction {
-                Settings.selectAll().where { Settings.userId eq user and (Settings.key eq key) }.singleOrNull()
-            }
-        if (queryResult == null) {
-            logger.d { "Setting not found for key: $key. Using default value: $defaultValue" }
-            setBooleanSetting(key, defaultValue)
-            defaultValue
-        } else {
-            queryResult[Settings.value]
+): Boolean {
+    val logger = Logger.withTag("Settings")
+    val queryResult =
+        newSuspendedTransaction(IO) {
+            Settings.selectAll().where { Settings.userId eq user and (Settings.key eq key) }.singleOrNull()
         }
+    return if (queryResult == null) {
+        logger.d { "Setting not found for key: $key. Using default value: $defaultValue" }
+        setBooleanSetting(key, defaultValue)
+        defaultValue
+    } else {
+        queryResult[Settings.value]
     }
+}
 
 /**
  * Sets a boolean setting in the database.
@@ -51,21 +48,19 @@ suspend fun getBooleanSetting(
 suspend fun setBooleanSetting(
     key: String,
     value: Boolean,
-) = withContext(IO) {
+) = newSuspendedTransaction(IO) {
     val logger = Logger.withTag("Settings")
-    transaction {
-        if (Settings.selectAll().where { Settings.userId eq user and (Settings.key eq key) }.empty()) {
-            logger.d { "Inserting new boolean setting: key=$key, value=$value" }
-            Settings.insert {
-                it[userId] = user
-                it[Settings.key] = key
-                it[Settings.value] = value
-            }
-        } else {
-            logger.d { "Updating existing boolean setting: key=$key, value=$value" }
-            Settings.update({ Settings.key eq key and (Settings.userId eq user) }) {
-                it[Settings.value] = value
-            }
+    if (Settings.selectAll().where { Settings.userId eq user and (Settings.key eq key) }.empty()) {
+        logger.d { "Inserting new boolean setting: key=$key, value=$value" }
+        Settings.insert {
+            it[userId] = user
+            it[Settings.key] = key
+            it[Settings.value] = value
+        }
+    } else {
+        logger.d { "Updating existing boolean setting: key=$key, value=$value" }
+        Settings.update({ Settings.key eq key and (Settings.userId eq user) }) {
+            it[Settings.value] = value
         }
     }
 }
@@ -89,7 +84,7 @@ suspend fun saveSettings(
     localListen: Boolean,
     oldSpeak: Boolean,
     oldListen: Boolean,
-) = withContext(Dispatchers.IO) {
+) {
     log.d { "Saving settings: speak=$localSpeak, listen=$localListen" }
     if (localSpeak != oldSpeak) {
         setSpeakSetting(localSpeak)
