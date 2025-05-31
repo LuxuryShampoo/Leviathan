@@ -1,10 +1,13 @@
 package shampoo.luxury.leviathan.wrap.data.tasks
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import shampoo.luxury.leviathan.global.Values.user
@@ -15,16 +18,14 @@ import shampoo.luxury.leviathan.global.Values.user
  * @param title The title of the task. Cannot be null.
  * @param description An optional description of the task.
  */
-fun addTask(
+suspend fun addTask(
     title: String,
     description: String?,
-) {
-    transaction {
-        Tasks.insert {
-            it[userId] = user
-            it[Tasks.title] = title
-            it[Tasks.description] = description
-        }
+) = newSuspendedTransaction(IO) {
+    Tasks.insert {
+        it[userId] = user
+        it[Tasks.title] = title
+        it[Tasks.description] = description
     }
 }
 
@@ -55,14 +56,12 @@ fun fetchTasks() =
  * @param id The unique identifier of the task to update.
  * @param isCompleted The new completion status of the task.
  */
-fun updateTask(
+suspend fun updateTask(
     id: Int,
     isCompleted: Boolean,
-) {
-    transaction {
-        Tasks.update({ Tasks.id eq id and (Tasks.userId eq user) }) {
-            it[Tasks.isCompleted] = isCompleted
-        }
+) = newSuspendedTransaction(Dispatchers.IO) {
+    Tasks.update({ Tasks.id eq id and (Tasks.userId eq user) }) {
+        it[Tasks.isCompleted] = isCompleted
     }
 }
 
@@ -71,8 +70,7 @@ fun updateTask(
  *
  * @param id The unique identifier of the task to delete.
  */
-fun deleteTask(id: Int) {
-    transaction {
-        Tasks.deleteWhere { with(it) { Tasks.id eq id and (userId eq user) } }
+suspend fun deleteTask(id: Int) =
+    newSuspendedTransaction(Dispatchers.IO) {
+        Tasks.deleteWhere { Tasks.id eq id and (userId eq user) }
     }
-}

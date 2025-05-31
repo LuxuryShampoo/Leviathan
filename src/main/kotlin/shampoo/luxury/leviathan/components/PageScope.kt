@@ -9,7 +9,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import kotlinx.serialization.json.JsonNull.content
-import xyz.malefic.compose.nav.RouteManager.navi
 
 /**
  * A composable function that defines the layout for a page in the application.
@@ -45,6 +44,6 @@ fun PageScope(
             content()
         }
         Divider()
-        NavBar(navi)
+        NavBar()
     }
 }

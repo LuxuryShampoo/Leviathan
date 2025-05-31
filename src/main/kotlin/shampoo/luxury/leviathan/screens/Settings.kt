@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,36 +19,62 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import shampoo.luxury.leviathan.components.BooleanSetting
 import shampoo.luxury.leviathan.components.PageScope
-import shampoo.luxury.leviathan.global.Values.Prefs.listenSetting
-import shampoo.luxury.leviathan.global.Values.Prefs.speakSetting
+import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
+import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
+import shampoo.luxury.leviathan.global.Values.Prefs.getListenSetting
+import shampoo.luxury.leviathan.global.Values.Prefs.getSpeakSetting
 import shampoo.luxury.leviathan.theme.ThemeSelector
+import shampoo.luxury.leviathan.wrap.data.settings.saveSettings
 import xyz.malefic.compose.comps.text.typography.Heading1
 import xyz.malefic.compose.comps.text.typography.Heading3
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun Settings() {
-    var localSpeakSetting by remember { mutableStateOf(speakSetting) }
-    var localListenSetting by remember { mutableStateOf(listenSetting) }
+    var localSpeakSetting by remember { mutableStateOf(false) }
+    var localListenSetting by remember { mutableStateOf(false) }
+    var oldSpeakSetting = false
+    var oldListenSetting = false
     var settingsChanged by remember { mutableStateOf(false) }
 
-    val saveSettings =
+    val log = Logger.withTag("Settings")
+
+    LaunchedEffect(Unit) {
+        addLoading("getting settings")
+        removeLoading("navigation to settings")
+        withContext(Dispatchers.IO) {
+            log.d { "Loading settings..." }
+            oldSpeakSetting = getSpeakSetting()
+            localSpeakSetting = oldSpeakSetting
+            oldListenSetting = getListenSetting()
+            localListenSetting = oldListenSetting
+            log.d { "Settings loaded: speak=$localSpeakSetting, listen=$localListenSetting" }
+            removeLoading("getting settings")
+        }
+    }
+
+    PageScope({
         if (settingsChanged) {
-            {
-                if (localSpeakSetting != speakSetting) {
-                    speakSetting = localSpeakSetting
-                }
-                if (localListenSetting != listenSetting) {
-                    listenSetting = localListenSetting
-                }
+            GlobalScope.launch {
+                saveSettings(
+                    log,
+                    localSpeakSetting,
+                    localListenSetting,
+                    oldSpeakSetting,
+                    oldListenSetting,
+                )
                 settingsChanged = false
             }
-        } else {
-            {}
         }
-
-    PageScope(saveSettings) {
+    }) {
         Column(
             Modifier
                 .fillMaxWidth()

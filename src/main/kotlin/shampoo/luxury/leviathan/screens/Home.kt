@@ -34,11 +34,11 @@ import shampoo.luxury.leviathan.components.FileImage
 import shampoo.luxury.leviathan.components.MaxLoading
 import shampoo.luxury.leviathan.components.NavButton
 import shampoo.luxury.leviathan.components.PageScope
+import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
+import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.global.Values.selectedPet
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
-import xyz.malefic.compose.nav.RouteManager.navi
-import xyz.malefic.ext.precompose.gate
 import java.io.File
 
 @Composable
@@ -69,7 +69,7 @@ private fun TopRow() {
             32.dp,
             48.dp,
         ) {
-            navi gate "achievements"
+            navigate("achievements")
         }
     }
 }
@@ -83,6 +83,10 @@ private fun PetContainer() {
         val pet by selectedPet.collectAsState()
         var file by remember { mutableStateOf(File("")) }
         var loading by remember { mutableStateOf(true) }
+
+        LaunchedEffect(Unit) {
+            removeLoading("navigation to home")
+        }
 
         LaunchedEffect(pet) {
             file = pet?.localPath?.let { File(it) } ?: File("")

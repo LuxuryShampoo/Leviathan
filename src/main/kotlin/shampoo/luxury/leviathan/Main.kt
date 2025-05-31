@@ -44,29 +44,28 @@ fun main() =
             ),
             title = "Leviathan",
         ) {
-            AppRoot {
-                RouteManager.initialize(
-                    composableMap,
-                    grass("/routes.mcf")!!,
-                    MalefiConfigLoader(),
-                )
+            var themeChangeCount by remember { mutableStateOf(0) }
 
-                var themeChangeCount by remember { mutableStateOf(0) }
-
-                LaunchedEffect(Unit) {
-                    ThemeManager.themeChanges.connect { _ ->
-                        themeChangeCount++
-                    }
+            LaunchedEffect(Unit) {
+                ThemeManager.themeChanges.connect { _ ->
+                    themeChangeCount++
                 }
+            }
 
-                val themeStream by remember(themeChangeCount) { mutableStateOf(themeInputStream) }
+            val themeStream by remember(themeChangeCount) { mutableStateOf(themeInputStream) }
 
-                themeStream?.let { stream ->
-                    Logger.d("Recomposing with theme stream: $stream")
-                    MaleficTheme(stream) {
+            themeStream?.let { stream ->
+                Logger.d("Recomposing with theme stream: $stream")
+                MaleficTheme(stream) {
+                    AppRoot {
+                        RouteManager.initialize(
+                            composableMap,
+                            grass("/routes.mcf")!!,
+                            MalefiConfigLoader(),
+                        )
                         NavigationMenu()
                     }
-                } ?: ThemeManager.updateTheme(DEFAULT_THEME)
-            }
+                }
+            } ?: ThemeManager.updateTheme(DEFAULT_THEME)
         }
     }

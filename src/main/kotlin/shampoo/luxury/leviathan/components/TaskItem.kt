@@ -8,13 +8,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Checkbox
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.Trash
+import xyz.malefic.compose.comps.text.typography.Body1
+import xyz.malefic.compose.comps.text.typography.Body2
 
 /**
  * A composable function that represents a single tasks item in a tasks list.
@@ -48,9 +49,9 @@ fun TaskItem(
         CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
-            Text(title)
+            Body1(title)
             description?.let {
-                Text(it, Modifier.padding(top = 4.dp))
+                Body2(it, Modifier.padding(top = 4.dp))
             }
         }
         Row(verticalAlignment = CenterVertically) {
@@ -64,6 +65,7 @@ fun TaskItem(
                 "Delete Task",
                 24.dp,
                 24.dp,
+                outlined = false,
             ) {
                 onDeleteTask(id)
             }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -12,10 +13,10 @@ import compose.icons.fontawesomeicons.solid.ArrowLeft
 import shampoo.luxury.leviathan.components.AchievementItem
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.CategoryHeader
+import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
+import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Heading2
-import xyz.malefic.compose.nav.RouteManager.navi
-import xyz.malefic.ext.precompose.gate
 import androidx.compose.foundation.lazy.items as iii
 
 @Composable
@@ -25,6 +26,10 @@ fun Achievements() =
             .fillMaxSize()
             .padding(16.dp, 16.dp, 16.dp),
     ) {
+        LaunchedEffect(Unit) {
+            removeLoading("navigation to settings")
+        }
+
         Row(
             Modifier.fillMaxWidth(),
             verticalAlignment = CenterVertically,
@@ -34,7 +39,7 @@ fun Achievements() =
                 "Back",
                 24.dp,
                 32.dp,
-            ) { navi gate "home" }
+            ) { navigate("home") }
             Spacer(Modifier.width(8.dp))
             Heading2("Achievements")
         }

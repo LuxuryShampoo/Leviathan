@@ -88,7 +88,7 @@ fun AuthDialog(onAuthenticated: (String) -> Unit) {
                 if (loading) {
                     Box(
                         Modifier
-                            .fillMaxSize(0.5f)
+                            .fillMaxSize()
                             .background(MaterialTheme.colors.surface.copy(alpha = 0.6f)),
                         contentAlignment = Center,
                     ) {

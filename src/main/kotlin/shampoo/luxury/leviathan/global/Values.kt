@@ -9,7 +9,8 @@ import shampoo.luxury.leviathan.wrap.data.achievements.Achievement
 import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import shampoo.luxury.leviathan.wrap.data.pets.getOwnedPets
-import shampoo.luxury.leviathan.wrap.data.settings.SettingsDelegate
+import shampoo.luxury.leviathan.wrap.data.settings.getBooleanSetting
+import shampoo.luxury.leviathan.wrap.data.settings.setBooleanSetting
 import xyz.malefic.compose.prefs.collection.PersistentHashSet
 import xyz.malefic.compose.prefs.delegate.IntPreference
 import java.util.prefs.Preferences
@@ -19,8 +20,13 @@ object Values {
     object Prefs {
         val prefs: Preferences = userRoot().node("leviathan")
 
-        var speakSetting by SettingsDelegate("speak_enabled", true)
-        var listenSetting by SettingsDelegate("listen_enabled", true)
+        suspend fun getSpeakSetting(): Boolean = getBooleanSetting("speak_enabled", true)
+
+        suspend fun setSpeakSetting(value: Boolean) = setBooleanSetting("speak_enabled", value)
+
+        suspend fun getListenSetting(): Boolean = getBooleanSetting("listen_enabled", true)
+
+        suspend fun setListenSetting(value: Boolean) = setBooleanSetting("listen_enabled", value)
     }
 
     var user by IntPreference("current_user", -1)
@@ -38,7 +44,7 @@ object Values {
     val completedAchievements =
         PersistentHashSet<String>(
             "completedAchievements",
-            Values.Prefs.prefs,
+            Prefs.prefs,
         )
 
     val allAchievements =

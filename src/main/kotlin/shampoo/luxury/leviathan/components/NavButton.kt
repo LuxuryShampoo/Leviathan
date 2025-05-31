@@ -3,8 +3,7 @@ package shampoo.luxury.leviathan.components
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Button
 import androidx.compose.runtime.Composable
-import xyz.malefic.compose.nav.RouteManager.navi
-import xyz.malefic.ext.precompose.gate
+import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 
 /**
  * A composable function that creates a navigation button.
@@ -16,4 +15,4 @@ import xyz.malefic.ext.precompose.gate
 fun NavButton(
     target: String,
     content: @Composable (RowScope.() -> Unit),
-) = Button({ navi gate target }, content = content)
+) = Button({ navigate(target) }, content = content)

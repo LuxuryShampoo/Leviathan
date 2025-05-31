@@ -23,8 +23,9 @@ import androidx.compose.ui.Modifier
 import shampoo.luxury.leviathan.components.Carousel
 import shampoo.luxury.leviathan.components.CarouselButton
 import shampoo.luxury.leviathan.components.CarouselCost
-import shampoo.luxury.leviathan.components.MaxLoading
 import shampoo.luxury.leviathan.components.PageScope
+import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
+import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import shampoo.luxury.leviathan.wrap.data.pets.getUnownedPets
 import xyz.malefic.compose.comps.text.typography.Heading3
@@ -58,12 +59,12 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
     val imageFiles = remember { mutableStateListOf<File>() }
     var sortedUnownedPets by remember { mutableStateOf<List<Pet>>(emptyList()) }
     var focusedPet by remember { mutableStateOf<Pet?>(null) }
-    var loading by remember { mutableStateOf(true) }
-    val coroutineScope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        loading = true
+        addLoading("shop market load")
+        removeLoading("navigation to shop")
         val unownedPets = getUnownedPets()
         sortedUnownedPets = unownedPets.sortedBy { it.cost }
         imageFiles.clear()
@@ -74,7 +75,7 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
         )
         focusedPet = sortedUnownedPets.firstOrNull()
         onFocusChange(focusedPet?.name ?: "Loading...")
-        loading = false
+        removeLoading("shop market load")
     }
 
     LaunchedEffect(listState.firstVisibleItemIndex) {
@@ -84,23 +85,17 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
         }
     }
 
-    when {
-        loading -> {
-            MaxLoading()
-            return
+    if (sortedUnownedPets.isEmpty()) {
+        Box(
+            Modifier
+                .fillMaxHeight(0.6f)
+                .fillMaxWidth(),
+            Center,
+        ) {
+            Heading3("All Gone!")
         }
-        sortedUnownedPets.isEmpty() -> {
-            Box(
-                Modifier
-                    .fillMaxHeight(0.6f)
-                    .fillMaxWidth(),
-                Center,
-            ) {
-                Heading3("All Gone!")
-            }
-            onFocusChange("Woah!")
-            return
-        }
+        onFocusChange("Woah!")
+        return
     }
 
     Box(
@@ -119,12 +114,12 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
                 Carousel(listState, imageFiles)
             }
 
-            CarouselButton("<", coroutineScope, { align(CenterStart) }) {
+            CarouselButton("<", scope, { align(CenterStart) }) {
                 val prevIndex = (listState.firstVisibleItemIndex - 1 + imageFiles.size) % imageFiles.size
                 listState.animateScrollToItem(prevIndex)
             }
 
-            CarouselButton(">", coroutineScope, { align(CenterEnd) }) {
+            CarouselButton(">", scope, { align(CenterEnd) }) {
                 val nextIndex = (listState.firstVisibleItemIndex + 1) % imageFiles.size
                 listState.animateScrollToItem(nextIndex)
             }

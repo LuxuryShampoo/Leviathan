@@ -8,29 +8,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.HourglassStart
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.PageScope
 import shampoo.luxury.leviathan.components.TaskInputForm
 import shampoo.luxury.leviathan.components.TaskList
+import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
+import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.wrap.data.tasks.Task
 import shampoo.luxury.leviathan.wrap.data.tasks.addTask
 import shampoo.luxury.leviathan.wrap.data.tasks.deleteTask
 import shampoo.luxury.leviathan.wrap.data.tasks.fetchTasks
 import shampoo.luxury.leviathan.wrap.data.tasks.updateTask
 import xyz.malefic.compose.comps.text.typography.Heading4
-import xyz.malefic.compose.nav.RouteManager.navi
-import xyz.malefic.ext.precompose.gate
 
 @Composable
 fun Tasks() =
     PageScope {
-        val scope = rememberCoroutineScope()
+        val scope = rememberCoroutineScope { Dispatchers.IO }
         var tasks by remember { mutableStateOf(emptyList<Task>()) }
         var newTaskTitle by remember { mutableStateOf("") }
         var newTaskDescription by remember { mutableStateOf("") }
 
         LaunchedEffect(Unit) {
+            removeLoading("navigation to tasks")
             scope.launch {
                 tasks = fetchTasks()
             }
@@ -55,7 +57,7 @@ fun Tasks() =
                     24.dp,
                     32.dp,
                 ) {
-                    navi gate "pomodoro"
+                    navigate("pomodoro")
                 }
             }
 

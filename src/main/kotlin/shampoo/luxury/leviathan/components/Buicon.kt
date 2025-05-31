@@ -1,11 +1,13 @@
 package shampoo.luxury.leviathan.components
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
@@ -19,45 +21,45 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.SolidGroup
 import xyz.malefic.ext.modifier.modifyIf
 
-/**
- * A composable function that creates a button with an icon, styled for compact and customizable usage.
- *
- * @param imageVector A lambda that provides the desired icon from the `SolidGroup`.
- * @param contentDescription A description of the icon for accessibility purposes.
- * @param size The size of the icon in Dp. Defaults to 32.dp.
- * @param hitBox The size of the clickable area (hitbox) in Dp. Defaults to 64.dp.
- * @param unbounded A flag indicating whether the icon's size is unbounded. Defaults to false.
- * @param modifier A `Modifier` to apply to the outer `Box`. Defaults to `Modifier.Companion`.
- * @param onClick A lambda function to be executed when the button is clicked.
- */
 @Composable
 fun Buicon(
     imageVector: SolidGroup.() -> ImageVector,
     contentDescription: String,
-    size: Dp = 32.dp,
+    iconSize: Dp = 32.dp,
     hitBox: Dp = 64.dp,
     unbounded: Boolean = false,
     modifier: Modifier = Modifier,
+    outlined: Boolean = true,
     onClick: () -> Unit,
 ) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = modifier.size(hitBox),
-        colors =
-            ButtonDefaults.outlinedButtonColors(
-                backgroundColor = Transparent,
-                contentColor = MaterialTheme.colors.onBackground,
-            ),
-        contentPadding = PaddingValues(0.dp), // Remove default padding
-    ) {
+    val buttonColors =
+        ButtonDefaults.outlinedButtonColors(Transparent, colors.onBackground)
+    val content: @Composable RowScope.() -> Unit = {
         Icon(
-            imageVector = imageVector(FontAwesomeIcons.Solid),
-            contentDescription = contentDescription,
-            modifier =
-                Modifier
-                    .size(size)
-                    .modifyIf(!unbounded, Modifier.wrapContentSize(Center)),
-            tint = MaterialTheme.colors.onBackground,
+            imageVector(FontAwesomeIcons.Solid),
+            contentDescription,
+            Modifier
+                .size(iconSize)
+                .modifyIf(!unbounded, Modifier.wrapContentSize(Center)),
+            colors.onBackground,
+        )
+    }
+    if (outlined) {
+        OutlinedButton(
+            onClick,
+            modifier.size(hitBox),
+            colors = buttonColors,
+            contentPadding = PaddingValues(0.dp),
+            content = content,
+        )
+    } else {
+        Button(
+            onClick,
+            modifier.size(hitBox),
+            colors = buttonColors,
+            contentPadding = PaddingValues(0.dp),
+            elevation = null,
+            content = content,
         )
     }
 }

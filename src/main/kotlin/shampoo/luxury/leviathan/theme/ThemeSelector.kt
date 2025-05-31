@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -33,7 +32,6 @@ import xyz.malefic.compose.comps.text.typography.ColorType.OnSurface
 @Composable
 fun ThemeSelector() {
     var expanded by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
     var selectedTheme by remember { mutableStateOf(fromPath(currentThemePath)) }
 
     Row(

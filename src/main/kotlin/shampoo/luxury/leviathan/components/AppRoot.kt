@@ -1,6 +1,7 @@
 package shampoo.luxury.leviathan.components
 
 import androidx.compose.runtime.*
+import co.touchlab.kermit.Logger
 import shampoo.luxury.leviathan.global.GlobalLoadingState
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
@@ -18,7 +19,12 @@ fun AppRoot(content: @Composable () -> Unit) {
     }
 
     BackgroundBox {
-        MaxLoading().takeIf { loading }
+        if (loading) {
+            MaxLoading()
+            Logger.d("Loading in progress, showing loading indicator", tag = "AppRoot")
+        } else {
+            Logger.d("Loading complete, rendering content", tag = "AppRoot")
+        }
         content()
     }
 }
