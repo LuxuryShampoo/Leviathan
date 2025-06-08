@@ -32,26 +32,36 @@ object Whisper {
     private val transcriptSignal = Signal<String>()
     private var targetDataLine: TargetDataLine? = null
     private var whisper: WhisperJNI
-    private var ctx: WhisperContext
+    private lateinit var ctx: WhisperContext
 
     init {
-        try {
-            WhisperJNI.loadLibrary()
-            WhisperJNI.setLibraryLogger { text -> Logger.d("WhisperJNI") { text } }
+        WhisperJNI.loadLibrary()
+        WhisperJNI.setLibraryLogger { text -> Logger.d("WhisperJNI") { text } }
 
-            whisper = WhisperJNI()
+        whisper = WhisperJNI()
 
-            val systemInfo = whisper.systemInfo
-            Logger.d("Whisper") { "Native system info:\n$systemInfo" }
+        val systemInfo = whisper.systemInfo
+        Logger.d("Whisper") { "Native system info:\n$systemInfo" }
 
-            ctx =
-                requireNotNull(
-                    whisper.init(modelPath),
-                ) { "Failed to initialize Whisper context. Check if model file exists and system info above." }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw e
-        }
+        var initialized = false
+        do {
+            try {
+                ctx =
+                    requireNotNull(
+                        whisper.init(modelPath),
+                    ) { "Failed to initialize Whisper context. Check if model file exists and system info above." }
+                initialized = true
+            } catch (n: IllegalArgumentException) {
+                n.printStackTrace()
+                modelPath =
+                    extractResourceToLocal("files/model/ggml-tiny.en.bin", overwrite = true).toPath().also {
+                        Logger.d("Whisper") { "Model path: $it" }
+                    }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                throw e
+            }
+        } while (!initialized)
     }
 
     /**
