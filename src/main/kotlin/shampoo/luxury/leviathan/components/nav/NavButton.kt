@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.nav
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Button

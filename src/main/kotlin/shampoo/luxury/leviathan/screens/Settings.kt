@@ -25,8 +25,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import shampoo.luxury.leviathan.components.BooleanSetting
-import shampoo.luxury.leviathan.components.PageScope
+import shampoo.luxury.leviathan.components.layouts.PageScope
+import shampoo.luxury.leviathan.components.settings.BooleanSetting
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.global.Values.Prefs.getListenSetting

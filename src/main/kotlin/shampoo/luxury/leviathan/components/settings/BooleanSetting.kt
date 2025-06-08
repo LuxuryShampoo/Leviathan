@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.settings
 
 import androidx.compose.material.Switch
 import androidx.compose.runtime.Composable

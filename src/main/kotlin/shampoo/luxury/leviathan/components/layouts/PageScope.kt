@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.layouts
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import kotlinx.serialization.json.JsonNull.content
+import shampoo.luxury.leviathan.components.nav.NavBar
 
 /**
  * A composable function that defines the layout for a page in the application.

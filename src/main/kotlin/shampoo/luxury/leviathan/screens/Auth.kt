@@ -3,11 +3,10 @@ package shampoo.luxury.leviathan.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.StrokeCap.Companion.Round
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import co.touchlab.kermit.Logger
@@ -15,9 +14,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import shampoo.luxury.leviathan.components.AuthDialogError
-import shampoo.luxury.leviathan.components.AuthDialogFields
-import shampoo.luxury.leviathan.components.AuthDialogHeader
+import shampoo.luxury.leviathan.components.MaxLoading
+import shampoo.luxury.leviathan.components.auth.AuthDialogError
+import shampoo.luxury.leviathan.components.auth.AuthDialogFields
+import shampoo.luxury.leviathan.components.auth.AuthDialogHeader
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.global.Values.Prefs.prefs
@@ -31,12 +31,6 @@ import shampoo.luxury.leviathan.wrap.data.users.isValidUsername
 import xyz.malefic.compose.comps.text.typography.Body2
 import xyz.malefic.compose.prefs.delegate.BooleanPreference
 
-/**
- * A composable function that displays an authentication dialog.
- * The dialog allows the user to either log in or sign up before accessing the application.
- *
- * @param onAuthenticated A callback function that is invoked when the user successfully authenticates.
- */
 @Composable
 fun AuthDialog(onAuthenticated: (String) -> Unit) {
     var isLogin by remember { mutableStateOf(true) }
@@ -51,52 +45,79 @@ fun AuthDialog(onAuthenticated: (String) -> Unit) {
             MaterialTheme.shapes.medium,
         ) {
             Box {
-                Column(
-                    Modifier.padding(16.dp),
-                    Arrangement.spacedBy(8.dp),
-                    CenterHorizontally,
-                ) {
-                    AuthDialogHeader(isLogin)
-                    AuthDialogFields(username, password, { username = it }, { password = it })
-                    errorMessage?.let { AuthDialogError(it) }
-                    AuthDialogActions(
-                        isLogin,
-                        {
-                            isLogin = !isLogin
-                            errorMessage = null
-                        },
-                        {
-                            errorMessage = null
-                            if (!validate(isLogin, username, password) {
-                                    errorMessage = it
-                                }
-                            ) {
-                                return@AuthDialogActions
-                            }
-                            loading = true
-                            val action = if (isLogin) ::authenticateUser else ::registerUser
-                            action(username, password, { user ->
-                                loading = false
-                                onAuthenticated(user)
-                            }) { error ->
-                                loading = false
-                                errorMessage = error
-                            }
-                        },
-                    )
-                }
+                AuthDialogContent(
+                    isLogin = isLogin,
+                    username = username,
+                    password = password,
+                    errorMessage = errorMessage,
+                    onUsernameChange = { username = it },
+                    onPasswordChange = { password = it },
+                    onSwitchMode = {
+                        isLogin = !isLogin
+                        errorMessage = null
+                    },
+                    onSubmit = {
+                        handleAuthSubmit(
+                            isLogin = isLogin,
+                            username = username,
+                            password = password,
+                            setLoading = { loading = it },
+                            setError = { errorMessage = it },
+                            onAuthenticated = onAuthenticated,
+                        )
+                    },
+                )
                 if (loading) {
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colors.surface.copy(alpha = 0.6f)),
-                        contentAlignment = Center,
-                    ) {
-                        CircularProgressIndicator(strokeCap = Round)
-                    }
+                    MaxLoading(Modifier.background(colors.surface.copy(alpha = 0.6f)).fillMaxHeight().fillMaxWidth())
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun AuthDialogContent(
+    isLogin: Boolean,
+    username: String,
+    password: String,
+    errorMessage: String?,
+    onUsernameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onSwitchMode: () -> Unit,
+    onSubmit: () -> Unit,
+) {
+    Column(
+        Modifier.padding(16.dp),
+        Arrangement.spacedBy(8.dp),
+        CenterHorizontally,
+    ) {
+        AuthDialogHeader(isLogin)
+        AuthDialogFields(username, password, onUsernameChange, onPasswordChange)
+        errorMessage?.let { AuthDialogError(it) }
+        AuthDialogActions(isLogin, onSwitchMode, onSubmit)
+    }
+}
+
+private fun handleAuthSubmit(
+    isLogin: Boolean,
+    username: String,
+    password: String,
+    setLoading: (Boolean) -> Unit,
+    setError: (String?) -> Unit,
+    onAuthenticated: (String) -> Unit,
+) {
+    setError(null)
+    if (!validate(isLogin, username, password, setError)) {
+        return
+    }
+    setLoading(true)
+    val action = if (isLogin) ::authenticateUser else ::registerUser
+    action(username, password, { user ->
+        setLoading(false)
+        onAuthenticated(user)
+    }) { error ->
+        setLoading(false)
+        setError(error)
     }
 }
 
@@ -201,10 +222,6 @@ private fun registerUser(
     }
 }
 
-/**
- * A composable function that wraps the home screen with authentication.
- * Displays the authentication dialog if the user is not authenticated.
- */
 @Composable
 fun HomeWithAuth() {
     var prefIsAuthenticated by BooleanPreference("isAuthenticated", false, prefs)

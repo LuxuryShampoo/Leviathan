@@ -15,6 +15,7 @@ import xyz.malefic.ext.precompose.gate
 object GlobalLoadingState {
     private val loadingIds: MutableState<Set<String>> = mutableStateOf(emptySet())
     private val log = Logger.withTag("GlobalLoadingState")
+    var databaseLoaded = false
 
     val isLoading: State<Boolean>
         @Composable get() = derivedStateOf { loadingIds.value.isNotEmpty() }

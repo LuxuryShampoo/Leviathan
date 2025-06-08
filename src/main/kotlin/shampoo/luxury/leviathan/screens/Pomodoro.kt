@@ -37,7 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
-import shampoo.luxury.leviathan.components.PageScope
+import shampoo.luxury.leviathan.components.layouts.PageScope
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.wrap.data.tasks.Task

@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "shampoo.luxury"
-version = "1.2.0"
+version = "1.3.1"
 
 repositories {
     mavenCentral()
@@ -46,9 +46,12 @@ compose.desktop {
         mainClass = "shampoo.luxury.leviathan.MainKt"
 
         nativeDistributions {
+            windows {
+                includeAllModules = true
+            }
             targetFormats(Dmg, Msi, Deb)
             packageName = "Leviathan"
-            packageVersion = "1.2.0"
+            packageVersion = "1.3.1"
         }
     }
 }

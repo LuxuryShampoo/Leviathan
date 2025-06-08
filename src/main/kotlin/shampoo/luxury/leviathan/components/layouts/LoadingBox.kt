@@ -1,30 +1,29 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.layouts
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
-import co.touchlab.kermit.Logger
+import shampoo.luxury.leviathan.components.MaxLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
+import shampoo.luxury.leviathan.global.GlobalLoadingState.databaseLoaded
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.wrap.data.initializeDatabase
-import xyz.malefic.compose.comps.box.BackgroundBox
 
 @Composable
-fun AppRoot(content: @Composable () -> Unit) {
+fun LoadingBox(content: @Composable () -> Unit) {
     val loading by GlobalLoadingState.isLoading
 
     LaunchedEffect(Unit) {
         addLoading("database initialization")
         initializeDatabase()
         removeLoading("database initialization")
+        databaseLoaded = true
     }
 
-    BackgroundBox {
+    Box {
+        content()
         if (loading) {
             MaxLoading()
-            Logger.d("Loading in progress, showing loading indicator", tag = "AppRoot")
-        } else {
-            Logger.d("Loading complete, rendering content", tag = "AppRoot")
         }
-        content()
     }
 }

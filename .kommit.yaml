@@ -9,6 +9,7 @@ scopes:
   all:
     - ui
     - wrap
+    - data
   docs:
     - readme
   chore:

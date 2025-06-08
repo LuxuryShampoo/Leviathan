@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.auth
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions

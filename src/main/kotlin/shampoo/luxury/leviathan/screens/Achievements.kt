@@ -10,9 +10,9 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import compose.icons.fontawesomeicons.solid.ArrowLeft
-import shampoo.luxury.leviathan.components.AchievementItem
 import shampoo.luxury.leviathan.components.Buicon
-import shampoo.luxury.leviathan.components.CategoryHeader
+import shampoo.luxury.leviathan.components.achievements.AchievementItem
+import shampoo.luxury.leviathan.components.achievements.CategoryHeader
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import xyz.malefic.compose.comps.text.typography.Body1

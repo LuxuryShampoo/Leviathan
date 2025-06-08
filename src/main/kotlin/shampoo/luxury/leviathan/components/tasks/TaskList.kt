@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.tasks
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement

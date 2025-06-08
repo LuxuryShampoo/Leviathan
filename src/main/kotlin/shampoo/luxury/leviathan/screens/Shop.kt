@@ -25,10 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import shampoo.luxury.leviathan.components.Carousel
-import shampoo.luxury.leviathan.components.CarouselButton
-import shampoo.luxury.leviathan.components.CarouselCost
-import shampoo.luxury.leviathan.components.PageScope
+import shampoo.luxury.leviathan.components.layouts.PageScope
+import shampoo.luxury.leviathan.components.shop.Carousel
+import shampoo.luxury.leviathan.components.shop.CarouselButton
+import shampoo.luxury.leviathan.components.shop.CarouselCost
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.wrap.data.currency.getMoney

@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.achievements
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
@@ -23,8 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import shampoo.luxury.leviathan.wrap.data.achievements.Achievement
-import sun.java2d.loops.ProcessPath.drawPath
-import sun.swing.SwingUtilities2.drawRect
 
 /**
  * Composable function for displaying an individual achievement.

@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.auth
 
 import androidx.compose.runtime.Composable
 import xyz.malefic.compose.comps.text.typography.Heading6

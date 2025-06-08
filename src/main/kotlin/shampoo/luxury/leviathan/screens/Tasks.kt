@@ -11,9 +11,9 @@ import compose.icons.fontawesomeicons.solid.HourglassStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
-import shampoo.luxury.leviathan.components.PageScope
-import shampoo.luxury.leviathan.components.TaskInputForm
-import shampoo.luxury.leviathan.components.TaskList
+import shampoo.luxury.leviathan.components.layouts.PageScope
+import shampoo.luxury.leviathan.components.tasks.TaskInputForm
+import shampoo.luxury.leviathan.components.tasks.TaskList
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.wrap.data.tasks.Task

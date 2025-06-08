@@ -24,7 +24,10 @@ import javax.sound.sampled.TargetDataLine
 object Whisper {
     private var isClosed = false
     private lateinit var wakeWord: String
-    private var modelPath = extractResourceToLocal("model/ggml-tiny.en.bin").toPath()
+    private var modelPath =
+        extractResourceToLocal("files/model/ggml-tiny.en.bin").toPath().also {
+            Logger.d("Whisper") { "Model path: $it" }
+        }
     private var silenceThreshold = 2000
     private val transcriptSignal = Signal<String>()
     private var targetDataLine: TargetDataLine? = null
@@ -32,14 +35,23 @@ object Whisper {
     private var ctx: WhisperContext
 
     init {
-        WhisperJNI.loadLibrary()
-        WhisperJNI.setLibraryLogger {
-            WhisperJNI.LibraryLogger {
-                Logger.d("WhisperJNI: $it")
-            }
+        try {
+            WhisperJNI.loadLibrary()
+            WhisperJNI.setLibraryLogger { text -> Logger.d("WhisperJNI") { text } }
+
+            whisper = WhisperJNI()
+
+            val systemInfo = whisper.systemInfo
+            Logger.d("Whisper") { "Native system info:\n$systemInfo" }
+
+            ctx =
+                requireNotNull(
+                    whisper.init(modelPath),
+                ) { "Failed to initialize Whisper context. Check if model file exists and system info above." }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
         }
-        whisper = WhisperJNI()
-        ctx = whisper.init(modelPath)
     }
 
     /**

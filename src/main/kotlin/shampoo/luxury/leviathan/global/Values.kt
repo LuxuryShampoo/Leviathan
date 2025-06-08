@@ -33,7 +33,7 @@ object Values {
 
     suspend fun updateSelectedPet() {
         val pets = getOwnedPets()
-        _selectedPet.value = pets.firstOrNull()
+        _selectedPet.value = pets.lastOrNull()
     }
 
     val completedAchievements =

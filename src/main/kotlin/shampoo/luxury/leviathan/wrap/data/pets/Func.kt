@@ -2,13 +2,16 @@ package shampoo.luxury.leviathan.wrap.data.pets
 
 import kotlinx.coroutines.Dispatchers.IO
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.update
 import shampoo.luxury.leviathan.global.Values.updateSelectedPet
 import shampoo.luxury.leviathan.global.Values.user
 import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
+import shampoo.luxury.leviathan.wrap.data.pets.Pets.cost
+import shampoo.luxury.leviathan.wrap.data.pets.Pets.owned
+import shampoo.luxury.leviathan.wrap.data.pets.Pets.resourcePath
 
 /**
  * Initializes the pets in the database.
@@ -18,21 +21,21 @@ import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
 suspend fun initializePets() {
     newSuspendedTransaction(IO) {
         if (Pets.selectAll().empty()) {
-            listOf(
-                Pet("Rishi", "image/Rishi.png", -1.0),
-                Pet("Phat", "image/Phat.png", 27.0),
-                Pet("Bob", "image/BobAlarm.png", 50.0),
-                Pet("Beluga", "image/Beluga.png", 75.0),
-                Pet("MaineCoon", "image/MaineCoon.png", 101.0),
-                Pet("Supreme", "image/Supreme.png", 250.0),
-            ).forEach { pet ->
-                Pets.insert {
-                    it[userId] = user
-                    it[name] = pet.name
-                    it[resourcePath] = pet.resourcePath
-                    it[cost] = pet.cost
-                    it[owned] = pet.name == "Bob"
-                }
+            val pets =
+                listOf(
+                    Pet("Rishi", "drawable/Rishi.png", -1.0),
+                    Pet("Phat", "drawable/Phat.png", 27.0),
+                    Pet("Bob", "drawable/BobAlarm.png", 50.0),
+                    Pet("Beluga", "drawable/Beluga.png", 75.0),
+                    Pet("MaineCoon", "drawable/MaineCoon.png", 101.0),
+                    Pet("Supreme", "drawable/Supreme.png", 250.0),
+                )
+            Pets.batchInsert(pets) { pet ->
+                this[Pets.userId] = user
+                this[Pets.name] = pet.name
+                this[resourcePath] = pet.resourcePath
+                this[cost] = pet.cost
+                this[owned] = pet.name == "Bob"
             }
         }
     }

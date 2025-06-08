@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.achievements
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

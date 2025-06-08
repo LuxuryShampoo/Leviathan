@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.nav
 
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Row
@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import compose.icons.fontawesomeicons.solid.Cog
 import compose.icons.fontawesomeicons.solid.Home
 import compose.icons.fontawesomeicons.solid.Store
+import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import xyz.malefic.compose.nav.RouteManager.navi
 

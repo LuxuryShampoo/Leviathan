@@ -1,4 +1,4 @@
-package shampoo.luxury.leviathan.components
+package shampoo.luxury.leviathan.components.shop
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -31,6 +31,8 @@ import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.DollarSign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import shampoo.luxury.leviathan.components.Butext
+import shampoo.luxury.leviathan.components.FileImage
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import xyz.malefic.compose.comps.text.typography.Body1
 import java.io.File

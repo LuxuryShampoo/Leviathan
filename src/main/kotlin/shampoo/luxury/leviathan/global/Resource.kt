@@ -1,8 +1,8 @@
 package shampoo.luxury.leviathan.global
 
-import io.ktor.client.request.get
+import kotlinx.coroutines.runBlocking
+import shampoo.luxury.leviathan.generated.resources.Res
 import java.io.File
-import kotlin.io.copyTo
 
 /** Utility object for handling resource paths. */
 object Resource {
@@ -39,20 +39,20 @@ object Resource {
         overwrite: Boolean = false,
     ): File {
         val destinationFile = File(getLocalResourcePath(destinationPath))
-
         if (destinationFile.exists() && !overwrite) {
             return destinationFile
         }
 
-        val inputStream = ClassLoader.getSystemResourceAsStream(resourcePath)
-        requireNotNull(inputStream) { "Resource $resourcePath not found in JAR." }
+        val bytes =
+            runBlocking {
+                Res.readBytes(resourcePath)
+            }
+        require(bytes.isNotEmpty()) { "Resource $resourcePath not found in JAR." }
 
         destinationFile.parentFile?.mkdirs()
-        inputStream.buffered().use { input ->
-            destinationFile.outputStream().buffered().use { output ->
-                input.copyTo(output)
-            }
-        }
+        destinationFile.writeBytes(bytes)
+
+        check(destinationFile.exists()) { "Failed to extract resource $resourcePath to $destinationPath." }
         return destinationFile
     }
 }

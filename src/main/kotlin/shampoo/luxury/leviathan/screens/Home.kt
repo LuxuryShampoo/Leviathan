@@ -31,8 +31,8 @@ import compose.icons.fontawesomeicons.solid.Trophy
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.Burger
 import shampoo.luxury.leviathan.components.FileImage
-import shampoo.luxury.leviathan.components.NavButton
-import shampoo.luxury.leviathan.components.PageScope
+import shampoo.luxury.leviathan.components.layouts.PageScope
+import shampoo.luxury.leviathan.components.nav.NavButton
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
