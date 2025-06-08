@@ -1,7 +1,7 @@
 [versions]
 precompose = "1.6.2"
 maleficnav = "1.3.3"
-maleficextensions = "1.4.2"
+maleficextensions = "1.4.4"
 maleficcomps = "1.2.1"
 malefictheme = "1.1.2"
 maleficengine = "1.3.0"
