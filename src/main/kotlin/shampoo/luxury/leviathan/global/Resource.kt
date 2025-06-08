@@ -2,6 +2,7 @@ package shampoo.luxury.leviathan.global
 
 import kotlinx.coroutines.runBlocking
 import shampoo.luxury.leviathan.generated.resources.Res
+import shampoo.luxury.leviathan.wrap.data.pets.Pets.resourcePath
 import java.io.File
 
 /** Utility object for handling resource paths. */

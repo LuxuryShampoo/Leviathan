@@ -11,10 +11,13 @@ import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.global.Resource.extractResourceToLocal
 import shampoo.luxury.leviathan.global.Values.Prefs.getListenSetting
 import xyz.malefic.Signal
+import java.io.File
+import java.util.jar.JarFile
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.DataLine
 import javax.sound.sampled.TargetDataLine
+import kotlin.sequences.forEach
 
 /**
  * A singleton object for the WhisperJNI speech-to-text engine.
@@ -25,7 +28,7 @@ object Whisper {
     private var isClosed = false
     private lateinit var wakeWord: String
     private var modelPath =
-        extractResourceToLocal("files/model/ggml-tiny.en.bin").toPath().also {
+        extractResourceToLocal("files/model/tiny.bin").toPath().also {
             Logger.d("Whisper") { "Model path: $it" }
         }
     private var silenceThreshold = 2000
@@ -35,6 +38,22 @@ object Whisper {
     private lateinit var ctx: WhisperContext
 
     init {
+        val jarUrl = this::class.java.protectionDomain.codeSource.location
+        val jarFile = File(jarUrl.toURI())
+
+        println("Running jar: ${jarFile.absolutePath}")
+
+        if (!jarFile.isFile) {
+            println("Not running from a jar file.")
+        }
+
+        JarFile(jarFile).use { jar ->
+            println("Jar file structure:")
+            jar.entries().asSequence().forEach { entry ->
+                println(entry.name)
+            }
+        }
+
         WhisperJNI.loadLibrary()
         WhisperJNI.setLibraryLogger { text -> Logger.d("WhisperJNI") { text } }
 
@@ -54,7 +73,7 @@ object Whisper {
             } catch (n: IllegalArgumentException) {
                 n.printStackTrace()
                 modelPath =
-                    extractResourceToLocal("files/model/ggml-tiny.en.bin", overwrite = true).toPath().also {
+                    extractResourceToLocal("files/model/tiny.bin", overwrite = true).toPath().also {
                         Logger.d("Whisper") { "Model path: $it" }
                     }
             } catch (e: Exception) {
