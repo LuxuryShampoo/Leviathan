@@ -174,7 +174,7 @@ jobs:
           - os: ubuntu-latest
             packageType: deb
           - os: windows-latest
-            packageType: msi
+            packageType: exe
           - os: macos-latest
             packageType: dmg
 
@@ -220,7 +220,7 @@ jobs:
           - os: ubuntu-latest
             packageType: deb
           - os: windows-latest
-            packageType: msi
+            packageType: exe
           - os: macos-latest
             packageType: dmg
 
@@ -317,7 +317,7 @@ jobs:
 
             ### Installation
             Download the appropriate package for your operating system:
-            - Windows: `.msi` file
+            - Windows: `.exe` file
             - macOS: `.dmg` file
             - Linux: `.deb` file
 

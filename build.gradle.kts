@@ -1,6 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
 import org.jmailen.gradle.kotlinter.tasks.FormatTask
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 
@@ -46,10 +46,8 @@ compose.desktop {
         mainClass = "shampoo.luxury.leviathan.MainKt"
 
         nativeDistributions {
-            windows {
-                includeAllModules = true
-            }
-            targetFormats(Dmg, Msi, Deb)
+            includeAllModules = true
+            targetFormats(Dmg, Exe, Deb)
             packageName = "Leviathan"
             packageVersion = "1.3.2"
         }
