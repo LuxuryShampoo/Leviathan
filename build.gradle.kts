@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "shampoo.luxury"
-version = "1.2.0"
+version = "1.3.0"
 
 repositories {
     mavenCentral()
@@ -48,7 +48,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(Dmg, Msi, Deb)
             packageName = "Leviathan"
-            packageVersion = "1.2.0"
+            packageVersion = "1.3.0"
         }
     }
 }
