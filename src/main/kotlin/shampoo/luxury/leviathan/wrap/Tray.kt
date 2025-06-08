@@ -15,7 +15,7 @@ fun setupTrayIcon(scope: CoroutineScope) {
     }
 
     val tray = SystemTray.getSystemTray()
-    val image = Toolkit.getDefaultToolkit().getImage(extractResourceToLocal("drawable/Phat.png").absolutePath)
+    val image = Toolkit.getDefaultToolkit().getImage(extractResourceToLocal("images/Phat.png").absolutePath)
 
     val startListening = MenuItem("Start Listening")
     val stopListening = MenuItem("Stop Listening")

@@ -1,9 +1,7 @@
 package shampoo.luxury.leviathan.global
 
-import kotlinx.coroutines.runBlocking
-import shampoo.luxury.leviathan.generated.resources.Res
-import shampoo.luxury.leviathan.wrap.data.pets.Pets.resourcePath
 import java.io.File
+import java.io.FileOutputStream
 
 /** Utility object for handling resource paths. */
 object Resource {
@@ -30,30 +28,29 @@ object Resource {
      * Extracts a resource from the JAR file and saves it to a local destination.
      *
      * @param resourcePath The path to the resource within the JAR file.
-     * @param destinationPath The relative path where the resource will be saved locally.
      * @param overwrite If true, the resource will be extracted even if the file already exists. Defaults to false.
      * @return The `File` object representing the extracted resource.
      */
     fun extractResourceToLocal(
         resourcePath: String,
-        destinationPath: String = resourcePath,
         overwrite: Boolean = false,
     ): File {
-        val destinationFile = File(getLocalResourcePath(destinationPath))
-        if (destinationFile.exists() && !overwrite) {
-            return destinationFile
+        // Use the local resource path as destination
+        val destinationPath = getLocalResourcePath(resourcePath)
+        val outputFile = File(destinationPath)
+        if (outputFile.exists() && !overwrite) {
+            return outputFile
         }
+        // Ensure destination directory exists
+        outputFile.parentFile.mkdirs()
 
-        val bytes =
-            runBlocking {
-                Res.readBytes(resourcePath)
-            }
-        require(bytes.isNotEmpty()) { "Resource $resourcePath not found in JAR." }
-
-        destinationFile.parentFile?.mkdirs()
-        destinationFile.writeBytes(bytes)
-
-        check(destinationFile.exists()) { "Failed to extract resource $resourcePath to $destinationPath." }
-        return destinationFile
+        // Load resource using a forward slash for jar access
+        val resourceStream =
+            object {}.javaClass.getResourceAsStream("/$resourcePath")
+                ?: throw IllegalArgumentException("Resource not found: /$resourcePath")
+        FileOutputStream(outputFile).use { out ->
+            resourceStream.use { it.copyTo(out) }
+        }
+        return outputFile
     }
 }

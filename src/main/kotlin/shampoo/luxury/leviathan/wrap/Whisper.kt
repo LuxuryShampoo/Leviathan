@@ -28,7 +28,7 @@ object Whisper {
     private var isClosed = false
     private lateinit var wakeWord: String
     private var modelPath =
-        extractResourceToLocal("files/model/tiny.bin").toPath().also {
+        extractResourceToLocal("model/tiny.bin").toPath().also {
             Logger.d("Whisper") { "Model path: $it" }
         }
     private var silenceThreshold = 2000
@@ -73,7 +73,7 @@ object Whisper {
             } catch (n: IllegalArgumentException) {
                 n.printStackTrace()
                 modelPath =
-                    extractResourceToLocal("files/model/tiny.bin", overwrite = true).toPath().also {
+                    extractResourceToLocal("model/tiny.bin", overwrite = true).toPath().also {
                         Logger.d("Whisper") { "Model path: $it" }
                     }
             } catch (e: Exception) {

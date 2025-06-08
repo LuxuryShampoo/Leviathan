@@ -23,12 +23,12 @@ suspend fun initializePets() {
         if (Pets.selectAll().empty()) {
             val pets =
                 listOf(
-                    Pet("Rishi", "drawable/Rishi.png", -1.0),
-                    Pet("Phat", "drawable/Phat.png", 27.0),
-                    Pet("Bob", "drawable/BobAlarm.png", 50.0),
-                    Pet("Beluga", "drawable/Beluga.png", 75.0),
-                    Pet("MaineCoon", "drawable/MaineCoon.png", 101.0),
-                    Pet("Supreme", "drawable/Supreme.png", 250.0),
+                    Pet("Rishi", "images/Rishi.png", -1.0),
+                    Pet("Phat", "images/Phat.png", 27.0),
+                    Pet("Bob", "images/BobAlarm.png", 50.0),
+                    Pet("Beluga", "images/Beluga.png", 75.0),
+                    Pet("MaineCoon", "images/MaineCoon.png", 101.0),
+                    Pet("Supreme", "images/Supreme.png", 250.0),
                 )
             Pets.batchInsert(pets) { pet ->
                 this[Pets.userId] = user
