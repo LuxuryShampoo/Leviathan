@@ -3,9 +3,6 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
 import org.jmailen.gradle.kotlinter.tasks.FormatTask
 import org.jmailen.gradle.kotlinter.tasks.LintTask
-import org.gradle.api.file.DuplicatesStrategy
-import org.gradle.api.file.FileCopyDetails
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     alias(libs.plugins.kotlin.serialization)
@@ -15,7 +12,6 @@ plugins {
     alias(libs.plugins.kotlinter)
     alias(libs.plugins.compose)
     idea
-    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "shampoo.luxury"
@@ -86,50 +82,6 @@ tasks {
     }
     withType<FormatTask> {
         this.source = this.source.minus(fileTree("build/generated")).asFileTree
-    }
-    // Task to package compiled classes into a JAR for hot reload compatibility on Mac
-    val hotJar by registering(Jar::class) {
-        archiveBaseName.set("hot-classes")
-        archiveVersion.set("")
-        from(sourceSets.main.get().output)
-        destinationDirectory.set(file("${buildDir}/run/main/classpath"))
-    }
-    named<JavaExec>("runHot") {
-        dependsOn(hotJar)
-        classpath = files("$buildDir/run/main/classpath/hot-classes.jar")
-    }
-    // Ensure hotJar is built before any runHot* tasks that might use the JAR
-    matching { it.name.startsWith("runHot") }.configureEach {
-        dependsOn(hotJar)
-    }
-    register<Jar>("hotFatJar") {
-        archiveBaseName.set("hot-classes-all")
-        archiveVersion.set("")
-        from(sourceSets.main.get().output)
-        dependsOn(configurations.runtimeClasspath)
-        from({
-            configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-        })
-        destinationDirectory.set(file("${buildDir}/run/main/classpath"))
-        manifest {
-            attributes["Main-Class"] = "shampoo.luxury.leviathan.MainKt"
-        }
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        // Exclude all signature and manifest files from dependencies
-        exclude(
-            "META-INF/*.SF",
-            "META-INF/*.DSA",
-            "META-INF/*.RSA",
-            "META-INF/*.EC",
-            "META-INF/*.MF",
-            "META-INF/signature/*",
-            "META-INF/INDEX.LIST"
-        )
-    }
-    named<ShadowJar>("shadowJar") {
-        manifest {
-            attributes["Main-Class"] = "shampoo.luxury.leviathan.MainKt"
-        }
     }
 }
 
