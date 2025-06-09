@@ -1,6 +1,15 @@
 = Leviathan: Personal Assistant and Pet Simulator
 
-Leviathan is a unique application that combines the functionality of a personal assistant with the fun and engagement of a pet simulator. It is designed to help users stay productive while enjoying interactive features like games and pet management. Leviathan offers tools for time management, reminders, and entertainment, making it a versatile companion for both work and leisure.
+Leviathan is a unique application that combines the functionality of a personal assistant with the fun and engagement of a pet simulator. It is designed to help users stay productive while enjoying entertainment.
+
+== Table of Contents
+
+- <<Features>>
+- <<Technical Details>>
+- <<How to Download>>
+- <<How to Build>>
+- <<Contribution>>
+- <<License>>
 
 == Features
 
@@ -36,7 +45,13 @@ Leviathan is built using the following technologies:
 - Compose Components Resources: Adds utilities for resource management in Compose applications.
 - PreCompose: Simplifies navigation in Compose applications.
 
-== How to Build and Run
+== How to Download
+
+You can download the latest Compose Desktop app from the https://github.com/LuxuryShampoo/Leviathan/releases[Releases page].
+
+== How to Build
+
+The following steps are for building the application from source (not for installing a prebuilt app):
 
 1. Clone the repository.
 2. Ensure you have JDK 21 installed.
