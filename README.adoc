@@ -58,6 +58,18 @@ The following steps are for building the application from source (not for instal
 3. Run `./gradlew build` to build the project.
 4. Use `./gradlew run` to start the application.
 
+[NOTE]
+====
+If you are on **Mac** and encounter an error like:
+
+    java.io.FileNotFoundException: .../build/run/main/classpath/classes (Is a directory)
+
+This is due to a classpath issue with hot reload or packaged runs. To fix:
+
+1. Run `./gradlew hotJar` to package the compiled classes into a JAR.
+2. Use the generated JAR at `build/run/main/classpath/hot-classes.jar` as your classpath entry instead of the `classes` directory when running or hot reloading the app.
+====
+
 == Contribution
 
 Contributions are welcome! Please follow the commit message conventions defined in `.kommit.yaml` or use link:https://github.com/OmyDaGreat/Kommit[Kommit] for automatic formatting.
