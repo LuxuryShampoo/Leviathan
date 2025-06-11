@@ -2,6 +2,7 @@ package shampoo.luxury.leviathan.global
 
 import java.io.File
 import java.io.FileOutputStream
+import java.net.URI
 
 /** Utility object for handling resource paths. */
 object Resource {
@@ -50,6 +51,32 @@ object Resource {
                 ?: throw IllegalArgumentException("Resource not found: /$resourcePath")
         FileOutputStream(outputFile).use { out ->
             resourceStream.use { it.copyTo(out) }
+        }
+        return outputFile
+    }
+
+    /**
+     * Downloads a file from the given URL and saves it to the local resource path.
+     *
+     * @param url The URL to download the file from.
+     * @param destinationPath The relative path to save the file under the local resource directory.
+     * @param overwrite If true, the file will be downloaded even if it already exists. Defaults to false.
+     * @return The `File` object representing the downloaded file.
+     */
+    fun downloadFileToLocal(
+        url: String,
+        destinationPath: String,
+        overwrite: Boolean = false,
+    ): File {
+        val outputFile = File(getLocalResourcePath(destinationPath))
+        if (outputFile.exists() && !overwrite) {
+            return outputFile
+        }
+        outputFile.parentFile.mkdirs()
+        URI(url).toURL().openStream().use { input ->
+            FileOutputStream(outputFile).use { output ->
+                input.copyTo(output)
+            }
         }
         return outputFile
     }

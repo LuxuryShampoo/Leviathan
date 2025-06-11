@@ -8,7 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import shampoo.luxury.leviathan.global.Resource.extractResourceToLocal
+import shampoo.luxury.leviathan.global.Resource.downloadFileToLocal
 import shampoo.luxury.leviathan.global.Values.Prefs.getListenSetting
 import xyz.malefic.Signal
 import java.io.File
@@ -28,7 +28,7 @@ object Whisper {
     private var isClosed = false
     private lateinit var wakeWord: String
     private var modelPath =
-        extractResourceToLocal("model/tiny.bin").toPath().also {
+        downloadFileToLocal("https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin", "model/tiny.bin").toPath().also {
             Logger.d("Whisper") { "Model path: $it" }
         }
     private var silenceThreshold = 2000
@@ -73,7 +73,11 @@ object Whisper {
             } catch (n: IllegalArgumentException) {
                 n.printStackTrace()
                 modelPath =
-                    extractResourceToLocal("model/tiny.bin", overwrite = true).toPath().also {
+                    downloadFileToLocal(
+                        "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin",
+                        "model/tiny.bin",
+                        overwrite = true,
+                    ).toPath().also {
                         Logger.d("Whisper") { "Model path: $it" }
                     }
             } catch (e: Exception) {
