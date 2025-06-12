@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.Trophy
 import shampoo.luxury.leviathan.components.Buicon
@@ -82,6 +83,7 @@ private fun PetContainer() {
     ) {
         val pet by selectedPet.collectAsState()
         var file by remember { mutableStateOf(File("")) }
+        val logger = Logger.withTag("PetContainer")
 
         LaunchedEffect(Unit) {
             removeLoading("navigation to home")
@@ -92,6 +94,7 @@ private fun PetContainer() {
         }
 
         LaunchedEffect(file) {
+            logger.i { "Checking file: ${file.absolutePath}, exists: ${file.exists()}, pet: ${pet?.name}" }
             if (!file.exists()) {
                 addLoading("home pet image")
             } else {

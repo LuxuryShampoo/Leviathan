@@ -31,7 +31,8 @@ import shampoo.luxury.leviathan.components.shop.CarouselButton
 import shampoo.luxury.leviathan.components.shop.CarouselCost
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
-import shampoo.luxury.leviathan.wrap.data.currency.getMoney
+import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
+import shampoo.luxury.leviathan.wrap.data.currency.moneySignal
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import shampoo.luxury.leviathan.wrap.data.pets.getUnownedPets
 import xyz.malefic.compose.comps.text.typography.Body1
@@ -47,7 +48,10 @@ fun Shop() =
 
         LaunchedEffect(Unit) {
             scope.launch {
-                balance = getMoney().toPlainString()
+                moneySignal.connect {
+                    balance = it.toPlainString()
+                }
+                addToBalance(0)
             }
         }
 

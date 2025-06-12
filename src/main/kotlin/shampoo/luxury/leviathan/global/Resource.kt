@@ -15,14 +15,14 @@ object Resource {
     fun getLocalResourcePath(path: String): String {
         val osName = System.getProperty("os.name").lowercase()
         val userHome = System.getProperty("user.home")
-
+        val safePath = path.replace("/", File.separator)
         return "${
             when {
                 osName.contains("win") -> System.getenv("APPDATA") ?: "$userHome${File.separator}AppData${File.separator}Roaming"
                 osName.contains("mac") -> "$userHome${File.separator}Library${File.separator}Application Support"
                 else -> "$userHome${File.separator}.config"
             }
-        }${File.separator}Leviathan${File.separator}$path"
+        }${File.separator}Leviathan${File.separator}$safePath"
     }
 
     /**
@@ -36,16 +36,12 @@ object Resource {
         resourcePath: String,
         overwrite: Boolean = false,
     ): File {
-        // Use the local resource path as destination
         val destinationPath = getLocalResourcePath(resourcePath)
         val outputFile = File(destinationPath)
         if (outputFile.exists() && !overwrite) {
             return outputFile
         }
-        // Ensure destination directory exists
         outputFile.parentFile.mkdirs()
-
-        // Load resource using a forward slash for jar access
         val resourceStream =
             object {}.javaClass.getResourceAsStream("/$resourcePath")
                 ?: throw IllegalArgumentException("Resource not found: /$resourcePath")

@@ -6,10 +6,15 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.update
 import shampoo.luxury.leviathan.global.Values.user
+import xyz.malefic.Signal
+import java.math.BigDecimal
 
 suspend fun addToBalance(amount: Number) =
     newSuspendedTransaction(IO) {
-        addToBalance(amount.toDouble())
+        if (amount.toDouble() != 0.0) {
+            addToBalance(amount.toDouble())
+        }
+        moneySignal.emit(getMoney())
     }
 
 @Suppress("UnusedReceiverParameter")
@@ -29,3 +34,5 @@ suspend fun getMoney() =
             ?.get(Currency.amount)
             ?: 0.00.toBigDecimal()
     }
+
+val moneySignal = Signal<BigDecimal>()

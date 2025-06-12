@@ -20,7 +20,7 @@ import shampoo.luxury.leviathan.wrap.data.pets.Pets.resourcePath
  */
 suspend fun initializePets() {
     newSuspendedTransaction(IO) {
-        if (Pets.selectAll().empty()) {
+        if (Pets.selectAll().where { Pets.userId eq user }.empty()) {
             val pets =
                 listOf(
                     Pet("Rishi", "images/Rishi.png", -1.0),
