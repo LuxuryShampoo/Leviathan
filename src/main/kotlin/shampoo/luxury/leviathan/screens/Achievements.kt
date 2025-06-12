@@ -27,7 +27,7 @@ fun Achievements() =
             .padding(16.dp, 16.dp, 16.dp),
     ) {
         LaunchedEffect(Unit) {
-            removeLoading("navigation to settings")
+            removeLoading("navigation to achievements")
         }
 
         Row(
