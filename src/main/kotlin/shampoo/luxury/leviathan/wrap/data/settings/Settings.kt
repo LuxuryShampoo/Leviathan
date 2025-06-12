@@ -15,9 +15,9 @@ object Settings : IntIdTable() {
     val userId = reference("user_id", Users, onDelete = ReferenceOption.CASCADE)
 
     /**
-     * The unique key or name of the setting.
+     * The key or name of the setting.
      */
-    val key = varchar("key", 255).uniqueIndex()
+    val key = varchar("key", 255)
 
     /**
      * The value of the setting, stored as a boolean.

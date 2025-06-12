@@ -103,11 +103,17 @@ fun Settings() {
 
                 Divider(Modifier.padding(vertical = 16.dp))
 
-                BooleanSetting("Speak", localSpeakSetting) { localSpeakSetting = it }
+                BooleanSetting("Speak", localSpeakSetting) {
+                    localSpeakSetting = it
+                    settingsChanged = true
+                }
 
                 Divider(Modifier.padding(vertical = 16.dp))
 
-                BooleanSetting("Listen", localListenSetting) { localListenSetting = it }
+                BooleanSetting("Listen", localListenSetting) {
+                    localListenSetting = it
+                    settingsChanged = true
+                }
 
                 Spacer(Modifier.height(8.dp))
             }

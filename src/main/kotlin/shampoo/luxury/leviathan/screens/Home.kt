@@ -94,7 +94,7 @@ private fun PetContainer() {
         }
 
         LaunchedEffect(file) {
-            logger.i { "Checking file: ${file.absolutePath}, exists: ${file.exists()}, pet: ${pet?.name}" }
+            logger.d { "Checking file: ${file.absolutePath}, exists: ${file.exists()}, pet: ${pet?.name}" }
             if (!file.exists()) {
                 addLoading("home pet image")
             } else {
