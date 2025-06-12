@@ -22,12 +22,14 @@ import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.global.Values.Prefs.prefs
 import shampoo.luxury.leviathan.global.Values.user
+import shampoo.luxury.leviathan.global.clearPreferences
 import shampoo.luxury.leviathan.wrap.data.pets.initializePets
 import shampoo.luxury.leviathan.wrap.data.users.checkPassword
 import shampoo.luxury.leviathan.wrap.data.users.getUserIdByUsername
 import shampoo.luxury.leviathan.wrap.data.users.insertUser
 import shampoo.luxury.leviathan.wrap.data.users.isValidPassword
 import shampoo.luxury.leviathan.wrap.data.users.isValidUsername
+import shampoo.luxury.leviathan.wrap.data.users.userIdExists
 import xyz.malefic.compose.comps.text.typography.Body2
 import xyz.malefic.compose.prefs.delegate.BooleanPreference
 
@@ -226,6 +228,15 @@ private fun registerUser(
 fun HomeWithAuth() {
     var prefIsAuthenticated by BooleanPreference("isAuthenticated", false, prefs)
     var isAuthenticated by remember { mutableStateOf(prefIsAuthenticated) }
+
+    LaunchedEffect(isAuthenticated) {
+        if (isAuthenticated && !userIdExists(user)) {
+            isAuthenticated = false
+            prefIsAuthenticated = false
+            user = -1
+            clearPreferences("leviathan")
+        }
+    }
 
     if (!isAuthenticated) {
         AuthDialog {

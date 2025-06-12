@@ -37,6 +37,11 @@ suspend fun insertUser(
         }
     }
 
+suspend fun userIdExists(userId: Int): Boolean =
+    newSuspendedTransaction(IO) {
+        Users.selectAll().where { Users.id eq userId }.any()
+    }
+
 /**
  * Verifies if the provided plain-text password matches the stored hashed password for the given username.
  *
