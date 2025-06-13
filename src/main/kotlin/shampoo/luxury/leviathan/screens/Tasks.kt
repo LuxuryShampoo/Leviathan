@@ -16,6 +16,7 @@ import shampoo.luxury.leviathan.components.tasks.TaskInputForm
 import shampoo.luxury.leviathan.components.tasks.TaskList
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
+import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
 import shampoo.luxury.leviathan.wrap.data.tasks.Task
 import shampoo.luxury.leviathan.wrap.data.tasks.addTask
 import shampoo.luxury.leviathan.wrap.data.tasks.deleteTask
@@ -78,18 +79,15 @@ fun Tasks() =
 
             TaskList(
                 tasks,
-                { id, isCompleted ->
-                    scope.launch {
-                        updateTask(id, isCompleted)
-                        tasks = fetchTasks()
-                    }
-                },
-                { id ->
-                    scope.launch {
+            ) { id, isCompleted ->
+                scope.launch {
+                    updateTask(id, isCompleted)
+                    if (isCompleted) {
+                        addToBalance(10)
                         deleteTask(id)
-                        tasks = fetchTasks()
                     }
-                },
-            )
+                    tasks = fetchTasks()
+                }
+            }
         }
     }

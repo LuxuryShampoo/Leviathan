@@ -42,7 +42,6 @@ import shampoo.luxury.leviathan.components.shop.CarouselButton
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
-import shampoo.luxury.leviathan.global.Values
 import shampoo.luxury.leviathan.global.Values.selectedPet
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import shampoo.luxury.leviathan.wrap.data.pets.getOwnedPets
@@ -155,8 +154,8 @@ private fun PetContainer() {
                                 .clickable {
                                     scope.launch {
                                         logger.d { "Loading pet: ${shownPet.name}" }
-                                        Values.selectedPet = shownPet
-                                        logger.d { "Selected pet updated: ${Values.selectedPet}" }
+                                        selectedPet = shownPet
+                                        logger.d { "Selected pet updated: $selectedPet" }
                                         showRow = false
                                     }
                                 }.padding(8.dp),

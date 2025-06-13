@@ -3,18 +3,13 @@ package shampoo.luxury.leviathan.components.tasks
 import androidx.compose.foundation.layout.Arrangement.Absolute.SpaceBetween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.Checkbox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import compose.icons.fontawesomeicons.SolidGroup
-import compose.icons.fontawesomeicons.solid.Trash
-import shampoo.luxury.leviathan.components.Buicon
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Body2
 
@@ -28,14 +23,11 @@ import xyz.malefic.compose.comps.text.typography.Body2
  *  - "isCompleted" (Boolean): Whether the tasks is completed.
  * @param onTaskCompleted A callback invoked when the tasks's completion status changes.
  *  - Parameters: The tasks ID (Int) and the new completion status (Boolean).
- * @param onDeleteTask A callback invoked when the tasks is deleted.
- *  - Parameters: The tasks ID (Int).
  */
 @Composable
 fun TaskItem(
     task: Map<String, Any?>,
     onTaskCompleted: (Int, Boolean) -> Unit,
-    onDeleteTask: (Int) -> Unit,
 ) {
     val id = task["id"] as Int
     val title = task["title"] as String
@@ -60,16 +52,6 @@ fun TaskItem(
                 isCompleted,
                 { onTaskCompleted(id, it) },
             )
-            Spacer(Modifier.width(8.dp))
-            Buicon(
-                { SolidGroup.Trash },
-                "Delete Task",
-                24.dp,
-                24.dp,
-                outlined = false,
-            ) {
-                onDeleteTask(id)
-            }
         }
     }
 }

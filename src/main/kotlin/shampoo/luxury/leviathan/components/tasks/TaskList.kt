@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.items as iii
 fun TaskList(
     tasks: List<Task>,
     onTaskCompleted: (Int, Boolean) -> Unit,
-    onDeleteTask: (Int) -> Unit,
 ) {
     LazyColumn(
         Modifier.fillMaxSize(),
@@ -29,7 +28,6 @@ fun TaskList(
                     "isCompleted" to task.isCompleted,
                 ),
                 { id, isCompleted -> onTaskCompleted(id, isCompleted) },
-                { id -> onDeleteTask(id) },
             )
         }.takeUnless { tasks.isEmpty() } ?: run {
             item {
