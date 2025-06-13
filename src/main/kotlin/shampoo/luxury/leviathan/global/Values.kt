@@ -1,15 +1,13 @@
 package shampoo.luxury.leviathan.global
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import shampoo.luxury.leviathan.wrap.data.achievements.Achievement
 import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
-import shampoo.luxury.leviathan.wrap.data.pets.getOwnedPets
 import shampoo.luxury.leviathan.wrap.data.settings.getBooleanSetting
 import shampoo.luxury.leviathan.wrap.data.settings.setBooleanSetting
 import xyz.malefic.compose.prefs.collection.PersistentHashSet
 import xyz.malefic.compose.prefs.delegate.IntPreference
+import xyz.malefic.compose.prefs.delegate.SerializablePreference
 import java.util.prefs.Preferences
 import java.util.prefs.Preferences.userRoot
 
@@ -28,13 +26,11 @@ object Values {
 
     var user by IntPreference("current_user", -1)
 
-    private val _selectedPet = MutableStateFlow<Pet?>(null)
-    val selectedPet: StateFlow<Pet?> = _selectedPet
-
-    suspend fun updateSelectedPet() {
-        val pets = getOwnedPets()
-        _selectedPet.value = pets.lastOrNull()
-    }
+    var selectedPet by SerializablePreference(
+        "selected_pet",
+        Pet("Bob", "images/BobAlarm.png", 50.0),
+        Prefs.prefs,
+    )
 
     val completedAchievements =
         PersistentHashSet<String>(

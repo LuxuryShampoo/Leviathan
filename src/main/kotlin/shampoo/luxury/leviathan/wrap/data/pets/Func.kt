@@ -6,7 +6,6 @@ import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.update
-import shampoo.luxury.leviathan.global.Values.updateSelectedPet
 import shampoo.luxury.leviathan.global.Values.user
 import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
 import shampoo.luxury.leviathan.wrap.data.pets.Pets.cost
@@ -39,7 +38,6 @@ suspend fun initializePets() {
             }
         }
     }
-    updateSelectedPet()
 }
 
 /**

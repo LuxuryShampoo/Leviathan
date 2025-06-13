@@ -1,5 +1,6 @@
 package shampoo.luxury.leviathan.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Box
@@ -12,14 +13,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -29,15 +32,20 @@ import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.Trophy
+import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.Burger
 import shampoo.luxury.leviathan.components.FileImage
 import shampoo.luxury.leviathan.components.layouts.PageScope
 import shampoo.luxury.leviathan.components.nav.NavButton
+import shampoo.luxury.leviathan.components.shop.CarouselButton
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
+import shampoo.luxury.leviathan.global.Values
 import shampoo.luxury.leviathan.global.Values.selectedPet
+import shampoo.luxury.leviathan.wrap.data.pets.Pet
+import shampoo.luxury.leviathan.wrap.data.pets.getOwnedPets
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import java.io.File
@@ -81,20 +89,27 @@ private fun PetContainer() {
         Modifier.fillMaxSize(),
         Center,
     ) {
-        val pet by selectedPet.collectAsState()
         var file by remember { mutableStateOf(File("")) }
+        var ownedPets by remember { mutableStateOf<List<Pet>>(emptyList()) }
+        var showRow by remember { mutableStateOf(false) }
+        var currentIndex by remember { mutableStateOf(0) }
         val logger = Logger.withTag("PetContainer")
+        val scope = rememberCoroutineScope()
 
         LaunchedEffect(Unit) {
             removeLoading("navigation to home")
+            scope.launch {
+                ownedPets = getOwnedPets()
+                if (ownedPets.isNotEmpty()) currentIndex = 0
+            }
         }
 
-        LaunchedEffect(pet) {
-            file = pet?.localPath?.let { File(it) } ?: File("")
+        LaunchedEffect(selectedPet) {
+            file = File(selectedPet.localPath)
         }
 
         LaunchedEffect(file) {
-            logger.d { "Checking file: ${file.absolutePath}, exists: ${file.exists()}, pet: ${pet?.name}" }
+            logger.d { "Checking file: ${file.absolutePath}, exists: ${file.exists()}, pet: ${selectedPet.name}" }
             if (!file.exists()) {
                 addLoading("home pet image")
             } else {
@@ -108,10 +123,51 @@ private fun PetContainer() {
         ) {
             key(file.absolutePath) {
                 if (file.exists()) {
-                    FileImage(
-                        file,
-                        pet?.name ?: "Pet",
-                    ) { size(400.dp).clip(RoundedCornerShape(8.dp)) }
+                    val imageSize = if (showRow) 120.dp else 400.dp
+                    val elevation = if (showRow) 8.dp else 0.dp
+                    Surface(
+                        Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { showRow = !showRow }
+                            .padding(8.dp),
+                        elevation = elevation,
+                    ) {
+                        FileImage(file, selectedPet.name) { size(imageSize) }
+                    }
+                }
+            }
+            if (showRow && ownedPets.isNotEmpty()) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    contentAlignment = Center,
+                ) {
+                    CarouselButton("<", scope, { align(Alignment.CenterStart) }) {
+                        currentIndex = (currentIndex - 1 + ownedPets.size) % ownedPets.size
+                    }
+                    val shownPet = ownedPets[currentIndex]
+                    val shownFile = File(shownPet.localPath)
+                    if (shownFile.exists()) {
+                        Surface(
+                            Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable {
+                                    scope.launch {
+                                        logger.d { "Loading pet: ${shownPet.name}" }
+                                        Values.selectedPet = shownPet
+                                        logger.d { "Selected pet updated: ${Values.selectedPet}" }
+                                        showRow = false
+                                    }
+                                }.padding(8.dp),
+                            elevation = 8.dp,
+                        ) {
+                            FileImage(shownFile, shownPet.name) { size(120.dp) }
+                        }
+                    }
+                    CarouselButton(">", scope, { align(Alignment.CenterEnd) }) {
+                        currentIndex = (currentIndex + 1) % ownedPets.size
+                    }
                 }
             }
         }
