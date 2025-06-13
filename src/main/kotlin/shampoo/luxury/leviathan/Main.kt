@@ -24,7 +24,7 @@ import xyz.malefic.compose.nav.RouteManager
 import xyz.malefic.compose.nav.config.MalefiConfigLoader
 import xyz.malefic.ext.stream.grass
 import java.awt.Toolkit.getDefaultToolkit
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 @OptIn(DelicateCoroutinesApi::class)
 fun main() =
@@ -38,7 +38,7 @@ fun main() =
             while (scope.isActive) {
                 if (databaseLoaded) {
                     addToBalance(5)
-                    delay(5.seconds)
+                    delay(5.minutes)
                 }
             }
         }

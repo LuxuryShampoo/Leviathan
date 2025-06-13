@@ -1,9 +1,7 @@
 package shampoo.luxury.leviathan.components.shop
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,16 +13,14 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.BottomCenter
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.unit.dp
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -35,6 +31,7 @@ import shampoo.luxury.leviathan.components.Butext
 import shampoo.luxury.leviathan.components.FileImage
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import xyz.malefic.compose.comps.text.typography.Body1
+import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import java.io.File
 
 /**
@@ -107,23 +104,31 @@ fun CarouselButton(
  */
 @Composable
 fun BoxScope.CarouselCost(focusedPet: Pet?) {
-    Box(
-        Modifier
-            .align(BottomCenter)
-            .fillMaxWidth(0.3f)
-            .padding(4.dp)
-            .background(Black.copy(alpha = 0.6f))
-            .padding(4.dp),
-        Center,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                FontAwesomeIcons.Solid.DollarSign,
-                "Currency",
-                Modifier.size(16.dp),
-                MaterialTheme.colors.onPrimary,
-            )
-            Body1(focusedPet?.cost?.toString() ?: "N/A", Modifier.padding(start = 4.dp))
+    focusedPet?.let {
+        Surface(
+            Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 24.dp, bottom = 8.dp)
+                .fillMaxWidth(0.3f),
+            MaterialTheme.shapes.medium,
+            MaterialTheme.colors.primary.copy(alpha = 0.85f),
+        ) {
+            Row(
+                Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    FontAwesomeIcons.Solid.DollarSign,
+                    "Currency",
+                    Modifier.size(16.dp),
+                    MaterialTheme.colors.onPrimary,
+                )
+                Body1(
+                    focusedPet.cost.toString(),
+                    Modifier.padding(start = 4.dp),
+                    OnPrimary,
+                )
+            }
         }
     }
 }

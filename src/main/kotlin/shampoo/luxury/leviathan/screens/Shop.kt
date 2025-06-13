@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Button
 import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.CenterStart
@@ -34,6 +37,7 @@ import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
 import shampoo.luxury.leviathan.wrap.data.currency.moneySignal
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
+import shampoo.luxury.leviathan.wrap.data.pets.buyPet
 import shampoo.luxury.leviathan.wrap.data.pets.getUnownedPets
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Heading3
@@ -90,7 +94,7 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
-    LaunchedEffect(Unit) {
+    suspend fun loadPets() {
         addLoading("shop market")
         removeLoading("navigation to shop")
         val unownedPets = getUnownedPets()
@@ -104,6 +108,10 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
         focusedPet = sortedUnownedPets.firstOrNull()
         onFocusChange(focusedPet?.name ?: "Loading...")
         removeLoading("shop market")
+    }
+
+    LaunchedEffect(Unit) {
+        loadPets()
     }
 
     LaunchedEffect(listState.firstVisibleItemIndex) {
@@ -153,6 +161,23 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
             }
 
             CarouselCost(focusedPet)
+
+            focusedPet?.let {
+                Button(
+                    {
+                        scope.launch {
+                            buyPet(focusedPet!!)
+                            loadPets()
+                            listState.animateScrollToItem(0)
+                        }
+                    },
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = 24.dp, bottom = 8.dp),
+                ) {
+                    Text("Buy")
+                }
+            }
         }
     }
 }
