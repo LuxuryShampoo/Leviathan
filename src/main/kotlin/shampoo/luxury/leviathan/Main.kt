@@ -18,6 +18,8 @@ import shampoo.luxury.leviathan.components.layouts.ThemedApp
 import shampoo.luxury.leviathan.global.GlobalLoadingState.databaseLoaded
 import shampoo.luxury.leviathan.wrap.Whisper
 import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
+import shampoo.luxury.leviathan.wrap.data.pets.getPetLevel
+import shampoo.luxury.leviathan.wrap.data.pets.increasePetLevel
 import shampoo.luxury.leviathan.wrap.setupTrayIcon
 import xyz.malefic.compose.comps.precompose.NavWindow
 import xyz.malefic.compose.nav.RouteManager
@@ -39,6 +41,18 @@ fun main() =
                 if (databaseLoaded) {
                     addToBalance(5)
                     delay(5.minutes)
+                }
+            }
+        }
+
+        scope.launch {
+            while (scope.isActive) {
+                if (databaseLoaded) {
+                    val currentLevel = getPetLevel() ?: 1.0
+                    val increment = 0.05
+                    val effectiveIncrement = increment / (1 + currentLevel * 0.1)
+                    increasePetLevel(effectiveIncrement)
+                    delay(1.minutes)
                 }
             }
         }

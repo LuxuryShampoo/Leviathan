@@ -10,6 +10,7 @@ scopes:
     - ui
     - wrap
     - data
+    - pet
   docs:
     - readme
   chore:

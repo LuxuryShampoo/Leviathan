@@ -6,12 +6,16 @@ import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.update
+import shampoo.luxury.leviathan.global.Values.selectedPet
 import shampoo.luxury.leviathan.global.Values.user
 import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
 import shampoo.luxury.leviathan.wrap.data.pets.Pets.cost
 import shampoo.luxury.leviathan.wrap.data.pets.Pets.level
 import shampoo.luxury.leviathan.wrap.data.pets.Pets.owned
 import shampoo.luxury.leviathan.wrap.data.pets.Pets.resourcePath
+import kotlin.and
+import kotlin.text.get
+import kotlin.text.set
 
 /**
  * Initializes the pets in the database.
@@ -94,3 +98,53 @@ suspend fun buyPet(pet: Pet) =
             it[owned] = true
         }
     }
+
+/**
+ * Retrieves the level of a specific pet for the current user.
+ *
+ * @param pet The pet whose level is to be retrieved.
+ * @return The level of the pet as a Double, or null if the pet is not found.
+ */
+suspend fun getPetLevel(pet: Pet = selectedPet): Double? =
+    newSuspendedTransaction(IO) {
+        Pets
+            .selectAll()
+            .where { (Pets.userId eq user) and (Pets.name eq pet.name) }
+            .singleOrNull()!![level]
+    }
+
+/**
+ * Sets the level of a specific pet for the current user.
+ *
+ * @param newLevel The new level to assign to the pet.
+ * @param pet The pet whose level is to be set.
+ */
+suspend fun setPetLevel(
+    newLevel: Double,
+    pet: Pet = selectedPet,
+) = newSuspendedTransaction(IO) {
+    Pets.update({ (Pets.userId eq user) and (Pets.name eq pet.name) }) {
+        it[Pets.level] = newLevel
+    }
+}
+
+/**
+ * Increases the level of a specific pet for the current user.
+ *
+ * @param increment The amount to increase the pet's level by. Defaults to 1.0.
+ * @param pet The pet whose level is to be increased. Defaults to the selected pet.
+ */
+suspend fun increasePetLevel(
+    increment: Double = 1.0,
+    pet: Pet = selectedPet,
+) = newSuspendedTransaction(IO) {
+    val currentLevel =
+        Pets
+            .selectAll()
+            .where { (Pets.userId eq user) and (Pets.name eq pet.name) }
+            .singleOrNull()
+            ?.get(level) ?: 1.0
+    Pets.update({ (Pets.userId eq user) and (Pets.name eq pet.name) }) {
+        it[Pets.level] = currentLevel + increment
+    }
+}
