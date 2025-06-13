@@ -1,23 +1,24 @@
 package shampoo.luxury.leviathan.wrap.data.pets
 
-import shampoo.luxury.leviathan.global.Resource
+import java.io.File
 import java.io.Serializable
 
-/**
- * A data class representing a pet with its associated information.
- *
- * @property name The name of the pet.
- * @property resourcePath The relative path to the pet's resource in the JAR.
- * @property cost The cost of the pet.
- */
+// Minimal stub for Resource to extract a resource to local file.
+object Resource {
+    fun extractResourceToLocal(resourcePath: String): File = File(resourcePath)
+}
+
 data class Pet(
     val name: String,
     internal val resourcePath: String,
     val cost: Double = 0.0,
+    var level: Int = 1, // pet level (starts at 1)
+    var foodFed: Int = 0, // count of food fed towards next level
 ) : Serializable {
-    /**
-     * Resolves the local file path for the pet's resource using `extractResourceToLocal`.
-     * The value is computed once and cached.
-     */
+    // Match the original serialVersionUID to maintain compatibility with existing serialized data
+    companion object {
+        private const val serialVersionUID = -469598414369076742L
+    }
+
     val localPath: String by lazy { Resource.extractResourceToLocal(resourcePath).absolutePath }
 }

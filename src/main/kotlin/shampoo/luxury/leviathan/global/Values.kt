@@ -32,6 +32,8 @@ object Values {
         Prefs.prefs,
     )
 
+    var petFoodCount by IntPreference("pet_food_count", 0) // global pet food count
+
     val completedAchievements =
         PersistentHashSet<String>(
             "completedAchievements",

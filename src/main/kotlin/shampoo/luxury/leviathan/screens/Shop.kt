@@ -1,6 +1,8 @@
 package shampoo.luxury.leviathan.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +29,9 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.DollarSign
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.layouts.PageScope
@@ -34,10 +40,10 @@ import shampoo.luxury.leviathan.components.shop.CarouselButton
 import shampoo.luxury.leviathan.components.shop.CarouselCost
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
+import shampoo.luxury.leviathan.global.Values
 import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
 import shampoo.luxury.leviathan.wrap.data.currency.moneySignal
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
-import shampoo.luxury.leviathan.wrap.data.pets.buyPet
 import shampoo.luxury.leviathan.wrap.data.pets.getUnownedPets
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Heading3
@@ -94,7 +100,7 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
-    suspend fun loadPets() {
+    LaunchedEffect(Unit) {
         addLoading("shop market")
         removeLoading("navigation to shop")
         val unownedPets = getUnownedPets()
@@ -108,10 +114,6 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
         focusedPet = sortedUnownedPets.firstOrNull()
         onFocusChange(focusedPet?.name ?: "Loading...")
         removeLoading("shop market")
-    }
-
-    LaunchedEffect(Unit) {
-        loadPets()
     }
 
     LaunchedEffect(listState.firstVisibleItemIndex) {
@@ -162,20 +164,61 @@ private fun MarketBox(onFocusChange: (String) -> Unit) {
 
             CarouselCost(focusedPet)
 
-            focusedPet?.let {
+            // Add two buttons at the bottom of the screen
+            Row(
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                // Pet Food Button
                 Button(
-                    {
+                    onClick = {
                         scope.launch {
-                            buyPet(focusedPet!!)
-                            loadPets()
-                            listState.animateScrollToItem(0)
+                            // Deduct cost - for example 5 currency
+                            addToBalance(-5.0)
+                            // Add 1 to pet food count
+                            Values.petFoodCount++
                         }
                     },
-                    Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(end = 24.dp, bottom = 8.dp),
                 ) {
-                    Text("Buy")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = spacedBy(8.dp),
+                    ) {
+                        Icon(
+                            FontAwesomeIcons.Solid.DollarSign,
+                            contentDescription = "Cost",
+                        )
+                        Text("Buy Pet Food ($5)")
+                    }
+                }
+
+                // Level Up Pet Button (new)
+                Button(
+                    onClick = {
+                        scope.launch {
+                            // Higher cost for direct level up - 20 currency
+                            addToBalance(-20.0)
+                            // Directly increase pet level
+                            Values.selectedPet =
+                                Values.selectedPet.copy(
+                                    level = Values.selectedPet.level + 1,
+                                )
+                        }
+                    },
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = spacedBy(8.dp),
+                    ) {
+                        Icon(
+                            FontAwesomeIcons.Solid.DollarSign,
+                            contentDescription = "Cost",
+                        )
+                        Text("Level Up Pet ($20)")
+                    }
                 }
             }
         }
