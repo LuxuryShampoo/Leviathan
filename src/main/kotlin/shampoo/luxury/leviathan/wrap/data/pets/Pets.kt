@@ -38,4 +38,10 @@ object Pets : IntIdTable() {
      * Defaults to false.
      */
     val owned = bool("owned").default(false)
+
+    /**
+     * The level of the pet.
+     * Defaults to 1.
+     */
+    val level = double("level").default(1.0)
 }

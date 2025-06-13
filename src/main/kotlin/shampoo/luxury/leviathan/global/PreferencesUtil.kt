@@ -30,7 +30,7 @@ fun listAllPreferences() {
     traverseNode(Preferences.userRoot())
 }
 
-fun clearPreferences(nodePath: String) {
+fun clearPreferences(nodePath: String = "leviathan") {
     val prefs = Preferences.userRoot().node(nodePath)
     prefs.clear()
     println("Preferences cleared for node: $nodePath")

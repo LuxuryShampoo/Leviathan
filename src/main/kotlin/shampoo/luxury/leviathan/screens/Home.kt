@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +29,8 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import compose.icons.fontawesomeicons.SolidGroup
@@ -43,6 +46,7 @@ import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.global.Values.selectedPet
+import shampoo.luxury.leviathan.global.clearPreferences
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import shampoo.luxury.leviathan.wrap.data.pets.getOwnedPets
 import xyz.malefic.compose.comps.text.typography.Body1
@@ -103,6 +107,14 @@ private fun PetContainer() {
             }
         }
 
+        try {
+            selectedPet
+        } catch (_: Exception) {
+            clearPreferences()
+            selectedPet = Pet("Bob", "images/BobAlarm.png", 50.0)
+            logger.d { "Updated pet after error: ${selectedPet.name}" }
+        }
+
         LaunchedEffect(selectedPet) {
             file = File(selectedPet.localPath)
         }
@@ -131,7 +143,23 @@ private fun PetContainer() {
                             .padding(8.dp),
                         elevation = elevation,
                     ) {
-                        FileImage(file, selectedPet.name) { size(imageSize) }
+                        Box {
+                            FileImage(file, selectedPet.name) { size(imageSize) }
+                            Surface(
+                                Modifier
+                                    .align(Alignment.TopStart)
+                                    .padding(4.dp),
+                                RoundedCornerShape(bottomEnd = 8.dp),
+                                Color.Black.copy(alpha = 0.7f),
+                            ) {
+                                Text(
+                                    "Lv. ${selectedPet.level.toInt()}",
+                                    Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                    Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -140,7 +168,7 @@ private fun PetContainer() {
                     Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    contentAlignment = Center,
+                    Center,
                 ) {
                     CarouselButton("<", scope, { align(Alignment.CenterStart) }) {
                         currentIndex = (currentIndex - 1 + ownedPets.size) % ownedPets.size
@@ -161,7 +189,23 @@ private fun PetContainer() {
                                 }.padding(8.dp),
                             elevation = 8.dp,
                         ) {
-                            FileImage(shownFile, shownPet.name) { size(120.dp) }
+                            Box {
+                                FileImage(shownFile, shownPet.name) { size(120.dp) }
+                                Surface(
+                                    Modifier
+                                        .align(Alignment.TopStart)
+                                        .padding(4.dp),
+                                    RoundedCornerShape(bottomEnd = 8.dp),
+                                    Color.Black.copy(alpha = 0.7f),
+                                ) {
+                                    Text(
+                                        "Lv. ${shownPet.level.toInt()}",
+                                        Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                        Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                }
+                            }
                         }
                     }
                     CarouselButton(">", scope, { align(Alignment.CenterEnd) }) {

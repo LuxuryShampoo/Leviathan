@@ -234,7 +234,7 @@ fun HomeWithAuth() {
             isAuthenticated = false
             prefIsAuthenticated = false
             user = -1
-            clearPreferences("leviathan")
+            clearPreferences()
         }
     }
 

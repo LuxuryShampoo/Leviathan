@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.update
 import shampoo.luxury.leviathan.global.Values.user
 import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
 import shampoo.luxury.leviathan.wrap.data.pets.Pets.cost
+import shampoo.luxury.leviathan.wrap.data.pets.Pets.level
 import shampoo.luxury.leviathan.wrap.data.pets.Pets.owned
 import shampoo.luxury.leviathan.wrap.data.pets.Pets.resourcePath
 
@@ -35,6 +36,7 @@ suspend fun initializePets() {
                 this[resourcePath] = pet.resourcePath
                 this[cost] = pet.cost
                 this[owned] = pet.name == "Bob"
+                this[level] = pet.level
             }
         }
     }
@@ -48,7 +50,7 @@ suspend fun getAllPets() =
     buildList {
         newSuspendedTransaction(IO) {
             Pets.selectAll().where { Pets.userId eq user }.forEach {
-                add(Pet(it[Pets.name], it[Pets.resourcePath], it[Pets.cost]))
+                add(Pet(it[Pets.name], it[resourcePath], it[cost], it[level]))
             }
         }
     }
@@ -60,8 +62,8 @@ suspend fun getAllPets() =
 suspend fun getOwnedPets() =
     buildList {
         newSuspendedTransaction(IO) {
-            Pets.selectAll().where { (Pets.userId eq user) and (Pets.owned eq true) }.forEach {
-                add(Pet(it[Pets.name], it[Pets.resourcePath], it[Pets.cost]))
+            Pets.selectAll().where { (Pets.userId eq user) and (owned eq true) }.forEach {
+                add(Pet(it[Pets.name], it[resourcePath], it[cost], it[level]))
             }
         }
     }
@@ -73,8 +75,8 @@ suspend fun getOwnedPets() =
 suspend fun getUnownedPets() =
     buildList {
         newSuspendedTransaction(IO) {
-            Pets.selectAll().where { (Pets.userId eq user) and (Pets.owned eq false) }.forEach {
-                add(Pet(it[Pets.name], it[Pets.resourcePath], it[Pets.cost]))
+            Pets.selectAll().where { (Pets.userId eq user) and (owned eq false) }.forEach {
+                add(Pet(it[Pets.name], it[resourcePath], it[cost], it[level]))
             }
         }
     }

@@ -14,6 +14,7 @@ data class Pet(
     val name: String,
     internal val resourcePath: String,
     val cost: Double = 0.0,
+    val level: Double = 1.0,
 ) : Serializable {
     /**
      * Resolves the local file path for the pet's resource using `extractResourceToLocal`.
