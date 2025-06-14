@@ -1,13 +1,15 @@
 package shampoo.luxury.leviathan.global
 
+import co.touchlab.kermit.Logger
 import shampoo.luxury.leviathan.wrap.data.achievements.Achievement
 import shampoo.luxury.leviathan.wrap.data.achievements.AchievementCategory
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
+import shampoo.luxury.leviathan.wrap.data.pets.getOwnedPets
 import shampoo.luxury.leviathan.wrap.data.settings.getBooleanSetting
 import shampoo.luxury.leviathan.wrap.data.settings.setBooleanSetting
 import xyz.malefic.compose.prefs.collection.PersistentHashSet
 import xyz.malefic.compose.prefs.delegate.IntPreference
-import xyz.malefic.compose.prefs.delegate.SerializablePreference
+import xyz.malefic.compose.prefs.delegate.StringPreference
 import java.util.prefs.Preferences
 import java.util.prefs.Preferences.userRoot
 
@@ -26,11 +28,20 @@ object Values {
 
     var user by IntPreference("current_user", -1)
 
-    var selectedPet by SerializablePreference(
-        "selected_pet",
-        Pet("Bob", "images/BobAlarm.png", 50.0),
+    var selectedPetName by StringPreference(
+        "selected_pet_name",
+        "Bob",
         Prefs.prefs,
     )
+
+    suspend fun getSelectedPet(): Pet =
+        getOwnedPets().find { it.name == selectedPetName } ?: Pet("Bob", "images/BobAlarm.png", 50.0).also {
+            Logger.d("Pet") { "Selected pet $selectedPetName not found, defaulting to Bob" }
+        }
+
+    fun setSelectedPet(value: Pet) {
+        selectedPetName = value.name
+    }
 
     val completedAchievements =
         PersistentHashSet<String>(

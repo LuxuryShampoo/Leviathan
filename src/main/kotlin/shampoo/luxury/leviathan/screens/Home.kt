@@ -45,7 +45,9 @@ import shampoo.luxury.leviathan.components.shop.CarouselButton
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
-import shampoo.luxury.leviathan.global.Values.selectedPet
+import shampoo.luxury.leviathan.global.Values.getSelectedPet
+import shampoo.luxury.leviathan.global.Values.selectedPetName
+import shampoo.luxury.leviathan.global.Values.setSelectedPet
 import shampoo.luxury.leviathan.global.clearPreferences
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import shampoo.luxury.leviathan.wrap.data.pets.getOwnedPets
@@ -98,25 +100,39 @@ private fun PetContainer() {
         var currentIndex by remember { mutableStateOf(0) }
         val logger = Logger.withTag("PetContainer")
         val scope = rememberCoroutineScope()
+        var initSelectedPet by remember { mutableStateOf(false) }
+        var selectedPet by remember { mutableStateOf(Pet("Bob", "images/BobAlarm.png", 50.0)) }
 
         LaunchedEffect(Unit) {
             removeLoading("navigation to home")
-            scope.launch {
-                ownedPets = getOwnedPets()
-                if (ownedPets.isNotEmpty()) currentIndex = 0
+            ownedPets = getOwnedPets()
+            if (ownedPets.isNotEmpty()) currentIndex = 0
+        }
+
+        LaunchedEffect(Unit) {
+            selectedPet = getSelectedPet()
+            logger.d { "Initial selected pet: $selectedPet" }
+            initSelectedPet =
+                true.also {
+                    logger.d { "Selected pet initialized: $selectedPet" }
+                }
+            if (selectedPetName != selectedPet.name) {
+                logger.d { "Selected pet name changed: ${selectedPet.name} != $selectedPetName" }
+                clearPreferences()
+                selectedPetName = selectedPet.name
+                logger.d { "Updated pet after error: ${selectedPet.name} and $selectedPetName should be the same" }
             }
         }
 
-        try {
-            selectedPet
-        } catch (_: Exception) {
-            clearPreferences()
-            selectedPet = Pet("Bob", "images/BobAlarm.png", 50.0)
-            logger.d { "Updated pet after error: ${selectedPet.name}" }
-        }
-
-        LaunchedEffect(selectedPet) {
+        LaunchedEffect(selectedPet, initSelectedPet) {
             file = File(selectedPet.localPath)
+            if (initSelectedPet) {
+                file = File(selectedPet.localPath)
+                setSelectedPet(selectedPet)
+                logger.d { "Selected pet updated: ${selectedPet.name}, selectedPetName: $selectedPetName, file: ${file.absolutePath}" }
+            } else {
+                logger.d { "The selected pet is not initialized yet, waiting for it to be set." }
+            }
         }
 
         LaunchedEffect(file) {
