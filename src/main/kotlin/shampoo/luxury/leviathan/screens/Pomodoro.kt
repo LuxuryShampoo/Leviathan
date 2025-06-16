@@ -120,19 +120,19 @@ fun Pomodoro() =
                             workDuration.toString(),
                             { workDuration = it.toIntOrNull() ?: workDuration },
                             label = { Body1("Work Duration (minutes)") },
-                            placeholder = { Body1(workDuration.toString(), colorType = ColorType.OnBackground) },
+                            placeholder = { Body1(workDuration.toString(), colorType = ColorType.OnSurface) },
                         )
                         OutlinedTextField(
                             shortBreakDuration.toString(),
                             { shortBreakDuration = it.toIntOrNull() ?: shortBreakDuration },
                             label = { Body1("Short Break Duration (minutes)") },
-                            placeholder = { Body1(shortBreakDuration.toString(), colorType = ColorType.OnBackground) },
+                            placeholder = { Body1(shortBreakDuration.toString(), colorType = ColorType.OnSurface) },
                         )
                         OutlinedTextField(
                             longBreakDuration.toString(),
                             { longBreakDuration = it.toIntOrNull() ?: longBreakDuration },
                             label = { Body1("Long Break Duration (minutes)") },
-                            placeholder = { Body1(longBreakDuration.toString(), colorType = ColorType.OnBackground) },
+                            placeholder = { Body1(longBreakDuration.toString(), colorType = ColorType.OnSurface) },
                         )
                         Row(
                             Modifier.fillMaxWidth(),

@@ -72,12 +72,14 @@ fun Tasks() =
                 { newTaskTitle = it },
                 { newTaskDescription = it },
                 {
-                    tasks + Task(Int.MAX_VALUE, newTaskTitle, newTaskDescription, false)
+                    tasks += Task(Int.MAX_VALUE, newTaskTitle, newTaskDescription, false)
+                    val tempTitle = newTaskTitle
                     newTaskTitle = ""
+                    val tempDescription = newTaskDescription
                     newTaskDescription = ""
                     GlobalScope
                         .launch {
-                            addTask(newTaskTitle, newTaskDescription.ifBlank { null })
+                            addTask(tempTitle, tempDescription.ifBlank { null })
                         }.invokeOnCompletion {
                             scope.launch {
                                 tasks = fetchTasks()
