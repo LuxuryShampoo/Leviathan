@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.ArrowLeft
 import compose.icons.fontawesomeicons.solid.Edit
 import compose.icons.fontawesomeicons.solid.Pause
@@ -159,7 +158,7 @@ fun Pomodoro() =
         ) {
             Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
                 Buicon(
-                    { SolidGroup.ArrowLeft },
+                    { ArrowLeft },
                     "Tasks",
                     24.dp,
                     32.dp,
@@ -184,15 +183,15 @@ fun Pomodoro() =
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Buicon(
-                    { SolidGroup.Play },
+                    { Play },
                     "Start",
                 ) { isRunning = true }
                 Buicon(
-                    { SolidGroup.Pause },
+                    { Pause },
                     "Pause",
                 ) { isRunning = false }
                 Buicon(
-                    { SolidGroup.UndoAlt },
+                    { UndoAlt },
                     "Reset",
                 ) {
                     isRunning = false
@@ -200,7 +199,7 @@ fun Pomodoro() =
                     timeLeft = periods[currentPeriodIndex]
                 }
                 Buicon(
-                    { SolidGroup.Edit },
+                    { Edit },
                     "Customize",
                 ) { showDialog = true }
             }

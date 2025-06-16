@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.Bars
 
 @Composable
@@ -17,7 +16,7 @@ fun Burger() {
     var expanded by remember { mutableStateOf(false) }
     Box {
         Buicon(
-            { SolidGroup.Bars },
+            { Bars },
             "Menu",
             32.dp,
             48.dp,

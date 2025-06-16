@@ -33,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.Tasks
 import compose.icons.fontawesomeicons.solid.Trophy
 import kotlinx.coroutines.launch
@@ -71,7 +70,7 @@ private fun TopRow() {
         CenterVertically,
     ) {
         Buicon(
-            { SolidGroup.Tasks },
+            { Tasks },
             "Tasks",
             32.dp,
             48.dp,
@@ -79,7 +78,7 @@ private fun TopRow() {
             navigate("tasks")
         }
         Buicon(
-            { SolidGroup.Trophy },
+            { Trophy },
             "Achievements",
             32.dp,
             48.dp,

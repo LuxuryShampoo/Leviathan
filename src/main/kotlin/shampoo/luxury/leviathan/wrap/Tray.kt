@@ -1,11 +1,18 @@
 package shampoo.luxury.leviathan.wrap
 
+import androidx.compose.ui.window.Notification.Type.Error
+import androidx.compose.ui.window.Notification.Type.Info
+import androidx.compose.ui.window.Notification.Type.None
+import androidx.compose.ui.window.Notification.Type.Warning
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.global.Resource.extractResourceToLocal
+import shampoo.luxury.leviathan.global.TrayNotif.notifSignal
 import java.awt.*
+import java.awt.TrayIcon.MessageType.ERROR
 import java.awt.TrayIcon.MessageType.INFO
+import java.awt.TrayIcon.MessageType.WARNING
 import kotlin.system.exitProcess
 
 fun setupTrayIcon(scope: CoroutineScope) {
@@ -29,6 +36,20 @@ fun setupTrayIcon(scope: CoroutineScope) {
 
     val trayIcon = TrayIcon(image, "Leviathan Whisper", popup)
     trayIcon.isImageAutoSize = true
+
+    notifSignal.connect {
+        Logger.d("Received notification: ${it.title} - ${it.message} - ${it.type}")
+        trayIcon.displayMessage(
+            it.title,
+            it.message,
+            when (it.type) {
+                Info -> INFO
+                Warning -> WARNING
+                Error -> ERROR
+                None -> INFO
+            },
+        )
+    }
 
     startListening.addActionListener {
         scope.launch {

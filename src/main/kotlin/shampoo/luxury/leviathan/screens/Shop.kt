@@ -34,11 +34,12 @@ import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.Hamburger
 import compose.icons.fontawesomeicons.solid.Paw
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
@@ -67,13 +68,27 @@ import java.math.BigDecimal
 @Composable
 fun Shop() =
     PageScope {
-        @Suppress("kotlin:S1192")
         var focusedPetName by remember { mutableStateOf("Loading...") }
         val balance by BalanceState.balance.collectAsState()
         var showPetFood by remember { mutableStateOf(false) }
+        var sortedUnownedPets by remember { mutableStateOf<List<Pet>>(emptyList()) }
+        var focusedPet by remember { mutableStateOf<Pet?>(null) }
+        var init by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
             BalanceState.updateBalance(getMoney())
+            addLoading("shop market")
+            removeLoading("navigation to shop")
+            sortedUnownedPets = getUnownedPets().sortedBy { it.cost }
+            init = true
+        }
+
+        LaunchedEffect(sortedUnownedPets) {
+            if (init) {
+                focusedPet = sortedUnownedPets.firstOrNull()
+                focusedPetName = focusedPet?.name ?: "Loading..."
+                removeLoading("shop market")
+            }
         }
 
         TopRow(focusedPetName.takeUnless { showPetFood } ?: "Pet Food")
@@ -83,7 +98,17 @@ fun Shop() =
                 Modifier.fillMaxSize(),
             ) {
                 AnimatedVisibility(visible = !showPetFood) {
-                    PetMarket { focusedPetName = it }
+                    PetMarket(
+                        sortedUnownedPets = sortedUnownedPets,
+                        focusedPet = focusedPet,
+                        onFocusChange = { focusedPetName = it },
+                        onBuyPet = { pet ->
+                            sortedUnownedPets = sortedUnownedPets - pet
+                        },
+                        setFocusedPet = { pet ->
+                            focusedPet = pet
+                        },
+                    )
                 }
                 AnimatedVisibility(visible = showPetFood) {
                     FoodMarket(balance)
@@ -103,7 +128,7 @@ fun Shop() =
             ) {
                 if (showPetFood) {
                     Buicon(
-                        { SolidGroup.Paw },
+                        { Paw },
                         contentDescription = "Toggle Pet Market",
                         modifier = Modifier.padding(start = 8.dp),
                         iconSize = 24.dp,
@@ -111,7 +136,7 @@ fun Shop() =
                     ) { showPetFood = false }
                 } else {
                     Buicon(
-                        { SolidGroup.Hamburger },
+                        { Hamburger },
                         contentDescription = "Toggle Pet Food",
                         modifier = Modifier.padding(start = 8.dp),
                         iconSize = 24.dp,
@@ -122,55 +147,38 @@ fun Shop() =
         }
     }
 
-@Composable
-private fun TopRow(focusedPetName: String) {
-    Row(
-        Modifier
-            .fillMaxHeight(0.2f)
-            .fillMaxWidth(),
-        SpaceEvenly,
-        CenterVertically,
-    ) {
-        Heading3(focusedPetName)
-    }
-}
-
 @OptIn(DelicateCoroutinesApi::class)
 @Composable
-private fun PetMarket(onFocusChange: (String) -> Unit) {
+private fun PetMarket(
+    sortedUnownedPets: List<Pet>,
+    focusedPet: Pet?,
+    onFocusChange: (String) -> Unit,
+    onBuyPet: (Pet) -> Unit,
+    setFocusedPet: (Pet?) -> Unit,
+) {
+    var debounceJob by remember { mutableStateOf<Job?>(null) }
     val imageFiles = remember { mutableStateListOf<File>() }
-    var sortedUnownedPets by remember { mutableStateOf<List<Pet>>(emptyList()) }
-    var focusedPet by remember { mutableStateOf<Pet?>(null) }
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
-    var init by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        addLoading("shop market")
-        removeLoading("navigation to shop")
-        sortedUnownedPets = getUnownedPets().sortedBy { it.cost }
-        init = true
-    }
 
     LaunchedEffect(sortedUnownedPets) {
-        if (init) {
-            focusedPet = sortedUnownedPets.firstOrNull()
-            onFocusChange(focusedPet?.name ?: "Loading...")
-            imageFiles.clear()
-            imageFiles.addAll(
-                sortedUnownedPets
-                    .filter { File(it.localPath).exists() }
-                    .map { File(it.localPath) },
-            )
-            removeLoading("shop market")
-        }
+        imageFiles.clear()
+        imageFiles.addAll(
+            sortedUnownedPets
+                .filter { File(it.localPath).exists() }
+                .map { File(it.localPath) },
+        )
     }
 
     LaunchedEffect(listState.firstVisibleItemIndex) {
-        focusedPet = sortedUnownedPets.getOrNull(listState.firstVisibleItemIndex)
-        focusedPet?.let {
-            onFocusChange(it.name)
-        }
+        debounceJob?.cancel()
+        debounceJob =
+            scope.launch {
+                delay(300)
+                val pet = sortedUnownedPets.getOrNull(listState.firstVisibleItemIndex)
+                setFocusedPet(pet)
+                pet?.let { onFocusChange(it.name) }
+            }
     }
 
     if (sortedUnownedPets.isEmpty()) {
@@ -214,16 +222,15 @@ private fun PetMarket(onFocusChange: (String) -> Unit) {
 
             CarouselCost(focusedPet)
 
-            focusedPet?.let {
+            focusedPet?.let { pet ->
                 Button(
                     {
-                        sortedUnownedPets -= focusedPet!!
+                        onBuyPet(pet)
                         GlobalScope
                             .launch {
-                                buyPet(focusedPet!!)
+                                buyPet(pet)
                             }.invokeOnCompletion {
                                 scope.launch {
-                                    sortedUnownedPets = getUnownedPets().sortedBy { it.cost }
                                     listState.animateScrollToItem(0)
                                 }
                             }
@@ -236,6 +243,19 @@ private fun PetMarket(onFocusChange: (String) -> Unit) {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun TopRow(focusedPetName: String) {
+    Row(
+        Modifier
+            .fillMaxHeight(0.2f)
+            .fillMaxWidth(),
+        SpaceEvenly,
+        CenterVertically,
+    ) {
+        Heading3(focusedPetName)
     }
 }
 
