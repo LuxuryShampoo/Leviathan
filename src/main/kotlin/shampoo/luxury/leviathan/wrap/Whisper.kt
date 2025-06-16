@@ -11,13 +11,10 @@ import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.global.Resource.downloadFileToLocal
 import shampoo.luxury.leviathan.global.Values.Prefs.getListenSetting
 import xyz.malefic.Signal
-import java.io.File
-import java.util.jar.JarFile
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.DataLine
 import javax.sound.sampled.TargetDataLine
-import kotlin.sequences.forEach
 
 /**
  * A singleton object for the WhisperJNI speech-to-text engine.
@@ -38,37 +35,17 @@ object Whisper {
     private lateinit var ctx: WhisperContext
 
     init {
-        val jarUrl = this::class.java.protectionDomain.codeSource.location
-        val jarFile = File(jarUrl.toURI())
-
-        println("Running jar: ${jarFile.absolutePath}")
-
-        if (!jarFile.isFile) {
-            println("Not running from a jar file.")
-        }
-
-        JarFile(jarFile).use { jar ->
-            println("Jar file structure:")
-            jar.entries().asSequence().forEach { entry ->
-                println(entry.name)
-            }
-        }
-
         WhisperJNI.loadLibrary()
-        WhisperJNI.setLibraryLogger { text -> Logger.d("WhisperJNI") { text } }
-
+        WhisperJNI.setLibraryLogger {}
         whisper = WhisperJNI()
-
-        val systemInfo = whisper.systemInfo
-        Logger.d("Whisper") { "Native system info:\n$systemInfo" }
 
         var initialized = false
         do {
             try {
                 ctx =
-                    requireNotNull(
-                        whisper.init(modelPath),
-                    ) { "Failed to initialize Whisper context. Check if model file exists and system info above." }
+                    requireNotNull(whisper.init(modelPath)) {
+                        "Failed to initialize Whisper context. Check if model file exists and system info above."
+                    }
                 initialized = true
             } catch (n: IllegalArgumentException) {
                 n.printStackTrace()
@@ -164,9 +141,9 @@ object Whisper {
         audioBatch: MutableList<Float>,
         params: WhisperFullParams,
     ) {
-        Logger.d("Processing audio batch of size: ${audioBatch.size}")
+        Logger.d("Whisper") { "Processing audio batch of size: ${audioBatch.size}" }
         processAudioBatch(audioBatch, params)
-        Logger.d("Audio batch processed.")
+        Logger.d("Whisper") { "Audio batch processed." }
     }
 
     /**
@@ -190,18 +167,18 @@ object Whisper {
 
         for (i in 0 until numSegments) {
             val text = whisper.fullGetSegmentText(ctx, i).trim()
-            Logger.d("Segment text: $text")
+            Logger.d("Whisper") { "Segment text: $text" }
 
             if (text.startsWith("[") && text.endsWith("]") || text.startsWith("(") && text.endsWith(")")) {
                 silence++
-                Logger.d("Silence count incremented: $silence")
+                Logger.d("Whisper") { "Silence count incremented: $silence" }
             } else {
                 silence = 0
                 if (transcribing) {
                     transcriptBuffer.add(text)
                 }
                 if (!transcribing && text.contains(wakeWord, ignoreCase = true)) {
-                    Logger.d("Wake word detected: $wakeWord")
+                    Logger.d("Whisper") { "Wake word detected: $wakeWord" }
                     transcribing = true
                     transcriptBuffer.clear()
                 }
@@ -230,9 +207,9 @@ object Whisper {
         transcriptBuffer: MutableList<String>,
         setter: (Boolean, Int) -> Unit,
     ) {
-        Logger.d("Checking silence count: $silenceCount, isTranscribing: $isTranscribing")
+        Logger.d("Whisper") { "Checking silence count: $silenceCount, isTranscribing: $isTranscribing" }
         if (isTranscribing && silenceCount >= 3) {
-            Logger.d("Silence detected. Emitting transcript...")
+            Logger.d("Whisper") { "Silence detected. Emitting transcript..." }
             val finalTranscript = transcriptBuffer.joinToString(" ")
             transcriptSignal.emit(finalTranscript)
             transcriptBuffer.clear()
@@ -260,11 +237,11 @@ object Whisper {
             val audioBatch = mutableListOf<Float>()
             val transcriptBuffer = mutableListOf<String>()
 
-            Logger.d("Listening started...")
+            Logger.d("Whisper") { "Starting to listen for audio input..." }
 
             while (!isClosed) {
                 if (!getListenSetting()) {
-                    Logger.d("Listening preference is disabled. Skipping...")
+                    Logger.d("Whisper") { "Listening preference is disabled. Skipping..." }
                     continue
                 }
 
@@ -286,7 +263,7 @@ object Whisper {
                 }
             }
 
-            Logger.d("Listening stopped.")
+            Logger.d("Whisper") { "Listening stopped." }
         }
     }
 

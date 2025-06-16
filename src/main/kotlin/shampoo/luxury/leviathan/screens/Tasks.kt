@@ -6,14 +6,17 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.HourglassStart
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.layouts.PageScope
 import shampoo.luxury.leviathan.components.tasks.TaskInputForm
 import shampoo.luxury.leviathan.components.tasks.TaskList
+import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
@@ -24,19 +27,20 @@ import shampoo.luxury.leviathan.wrap.data.tasks.fetchTasks
 import shampoo.luxury.leviathan.wrap.data.tasks.updateTask
 import xyz.malefic.compose.comps.text.typography.Heading4
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun Tasks() =
     PageScope {
-        val scope = rememberCoroutineScope { Dispatchers.IO }
+        val scope = rememberCoroutineScope()
         var tasks by remember { mutableStateOf(emptyList<Task>()) }
         var newTaskTitle by remember { mutableStateOf("") }
         var newTaskDescription by remember { mutableStateOf("") }
 
         LaunchedEffect(Unit) {
+            addLoading("fetching tasks")
             removeLoading("navigation to tasks")
-            scope.launch {
-                tasks = fetchTasks()
-            }
+            tasks = fetchTasks()
+            removeLoading("fetching tasks")
         }
 
         Column(
@@ -68,26 +72,43 @@ fun Tasks() =
                 { newTaskTitle = it },
                 { newTaskDescription = it },
                 {
-                    scope.launch {
-                        addTask(newTaskTitle, newTaskDescription.ifBlank { null })
-                        tasks = fetchTasks()
-                        newTaskTitle = ""
-                        newTaskDescription = ""
-                    }
+                    tasks + Task(Int.MAX_VALUE, newTaskTitle, newTaskDescription, false)
+                    newTaskTitle = ""
+                    newTaskDescription = ""
+                    GlobalScope
+                        .launch {
+                            addTask(newTaskTitle, newTaskDescription.ifBlank { null })
+                        }.invokeOnCompletion {
+                            scope.launch {
+                                tasks = fetchTasks()
+                            }
+                        }
                 },
             )
 
             TaskList(
                 tasks,
             ) { id, isCompleted ->
-                scope.launch {
-                    updateTask(id, isCompleted)
-                    if (isCompleted) {
-                        addToBalance(10)
-                        deleteTask(id)
+                if (isCompleted) {
+                    tasks.firstOrNull { it.id == id }?.let {
+                        Logger.d("Tasks") { "Removing $it" }
+                        tasks -= it
                     }
-                    tasks = fetchTasks()
                 }
+                GlobalScope
+                    .launch {
+                        if (isCompleted) {
+                            addToBalance(10)
+                            deleteTask(id)
+                            Logger.d("Tasks") { "Task $id has been removed" }
+                        } else {
+                            updateTask(id, false)
+                        }
+                    }.invokeOnCompletion {
+                        scope.launch {
+                            tasks = fetchTasks()
+                        }
+                    }
             }
         }
     }

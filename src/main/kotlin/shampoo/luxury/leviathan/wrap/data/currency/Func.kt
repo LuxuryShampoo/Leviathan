@@ -28,6 +28,17 @@ suspend fun addToBalance(amount: Number) =
         BalanceState.updateBalance(getMoney())
     }
 
+suspend fun newAddBalance(
+    amount: Number,
+    current: Number,
+) = newSuspendedTransaction(IO) {
+    val newBalance = (current.toDouble() + amount.toDouble()).toBigDecimal().coerceAtLeast(0.00.toBigDecimal())
+    BalanceState.updateBalance(newBalance)
+    Currency.update({ Currency.user eq user }) {
+        it[Currency.amount] = newBalance
+    }
+}
+
 /**
  * Retrieves the current balance of the user.
  *

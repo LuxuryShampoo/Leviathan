@@ -33,7 +33,9 @@ import compose.icons.fontawesomeicons.solid.Edit
 import compose.icons.fontawesomeicons.solid.Pause
 import compose.icons.fontawesomeicons.solid.Play
 import compose.icons.fontawesomeicons.solid.UndoAlt
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
@@ -44,16 +46,17 @@ import shampoo.luxury.leviathan.wrap.data.tasks.Task
 import shampoo.luxury.leviathan.wrap.data.tasks.fetchTasks
 import xyz.malefic.compose.comps.text.typography.Body1
 import xyz.malefic.compose.comps.text.typography.Body2
+import xyz.malefic.compose.comps.text.typography.ColorType
 import xyz.malefic.compose.comps.text.typography.Heading3
 import xyz.malefic.compose.comps.text.typography.Heading4
 import xyz.malefic.compose.comps.text.typography.Heading6
 import androidx.compose.foundation.lazy.items as iii
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, DelicateCoroutinesApi::class)
 @Composable
 fun Pomodoro() =
     PageScope {
-        val scope = rememberCoroutineScope { Dispatchers.IO }
+        val scope = rememberCoroutineScope { IO }
         var tasks by remember { mutableStateOf(emptyList<Task>()) }
         var selectedTask by remember { mutableStateOf<Task?>(null) }
         var timeLeft by remember { mutableStateOf(25 * 60) }
@@ -79,10 +82,14 @@ fun Pomodoro() =
         var currentPeriodIndex by remember { mutableStateOf(0) }
 
         LaunchedEffect(Unit) {
-            scope.launch {
-                tasks = fetchTasks().filter { !it.isCompleted }
-                removeLoading("navigation to pomodoro")
-            }
+            scope
+                .launch {
+                    tasks = fetchTasks().filter { !it.isCompleted }
+                }.invokeOnCompletion {
+                    GlobalScope.launch {
+                        removeLoading("navigation to pomodoro")
+                    }
+                }
         }
 
         LaunchedEffect(isRunning, currentPeriodIndex) {
@@ -113,16 +120,19 @@ fun Pomodoro() =
                             workDuration.toString(),
                             { workDuration = it.toIntOrNull() ?: workDuration },
                             label = { Body1("Work Duration (minutes)") },
+                            placeholder = { Body1(workDuration.toString(), colorType = ColorType.OnBackground) },
                         )
                         OutlinedTextField(
                             shortBreakDuration.toString(),
                             { shortBreakDuration = it.toIntOrNull() ?: shortBreakDuration },
                             label = { Body1("Short Break Duration (minutes)") },
+                            placeholder = { Body1(shortBreakDuration.toString(), colorType = ColorType.OnBackground) },
                         )
                         OutlinedTextField(
                             longBreakDuration.toString(),
                             { longBreakDuration = it.toIntOrNull() ?: longBreakDuration },
                             label = { Body1("Long Break Duration (minutes)") },
+                            placeholder = { Body1(longBreakDuration.toString(), colorType = ColorType.OnBackground) },
                         )
                         Row(
                             Modifier.fillMaxWidth(),

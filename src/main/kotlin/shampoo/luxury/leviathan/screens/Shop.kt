@@ -1,11 +1,13 @@
 package shampoo.luxury.leviathan.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +15,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,6 +37,9 @@ import co.touchlab.kermit.Logger
 import compose.icons.fontawesomeicons.SolidGroup
 import compose.icons.fontawesomeicons.solid.Hamburger
 import compose.icons.fontawesomeicons.solid.Paw
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
 import shampoo.luxury.leviathan.components.layouts.PageScope
@@ -46,8 +50,8 @@ import shampoo.luxury.leviathan.global.BalanceState
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.removeLoading
 import shampoo.luxury.leviathan.global.Values.getSelectedPet
-import shampoo.luxury.leviathan.wrap.data.currency.addToBalance
 import shampoo.luxury.leviathan.wrap.data.currency.getMoney
+import shampoo.luxury.leviathan.wrap.data.currency.newAddBalance
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import shampoo.luxury.leviathan.wrap.data.pets.buyPet
 import shampoo.luxury.leviathan.wrap.data.pets.getUnownedPets
@@ -58,27 +62,32 @@ import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import xyz.malefic.compose.comps.text.typography.Heading3
 import xyz.malefic.compose.comps.text.typography.Heading6
 import java.io.File
+import java.math.BigDecimal
 
 @Composable
 fun Shop() =
     PageScope {
+        @Suppress("kotlin:S1192")
         var focusedPetName by remember { mutableStateOf("Loading...") }
         val balance by BalanceState.balance.collectAsState()
         var showPetFood by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
-            addToBalance(0)
-            val selectedPetName = getSelectedPet().name
-            Logger.d("Shop") { "The selected pet is $selectedPetName" }
+            BalanceState.updateBalance(getMoney())
         }
 
         TopRow(focusedPetName.takeUnless { showPetFood } ?: "Pet Food")
         Divider()
         Box {
-            if (!showPetFood) {
-                PetMarket { focusedPetName = it }
-            } else {
-                FoodMarket()
+            Box(
+                Modifier.fillMaxSize(),
+            ) {
+                AnimatedVisibility(visible = !showPetFood) {
+                    PetMarket { focusedPetName = it }
+                }
+                AnimatedVisibility(visible = showPetFood) {
+                    FoodMarket(balance)
+                }
             }
             Box(
                 Modifier
@@ -126,6 +135,7 @@ private fun TopRow(focusedPetName: String) {
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 private fun PetMarket(onFocusChange: (String) -> Unit) {
     val imageFiles = remember { mutableStateListOf<File>() }
@@ -133,25 +143,27 @@ private fun PetMarket(onFocusChange: (String) -> Unit) {
     var focusedPet by remember { mutableStateOf<Pet?>(null) }
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
-
-    suspend fun loadPets() {
-        addLoading("shop market")
-        removeLoading("navigation to shop")
-        val unownedPets = getUnownedPets()
-        sortedUnownedPets = unownedPets.sortedBy { it.cost }
-        imageFiles.clear()
-        imageFiles.addAll(
-            sortedUnownedPets
-                .filter { File(it.localPath).exists() }
-                .map { File(it.localPath) },
-        )
-        focusedPet = sortedUnownedPets.firstOrNull()
-        onFocusChange(focusedPet?.name ?: "Loading...")
-        removeLoading("shop market")
-    }
+    var init by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        loadPets()
+        addLoading("shop market")
+        removeLoading("navigation to shop")
+        sortedUnownedPets = getUnownedPets().sortedBy { it.cost }
+        init = true
+    }
+
+    LaunchedEffect(sortedUnownedPets) {
+        if (init) {
+            focusedPet = sortedUnownedPets.firstOrNull()
+            onFocusChange(focusedPet?.name ?: "Loading...")
+            imageFiles.clear()
+            imageFiles.addAll(
+                sortedUnownedPets
+                    .filter { File(it.localPath).exists() }
+                    .map { File(it.localPath) },
+            )
+            removeLoading("shop market")
+        }
     }
 
     LaunchedEffect(listState.firstVisibleItemIndex) {
@@ -205,26 +217,31 @@ private fun PetMarket(onFocusChange: (String) -> Unit) {
             focusedPet?.let {
                 Button(
                     {
-                        scope.launch {
-                            buyPet(focusedPet!!)
-                            loadPets()
-                            listState.animateScrollToItem(0)
-                        }
+                        sortedUnownedPets -= focusedPet!!
+                        GlobalScope
+                            .launch {
+                                buyPet(focusedPet!!)
+                            }.invokeOnCompletion {
+                                scope.launch {
+                                    sortedUnownedPets = getUnownedPets().sortedBy { it.cost }
+                                    listState.animateScrollToItem(0)
+                                }
+                            }
                     },
                     Modifier
                         .align(Alignment.BottomEnd)
                         .padding(end = 24.dp, bottom = 8.dp),
                 ) {
-                    Text("Buy")
+                    Body1("Buy", colorType = OnPrimary)
                 }
             }
         }
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
-private fun FoodMarket() {
-    val scope = rememberCoroutineScope()
+private fun FoodMarket(balance: BigDecimal) {
     val petFoods =
         listOf(
             PetFood("Basic Food", 10.0, 0.12),
@@ -253,10 +270,15 @@ private fun FoodMarket() {
                 Body1("$${food.cost}", Modifier.padding(end = 24.dp))
                 Button(
                     {
-                        scope.launch {
-                            addToBalance(-food.cost)
-                            BalanceState.updateBalance(getMoney())
-                            increasePetLevel(food.levelIncrease, getSelectedPet())
+                        GlobalScope.launch {
+                            listOf(
+                                launch {
+                                    newAddBalance(-food.cost, balance)
+                                    BalanceState.updateBalance(getMoney())
+                                },
+                                launch { increasePetLevel(food.levelIncrease, getSelectedPet()) },
+                            ).joinAll()
+
                             Logger.d("Shop") { "Bought ${food.name} for ${food.cost}, increased pet level by ${food.levelIncrease}" }
                         }
                     },

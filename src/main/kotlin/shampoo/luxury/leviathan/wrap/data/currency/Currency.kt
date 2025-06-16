@@ -3,6 +3,8 @@ package shampoo.luxury.leviathan.wrap.data.currency
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 import shampoo.luxury.leviathan.wrap.data.users.Users
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 /**
  * Represents the Currency table in the database.
@@ -17,6 +19,6 @@ import shampoo.luxury.leviathan.wrap.data.users.Users
  */
 object Currency : Table() {
     val user = reference("user_id", Users, onDelete = ReferenceOption.CASCADE)
-    val amount = decimal("amount", 18, 2).default(0.00.toBigDecimal())
+    val amount = decimal("amount", 18, 2).default(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP))
     override val primaryKey = PrimaryKey(user)
 }

@@ -1,5 +1,6 @@
 package shampoo.luxury.leviathan.wrap.data.tasks
 
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers.IO
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -45,6 +46,7 @@ suspend fun fetchTasks() =
                     ),
                 )
             }
+            Logger.d("Tasks") { "Updated" }
         }
     }
 

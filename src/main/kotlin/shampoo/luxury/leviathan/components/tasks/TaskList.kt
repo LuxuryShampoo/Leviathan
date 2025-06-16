@@ -14,25 +14,22 @@ import androidx.compose.foundation.lazy.items as iii
 fun TaskList(
     tasks: List<Task>,
     onTaskCompleted: (Int, Boolean) -> Unit,
+) = LazyColumn(
+    Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.spacedBy(8.dp),
 ) {
-    LazyColumn(
-        Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        iii(tasks) { task ->
-            TaskItem(
-                mapOf(
-                    "id" to task.id,
-                    "title" to task.title,
-                    "description" to task.description,
-                    "isCompleted" to task.isCompleted,
-                ),
-                { id, isCompleted -> onTaskCompleted(id, isCompleted) },
-            )
-        }.takeUnless { tasks.isEmpty() } ?: run {
-            item {
-                Body1("No tasks available")
-            }
+    iii(tasks) { task ->
+        TaskItem(
+            mapOf(
+                "id" to task.id,
+                "title" to task.title,
+                "description" to task.description,
+                "isCompleted" to task.isCompleted,
+            ),
+        ) { id, isCompleted -> onTaskCompleted(id, isCompleted) }
+    }.takeUnless { tasks.isEmpty() } ?: run {
+        item {
+            Body1("No tasks available")
         }
     }
 }

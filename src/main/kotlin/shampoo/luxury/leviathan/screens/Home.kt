@@ -34,13 +34,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
 import compose.icons.fontawesomeicons.SolidGroup
+import compose.icons.fontawesomeicons.solid.Tasks
 import compose.icons.fontawesomeicons.solid.Trophy
 import kotlinx.coroutines.launch
 import shampoo.luxury.leviathan.components.Buicon
-import shampoo.luxury.leviathan.components.Burger
 import shampoo.luxury.leviathan.components.FileImage
 import shampoo.luxury.leviathan.components.layouts.PageScope
-import shampoo.luxury.leviathan.components.nav.NavButton
 import shampoo.luxury.leviathan.components.shop.CarouselButton
 import shampoo.luxury.leviathan.global.GlobalLoadingState.addLoading
 import shampoo.luxury.leviathan.global.GlobalLoadingState.navigate
@@ -51,8 +50,6 @@ import shampoo.luxury.leviathan.global.Values.setSelectedPet
 import shampoo.luxury.leviathan.global.clearPreferences
 import shampoo.luxury.leviathan.wrap.data.pets.Pet
 import shampoo.luxury.leviathan.wrap.data.pets.getOwnedPets
-import xyz.malefic.compose.comps.text.typography.Body1
-import xyz.malefic.compose.comps.text.typography.ColorType.OnPrimary
 import java.io.File
 
 @Composable
@@ -73,9 +70,13 @@ private fun TopRow() {
         SpaceBetween,
         CenterVertically,
     ) {
-        Burger()
-        NavButton("tasks") {
-            Body1("Tasks", colorType = OnPrimary)
+        Buicon(
+            { SolidGroup.Tasks },
+            "Tasks",
+            32.dp,
+            48.dp,
+        ) {
+            navigate("tasks")
         }
         Buicon(
             { SolidGroup.Trophy },
