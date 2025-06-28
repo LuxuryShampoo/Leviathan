@@ -164,7 +164,7 @@ private fun AuthDialogActions(
     Arrangement.spacedBy(8.dp),
 ) {
     Button(onSwitchMode, Modifier.weight(1f)) {
-        Body2(if (isLogin) "Switch to Sign Up" else "Switch to Log In")
+        Body2(if (isLogin) "Sign Up" else "Log In")
     }
     Button(onSubmit, Modifier.weight(1f)) {
         Body2("Submit")
