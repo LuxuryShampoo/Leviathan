@@ -68,14 +68,14 @@ tasks {
     register("formatAndLintKotlin") {
         group = "formatting"
         description = "Fix Kotlin code style deviations with kotlinter"
-        dependsOn(formatKotlin)
-        dependsOn(lintKotlin)
+        dependsOn("formatKotlin")
+        dependsOn("lintKotlin")
     }
     build {
         dependsOn("formatAndLintKotlin")
     }
     check {
-        dependsOn(installKotlinterPrePushHook)
+        dependsOn("installKotlinterPrePushHook")
     }
     withType<LintTask> {
         this.source = this.source.minus(fileTree("build/generated")).asFileTree
