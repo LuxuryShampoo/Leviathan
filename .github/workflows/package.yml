@@ -113,7 +113,7 @@ jobs:
         run: ./gradlew build
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: build-artifacts
           path: build/
@@ -156,7 +156,7 @@ jobs:
         run: ./gradlew build
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: build-artifacts
           path: build/
@@ -203,7 +203,7 @@ jobs:
         run: ./gradlew packageDistributionForCurrentOS
 
       - name: Upload package as artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: Leviathan-${{ matrix.packageType }}
           path: build/compose/binaries/main/${{ matrix.packageType }}/*
@@ -249,7 +249,7 @@ jobs:
         run: ./gradlew packageDistributionForCurrentOS
 
       - name: Upload package as artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: Leviathan-${{ matrix.packageType }}
           path: build/compose/binaries/main/${{ matrix.packageType }}/*
@@ -263,7 +263,7 @@ jobs:
 
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
 
@@ -297,7 +297,7 @@ jobs:
 
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
 
