@@ -169,7 +169,7 @@ object Whisper {
             val text = whisper.fullGetSegmentText(ctx, i).trim()
             Logger.d("Whisper") { "Segment text: $text" }
 
-            if (text.startsWith("[") && text.endsWith("]") || text.startsWith("(") && text.endsWith(")")) {
+            if ((text.startsWith("[") && text.endsWith("]")) || (text.startsWith("(") && text.endsWith(")"))) {
                 silence++
                 Logger.d("Whisper") { "Silence count incremented: $silence" }
             } else {

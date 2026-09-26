@@ -64,8 +64,16 @@ java {
     }
 }
 
+tasks.withType<LintTask> {
+    exclude { it.file.path.contains("build/generated") }
+}
+
+tasks.withType<FormatTask> {
+    exclude { it.file.path.contains("build/generated") }
+}
+
 tasks {
-    register("formatAndLintKotlin") {
+    register("formatAndLintKotlin", LintTask::class) {
         group = "formatting"
         description = "Fix Kotlin code style deviations with kotlinter"
         dependsOn("formatKotlin")
