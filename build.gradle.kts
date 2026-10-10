@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    implementation(compose.components.resources)
+    implementation(libs.compose.resources)
     implementation(libs.bundles.malefic.compose)
     implementation(compose.desktop.currentOs)
     implementation(libs.bundles.malefic.ext)
