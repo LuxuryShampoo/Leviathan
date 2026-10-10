@@ -22,11 +22,12 @@ import javax.sound.sampled.TargetDataLine
  * and stops transcription after detecting silence for a specified duration.
  */
 object Whisper {
+    private val log = Logger.withTag("Whisper")
     private var isClosed = false
     private lateinit var wakeWord: String
     private var modelPath =
         downloadFileToLocal("https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin", "model/tiny.bin").toPath().also {
-            Logger.d("Whisper") { "Model path: $it" }
+            log.d { "Model path: $it" }
         }
     private var silenceThreshold = 2000
     private val transcriptSignal = Signal<String>()
@@ -55,7 +56,7 @@ object Whisper {
                         "model/tiny.bin",
                         overwrite = true,
                     ).toPath().also {
-                        Logger.d("Whisper") { "Model path: $it" }
+                        log.d { "Model path: $it" }
                     }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -141,9 +142,9 @@ object Whisper {
         audioBatch: MutableList<Float>,
         params: WhisperFullParams,
     ) {
-        Logger.d("Whisper") { "Processing audio batch of size: ${audioBatch.size}" }
+        log.d { "Processing audio batch of size: ${audioBatch.size}" }
         processAudioBatch(audioBatch, params)
-        Logger.d("Whisper") { "Audio batch processed." }
+        log.d { "Audio batch processed." }
     }
 
     /**
@@ -167,18 +168,18 @@ object Whisper {
 
         for (i in 0 until numSegments) {
             val text = whisper.fullGetSegmentText(ctx, i).trim()
-            Logger.d("Whisper") { "Segment text: $text" }
+            log.d { "Segment text: $text" }
 
             if ((text.startsWith("[") && text.endsWith("]")) || (text.startsWith("(") && text.endsWith(")"))) {
                 silence++
-                Logger.d("Whisper") { "Silence count incremented: $silence" }
+                log.d { "Silence count incremented: $silence" }
             } else {
                 silence = 0
                 if (transcribing) {
                     transcriptBuffer.add(text)
                 }
                 if (!transcribing && text.contains(wakeWord, ignoreCase = true)) {
-                    Logger.d("Whisper") { "Wake word detected: $wakeWord" }
+                    log.d { "Wake word detected: $wakeWord" }
                     transcribing = true
                     transcriptBuffer.clear()
                 }
@@ -207,9 +208,9 @@ object Whisper {
         transcriptBuffer: MutableList<String>,
         setter: (Boolean, Int) -> Unit,
     ) {
-        Logger.d("Whisper") { "Checking silence count: $silenceCount, isTranscribing: $isTranscribing" }
+        log.d { "Checking silence count: $silenceCount, isTranscribing: $isTranscribing" }
         if (isTranscribing && silenceCount >= 3) {
-            Logger.d("Whisper") { "Silence detected. Emitting transcript..." }
+            log.d { "Silence detected. Emitting transcript..." }
             val finalTranscript = transcriptBuffer.joinToString(" ")
             transcriptSignal.emit(finalTranscript)
             transcriptBuffer.clear()
@@ -237,11 +238,11 @@ object Whisper {
             val audioBatch = mutableListOf<Float>()
             val transcriptBuffer = mutableListOf<String>()
 
-            Logger.d("Whisper") { "Starting to listen for audio input..." }
+            log.d { "Starting to listen for audio input..." }
 
             while (!isClosed) {
                 if (!getListenSetting()) {
-                    Logger.d("Whisper") { "Listening preference is disabled. Skipping..." }
+                    log.d { "Listening preference is disabled. Skipping..." }
                     continue
                 }
 
@@ -263,7 +264,7 @@ object Whisper {
                 }
             }
 
-            Logger.d("Whisper") { "Listening stopped." }
+            log.d { "Listening stopped." }
         }
     }
 

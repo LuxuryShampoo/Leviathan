@@ -36,7 +36,7 @@ object Values {
 
     suspend fun getSelectedPet(): Pet =
         getOwnedPets().find { it.name == selectedPetName } ?: Pet("Bob", "images/BobAlarm.png", 50.0).also {
-            Logger.d("Pet") { "Selected pet $selectedPetName not found, defaulting to Bob" }
+            Logger.d(tag = "Pet") { "Selected pet $selectedPetName not found, defaulting to Bob" }
         }
 
     fun setSelectedPet(value: Pet) {

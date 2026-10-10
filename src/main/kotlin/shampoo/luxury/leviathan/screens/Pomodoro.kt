@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import co.touchlab.kermit.Logger
 import compose.icons.fontawesomeicons.solid.ArrowLeft
 import compose.icons.fontawesomeicons.solid.Edit
 import compose.icons.fontawesomeicons.solid.Pause
@@ -49,6 +50,7 @@ import xyz.malefic.compose.comps.text.typography.ColorType
 import xyz.malefic.compose.comps.text.typography.Heading3
 import xyz.malefic.compose.comps.text.typography.Heading4
 import xyz.malefic.compose.comps.text.typography.Heading6
+import kotlin.time.Duration.Companion.seconds
 import androidx.compose.foundation.lazy.items as iii
 
 @OptIn(ExperimentalMaterialApi::class, DelicateCoroutinesApi::class)
@@ -83,7 +85,7 @@ fun Pomodoro() =
         LaunchedEffect(Unit) {
             scope
                 .launch {
-                    tasks = fetchTasks().filter { !it.isCompleted }
+                    tasks = fetchTasks(Logger.withTag("Pomodoro")).filter { !it.isCompleted }
                 }.invokeOnCompletion {
                     GlobalScope.launch {
                         removeLoading("navigation to pomodoro")
@@ -93,7 +95,7 @@ fun Pomodoro() =
 
         LaunchedEffect(isRunning, currentPeriodIndex) {
             while (isRunning && timeLeft > 0) {
-                delay(1000L)
+                delay(1.seconds)
                 timeLeft -= 1
             }
             if (timeLeft == 0) {

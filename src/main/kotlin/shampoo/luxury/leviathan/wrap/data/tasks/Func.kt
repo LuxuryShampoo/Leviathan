@@ -33,10 +33,10 @@ suspend fun addTask(
  *
  * @return A list of tasks, where each task is represented as a `Task` object.
  */
-suspend fun fetchTasks() =
+suspend fun fetchTasks(log: Logger) =
     buildList {
         newSuspendedTransaction(IO) {
-            Tasks.selectAll().where { Tasks.userId eq user }.map { row ->
+            Tasks.selectAll().where { Tasks.userId eq user }.forEach { row ->
                 add(
                     Task(
                         row[Tasks.id].value,
@@ -46,7 +46,7 @@ suspend fun fetchTasks() =
                     ),
                 )
             }
-            Logger.d("Tasks") { "Updated" }
+            log.d { "Updated" }
         }
     }
 

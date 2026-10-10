@@ -64,6 +64,7 @@ import xyz.malefic.compose.comps.text.typography.Heading3
 import xyz.malefic.compose.comps.text.typography.Heading6
 import java.io.File
 import java.math.BigDecimal
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun Shop() =
@@ -174,7 +175,7 @@ private fun PetMarket(
         debounceJob?.cancel()
         debounceJob =
             scope.launch {
-                delay(300)
+                delay(300.milliseconds)
                 val pet = sortedUnownedPets.getOrNull(listState.firstVisibleItemIndex)
                 setFocusedPet(pet)
                 pet?.let { onFocusChange(it.name) }
@@ -299,7 +300,7 @@ private fun FoodMarket(balance: BigDecimal) {
                                 launch { increasePetLevel(food.levelIncrease, getSelectedPet()) },
                             ).joinAll()
 
-                            Logger.d("Shop") { "Bought ${food.name} for ${food.cost}, increased pet level by ${food.levelIncrease}" }
+                            Logger.d(tag = "Shop") { "Bought ${food.name} for ${food.cost}, increased pet level by ${food.levelIncrease}" }
                         }
                     },
                 ) {

@@ -34,6 +34,7 @@ import xyz.malefic.compose.comps.text.typography.Heading4
 @Composable
 fun Tasks() =
     PageScope {
+        val log = Logger.withTag("Tasks")
         val scope = rememberCoroutineScope()
         var tasks by remember { mutableStateOf(emptyList<Task>()) }
         var newTaskTitle by remember { mutableStateOf("") }
@@ -44,7 +45,7 @@ fun Tasks() =
         LaunchedEffect(Unit) {
             addLoading("fetching tasks")
             removeLoading("navigation to tasks")
-            tasks = fetchTasks()
+            tasks = fetchTasks(log)
             removeLoading("fetching tasks")
         }
 
@@ -87,7 +88,7 @@ fun Tasks() =
                             addTask(tempTitle, tempDescription.ifBlank { null })
                         }.invokeOnCompletion {
                             scope.launch {
-                                tasks = fetchTasks()
+                                tasks = fetchTasks(log)
                             }
                         }
                 },
@@ -97,7 +98,7 @@ fun Tasks() =
                 tasks,
             ) { id, isCompleted ->
                 if (id == Int.MAX_VALUE) {
-                    Logger.w("Tasks") { "Attempted to update task with invalid ID: $id" }
+                    log.w { "Attempted to update task with invalid ID: $id" }
                     trayState.sendNotification(notifState)
                     GlobalScope.launch {
                         notifSignal.emit(notifState)
@@ -106,7 +107,7 @@ fun Tasks() =
                 }
                 if (isCompleted) {
                     tasks.firstOrNull { it.id == id }?.let {
-                        Logger.d("Tasks") { "Removing $it" }
+                        log.d { "Removing $it" }
                         tasks -= it
                     }
                 }
@@ -115,13 +116,13 @@ fun Tasks() =
                         if (isCompleted) {
                             addToBalance(10)
                             deleteTask(id)
-                            Logger.d("Tasks") { "Task $id has been removed" }
+                            log.d { "Task $id has been removed" }
                         } else {
                             updateTask(id, false)
                         }
                     }.invokeOnCompletion {
                         scope.launch {
-                            tasks = fetchTasks()
+                            tasks = fetchTasks(log)
                         }
                     }
             }
