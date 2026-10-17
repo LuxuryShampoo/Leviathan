@@ -17,7 +17,7 @@ font-awesome = "1.1.1"
 kermit = "2.2.0"
 slf4j = "2.0.20"
 whisper = "1.7.1"
-exposed = "0.61.0"
+exposed = "1.6.0"
 mysql = "8.0.33"
 bcrypt = "0.10.2"
 
